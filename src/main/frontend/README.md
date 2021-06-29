@@ -1,0 +1,1 @@
+Added "proxy": "http://localhost:8080" to package.json
