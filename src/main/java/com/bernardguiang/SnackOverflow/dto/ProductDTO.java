@@ -1,21 +1,32 @@
 package com.bernardguiang.SnackOverflow.dto;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 public class ProductDTO 
 {
 	private Long id;
 	
+	@NotBlank
 	private String name;
 	
+	@NotBlank
 	private String description;
+	
+	@NotNull
+	private BigDecimal price;
 	
 	private List<String> images;
 	
-	private Set<String> categories = new HashSet<>();
+	private List<String> categories;
 	
 	public ProductDTO()
 	{
@@ -46,6 +57,14 @@ public class ProductDTO
 		this.description = description;
 	}
 
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
 	public List<String> getImages() {
 		return images;
 	}
@@ -54,12 +73,18 @@ public class ProductDTO
 		this.images = images;
 	}
 
-	public Set<String> getCategories() {
+	public List<String> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Set<String> categories) {
+	public void setCategories(List<String> categories) {
 		this.categories = categories;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductDTO [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price
+				+ ", images=" + images + ", categories=" + categories + "]";
 	}
 	
 	

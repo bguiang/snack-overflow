@@ -1,5 +1,6 @@
 import './App.css';
 import React from "react";
+import '@fontsource/roboto';
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,33 +10,43 @@ import {
 import Navbar from './components/Navbar'
 import Snacks from './components/Snacks';
 import Snack from './components/Snack';
-import {Container} from '@material-ui/core'
+import {CssBaseline, Container} from '@material-ui/core'
+import useStyles from './styles'
 
 function App() {
+
+  const classes = useStyles();
+
+
   return (
     <Router>
-      <Navbar/>
-      <main>
-        <Container maxWidth="md">
-          <Switch>
-            <Route path="/snacks/:id">
-              <Snack />
-            </Route>
-            <Route path="/snacks">
-              <Snacks />
-            </Route>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/contact">
-              <Contact />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </Container>
-      </main>
+        <div className={classes.app}>
+          <CssBaseline />
+          <Navbar/>
+          <main className={classes.main}>
+            <Container className={classes.container} maxWidth="lg" flexGrow={1}>
+              <Switch>
+                <Route path="/snacks/:id">
+                  <Snack />
+                </Route>
+                <Route path="/about">
+                  <About />
+                </Route>
+                <Route path="/contact">
+                  <Contact />
+                </Route>
+                <Route path="/">
+                  <Snacks />
+                </Route>
+              </Switch>
+            </Container>
+          </main>
+          <footer className={classes.footer}>
+            <Container>
+
+            </Container>
+          </footer>
+        </div>
     </Router>
   );
 }

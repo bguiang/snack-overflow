@@ -112,6 +112,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests() // we want to authorize requests
 			.antMatchers("/", "index", "/css/*", "/js/**")
 				.permitAll()	// permit matched patterns above
+			.antMatchers(HttpMethod.GET, "/api/v1/products/**")
+				.permitAll()
 				
 			//.antMatchers("/api/**").hasRole(ADMIN.name(), ADMINTRAINEE.name()) // this will immediately approve without going to the next lines to match for permissions
 			//.antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(PRODUCT_WRITE.name())

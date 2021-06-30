@@ -9,9 +9,10 @@
 
 /* dark-theme.css */
 body {
-    color: #eee;
-    background: #121212;
+    font-family: "Roboto";
+    height: 100%;
 }
-body a {
-    color: #809fff;
+
+html, body, #app, #app>div {
+  height: 100%
 }

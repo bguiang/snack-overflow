@@ -2,30 +2,13 @@ import React from "react";
 import useSnacks from "../hooks/useSnacks";
 
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import Paper from '@material-ui/core/Paper';
+import { Grid, Paper, Typography, Box, TextField, Container } from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      height: 200,
-      width: 150,
-    },
-    control: {
-      padding: theme.spacing(2),
-    },
-  }));
+import useStyles from "../styles";
 
 const Snacks = () => {
-    const [snacks] = useSnacks();
     const classes = useStyles();
+    const [snacks] = useSnacks();
     const history = useHistory();
 
     const snackClick = (snack) => {
@@ -33,16 +16,16 @@ const Snacks = () => {
     };
 
     return (
-
         //There are five grid breakpoints: xs, sm, md, lg, and xl.
-        <Grid container className={classes.root} spacing={2}>
+        <Grid container className={classes.shop} spacing={2}>
             <Grid item xs={8}>
                 <Grid container justify="center" spacing={2}>
                 {snacks.map((snack) => (
                     <Grid key={snack} item xs={8} sm={6} md={4}>
-                        <Paper className={classes.paper}  onClick={() => snackClick(snack)}>
-
-                            <h3>{snack.name}</h3>
+                        <Paper className={classes.shopItem}  onClick={() => snackClick(snack)}>
+                            <Typography variant="h6">{snack.name}</Typography>
+                            <Typography variant="subtitle1">{snack.description}</Typography>
+                            <Typography variant="subtitle1">${snack.price}</Typography>
                         </Paper>
                     </Grid>
                 ))}

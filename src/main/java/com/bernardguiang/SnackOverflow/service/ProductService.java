@@ -25,9 +25,15 @@ public class ProductService
 	 
 	public ProductDTO save(ProductDTO productDTO)
 	{
+		System.out.println("Converting DTO: " + productDTO.toString());
 		Product product = productDTOToEntity(productDTO);
+		System.out.println("Saving: " + product.toString());
+		
 		Product saved = productRepository.save(product);
 		ProductDTO productDTOSaved = productEntityToDTO(saved);
+		
+		
+		System.out.println("Saved: " + saved.toString());
 		
 		return productDTOSaved;
 	}
@@ -69,9 +75,10 @@ public class ProductService
 		productDTO.setId(product.getId());
 		productDTO.setName(product.getName());
 		productDTO.setDescription(product.getDescription());
+		productDTO.setPrice(product.getPrice());
 		productDTO.setImages(product.getImages());
 		
-		Set<String> categoriesDTO = new HashSet<>();
+		List<String> categoriesDTO = new ArrayList<>();
 		for(Category category : product.getCategories())
 		{
 			categoriesDTO.add(category.getName());
@@ -87,6 +94,7 @@ public class ProductService
 		product.setId(productDTO.getId());
 		product.setName(productDTO.getName());
 		product.setDescription(productDTO.getDescription());
+		product.setPrice(productDTO.getPrice());
 		product.setImages(productDTO.getImages());
 		
 		// Should it throw an error if category doesn't exist?

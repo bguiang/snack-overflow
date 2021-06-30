@@ -1,14 +1,19 @@
 package com.bernardguiang.SnackOverflow.model;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Product {
@@ -16,9 +21,15 @@ public class Product {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank
+	@Column(nullable = false, unique = true)
 	private String name;
 	
+	@NotBlank
 	private String description;
+	
+	@NotNull
+	private BigDecimal price;
 	
 	@ElementCollection
 	private List<String> images;
@@ -66,6 +77,14 @@ public class Product {
 		this.description = description;
 	}
 
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
 	public List<String> getImages() {
 		return images;
 	}
@@ -81,6 +100,10 @@ public class Product {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price
+				+ ", images=" + images + "]";
+	}
 }
