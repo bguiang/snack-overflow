@@ -1,33 +1,36 @@
-package com.bernardguiang.SnackOverflow.model;
+package com.bernardguiang.SnackOverflow.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
-@Entity
-public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+// TODO: remove password later
+public class UserDTO {
 	private long id;
+	
+	@NotBlank
 	private String email;
+	
+	@NotBlank
 	private String username;
+	
+	@NotBlank
 	private String password;
+	
+	@NotBlank
 	private String fullName;
+	
+	@NotBlank
 	private String role;
 	
-	public User() {}
-	
+	public UserDTO() {}
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getUsername() {
-		return username;
-	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -36,15 +39,22 @@ public class User {
 		this.email = email;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public String getFullName() {
 		return fullName;
 	}
@@ -60,10 +70,5 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullName=" + fullName
-				+ ", role=" + role + "]";
-	}
+	
 }

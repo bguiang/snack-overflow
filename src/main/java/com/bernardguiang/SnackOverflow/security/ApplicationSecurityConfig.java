@@ -24,6 +24,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.bernardguiang.SnackOverflow.auth.ApplicationUserDetailsService;
 import com.bernardguiang.SnackOverflow.jwt.JwtConfig;
+import com.bernardguiang.SnackOverflow.jwt.JwtProvider;
 import com.bernardguiang.SnackOverflow.jwt.JwtTokenVerifierFilter;
 import com.bernardguiang.SnackOverflow.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 
@@ -35,12 +36,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final PasswordEncoder passwordEncoder;
 	private final ApplicationUserDetailsService applicationUserService;
+	private final JwtProvider jwtProvider;
 	private final JwtConfig jwtConfig;
 	
 	@Autowired
-	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserDetailsService applicationUserService, JwtConfig jwtConfig) {
+	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserDetailsService applicationUserService, JwtProvider jwtProvider, JwtConfig jwtConfig) {
 		this.passwordEncoder = passwordEncoder;
 		this.applicationUserService = applicationUserService;
+		this.jwtProvider = jwtProvider;
 		this.jwtConfig = jwtConfig;
 	}
 	
@@ -97,30 +100,27 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			// CSRF is Cross Site Request Forgery
-			// 1. Perpetrator forges a request for a fund transfer
-			// 2. Perpetrator embeds the request in a hyperlink and sends it to visitors that might be logged into the site
-			// 3. Visitor clicks on the link, inadvertently sending the request to the website
-			// 4. Website validates request and transfers funds from visitor to the perpetrator's account
-			//.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Cookies will be inaccessible to client-side scripts, must pass in csrf token
+		
+			// X-XSRF-TOKEN cookie (not readable by JS) will be returned and you need to pass it in with your requests
+			// Attachment should be automatic with Axios
+			//.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) 
 			//.and()
-			.csrf().disable()
+		
+			// Disable CSRF protection provided by default by spring security
+			.csrf().disable() // csrf attacks mainly happen when there are sessions and when using cookies for authentication
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWTs are stateless
 			.and() // then add JWT Authentication by UsernamePasswordAuthenticationFilter created
-			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProvider))
 			.addFilterAfter(new JwtTokenVerifierFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class) // username/password check first before trying to verify token
 			.authorizeRequests() // we want to authorize requests
 			.antMatchers("/", "index", "/css/*", "/js/**")
 				.permitAll()	// permit matched patterns above
 			.antMatchers(HttpMethod.GET, "/api/v1/products/**")
 				.permitAll()
-				
-			//.antMatchers("/api/**").hasRole(ADMIN.name(), ADMINTRAINEE.name()) // this will immediately approve without going to the next lines to match for permissions
-			//.antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(PRODUCT_WRITE.name())
-			//.antMatchers(HttpMethod.POST, "/api/**").hasAuthority(PRODUCT_WRITE.name())
-			//.antMatchers(HttpMethod.PUT, "/api/**").hasAuthority(PRODUCT_WRITE.name())
-			//.antMatchers("/api/**").hasRole(ADMIN.name())
-
+			.antMatchers("/api/v1/auth/**") //signup, refresh, signout
+				.permitAll()
+			.antMatchers("/api/v1/users/**") // TODO: remove this later
+				.permitAll()
 			.anyRequest()	// any request (secures all routes)
 			.authenticated(); // must be authenticated
 			//.and()

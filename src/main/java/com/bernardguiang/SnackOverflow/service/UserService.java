@@ -1,6 +1,9 @@
 package com.bernardguiang.SnackOverflow.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
+import com.bernardguiang.SnackOverflow.dto.UserDTO;
+import com.bernardguiang.SnackOverflow.model.Category;
+import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.UserRepository;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
@@ -26,20 +32,34 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
-	
+	// TODO: Duplicate of AuthService.signup
 	public void createNewUser(User user) {
 		userRepository.save(user);
 	}
 	
-	@EventListener(classes = { ContextRefreshedEvent.class})
-	public void setDefaultUsers() {
+	public List<UserDTO> findAll(){
+		Iterable<User> userIterator = userRepository.findAll();
 		
-		User user = new User();
-		user.setUsername("bernard");
-		user.setPassword(passwordEncoder.encode("password"));
-		user.setRole(ApplicationUserRole.ADMIN.name());
-		user.setFullName("Bernard Guiang");
-		User saved = userRepository.save(user);
-		System.out.println(saved);
+		List<UserDTO> userDTOs = new ArrayList<>();
+		for(User user : userIterator)
+		{
+			UserDTO userDTO = userEntityToDTO(user);
+			userDTOs.add(userDTO);
+		}
+		
+		return userDTOs;
+	}
+	
+	private UserDTO userEntityToDTO(User user) {
+		UserDTO userDTO = new UserDTO();
+		
+		userDTO.setUsername(user.getUsername());
+		userDTO.setEmail(user.getEmail());
+		userDTO.setFullName(user.getFullName());
+		userDTO.setId(user.getId());
+		userDTO.setPassword(user.getPassword());
+		userDTO.setRole(user.getRole());
+		
+		return userDTO;
 	}
 }

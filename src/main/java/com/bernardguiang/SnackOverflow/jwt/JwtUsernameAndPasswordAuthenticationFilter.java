@@ -1,8 +1,11 @@
 package com.bernardguiang.SnackOverflow.jwt;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -16,7 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -28,12 +33,11 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
 	private final AuthenticationManager authenticationManager;
-	@Autowired
-	private final JwtConfig jwtConfig;
+	private final JwtProvider jwtProvider;
 	
-	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig) {
+	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
 		this.authenticationManager = authenticationManager;
-		this.jwtConfig = jwtConfig;
+		this.jwtProvider = jwtProvider;
 	}
 
 	@Override
@@ -53,7 +57,6 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 			return authenticated;
 		} 
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
@@ -88,18 +91,28 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		//			  "iat": 1624931480,
 		//			  "exp": 1626073200
 		//		}
-		String token = Jwts.builder()
-			.setSubject(authResult.getName()) //subject
-			.claim("authorities", authResult.getAuthorities())// body
-			.setIssuedAt(new Date()) // iat
-			.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))// exp
-			.signWith(jwtConfig.getSecretKeyForSigning()) // make sure this is exact same as in the JwtTokenVerifierFilter
-			.compact();
+		
+		
+		// Create and Sign JWT
+		
+		String token = jwtProvider.generateToken(authResult);
+		// TODO: Create Refresh Token and store inside HttpOnly Cookie
+		// TODO: Send JWT as response instead of header?
 		
 		// Add token to response header to return to client
-		System.out.println("Authentication Success. Returning JWT");
+		System.out.println("Authentication Success. Returning Username and JWT Access Token in response. Returning Refresh Cookie");
 		System.out.println("Bearer " + token);
 		response.addHeader("Authorization", "Bearer " + token);
+		
+		response.setContentType("application/json");
+		AuthenticationResponse responseBody = new AuthenticationResponse(token, authResult.getName());
+		Gson gson = new Gson();
+		String responseBodyJSONString = gson.toJson(responseBody);
+		
+		PrintWriter writer = response.getWriter();
+	    writer.write(responseBodyJSONString);
+
+		//response.addCookie(cookie);
 	}
 	
 	

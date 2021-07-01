@@ -60,14 +60,12 @@ public class ProductController
 	}
 	
 	@GetMapping("/categories")
-	@ResponseBody
 	public List<CategoryDTO> getCategories() 
 	{
 		return categoryService.findAll();
 	}
 	
 	@GetMapping("/categories/{categoryName}")
-	@ResponseBody
 	public List<ProductDTO> getProductsByCategory(@RequestParam String categoryName) 
 	{
 		return productService.findAllByCategoryName(categoryName);

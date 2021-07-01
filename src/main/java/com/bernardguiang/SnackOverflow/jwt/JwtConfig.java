@@ -15,7 +15,7 @@ public class JwtConfig {
 	// load constants from application.properties file
 	private String secretKey;
 	private String tokenPrefix;
-	private int tokenExpirationAfterDays;
+	private long tokenExpirationMilliSeconds;
 	
 	public JwtConfig() {
 
@@ -38,11 +38,13 @@ public class JwtConfig {
 	public void setTokenPrefix(String tokenPrefix) {
 		this.tokenPrefix = tokenPrefix;
 	}
-	public int getTokenExpirationAfterDays() {
-		return tokenExpirationAfterDays;
+
+	public long getTokenExpirationMilliSeconds() {
+		return tokenExpirationMilliSeconds;
 	}
-	public void setTokenExpirationAfterDays(int tokenExpirationAfterDays) {
-		this.tokenExpirationAfterDays = tokenExpirationAfterDays;
+
+	public void setTokenExpirationMilliSeconds(long tokenExpirationMilliSeconds) {
+		this.tokenExpirationMilliSeconds = tokenExpirationMilliSeconds;
 	}
 	
 	

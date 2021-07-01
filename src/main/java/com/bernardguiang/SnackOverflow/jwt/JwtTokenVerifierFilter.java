@@ -139,6 +139,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 					simpleGrantedAuthorities
 			);
 			
+			// IF no errors are thrown when parsing the token claims, then the JWT is valid
 			// Set this request as authenticated
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			

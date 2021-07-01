@@ -68,6 +68,7 @@ public class ProductService
 		return productDTOs;
 	}
 	
+	// TODO: make this the constructor method of ProductDTO?
 	private ProductDTO productEntityToDTO(Product product)
 	{
 		ProductDTO productDTO = new ProductDTO();
