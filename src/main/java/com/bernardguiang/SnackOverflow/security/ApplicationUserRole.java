@@ -12,12 +12,18 @@ import com.google.common.collect.Sets;
 
 
 public enum ApplicationUserRole {
-	CUSTOMER(Sets.newHashSet()),
+	CUSTOMER(Sets.newHashSet(
+			PRODUCT_READ,
+			CATEGORY_READ, // TODO: useless? You don't need to be logged in to see this
+			ORDER_WRITE
+	)),
 	ADMIN(Sets.newHashSet(
 			PRODUCT_READ,
 			PRODUCT_WRITE,
 			CATEGORY_READ,
-			CATEGORY_WRITE
+			CATEGORY_WRITE,
+			ORDER_READ,
+			ORDER_WRITE
 	));
 	
 	private final Set<ApplicationUserPermission> permissions;

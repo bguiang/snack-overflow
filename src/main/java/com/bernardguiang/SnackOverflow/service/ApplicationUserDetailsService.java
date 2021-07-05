@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.auth;
+package com.bernardguiang.SnackOverflow.service;
 
 import java.util.Optional;
 
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.UserRepository;
+import com.bernardguiang.SnackOverflow.security.ApplicationUserDetails;
 
 @Service
 public class ApplicationUserDetailsService implements UserDetailsService{

@@ -1,15 +1,5 @@
 package com.bernardguiang.SnackOverflow.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.bernardguiang.SnackOverflow.model.Product;
-
 public class CategoryDTO {
 	private Long id;
 	private String name;

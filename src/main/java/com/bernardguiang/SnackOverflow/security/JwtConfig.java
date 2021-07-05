@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.jwt;
+package com.bernardguiang.SnackOverflow.security;
 
 import javax.crypto.SecretKey;
 

@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.jwt;
+package com.bernardguiang.SnackOverflow.security.requestfilter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.bernardguiang.SnackOverflow.security.JwtConfig;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

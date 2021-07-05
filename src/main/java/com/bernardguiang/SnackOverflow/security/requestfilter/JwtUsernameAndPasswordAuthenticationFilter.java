@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.jwt;
+package com.bernardguiang.SnackOverflow.security.requestfilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +21,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
+import com.bernardguiang.SnackOverflow.dto.UsernameAndPasswordAuthenticationRequest;
+import com.bernardguiang.SnackOverflow.model.RefreshToken;
+import com.bernardguiang.SnackOverflow.service.JwtService;
+import com.bernardguiang.SnackOverflow.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -33,11 +38,13 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
 	private final AuthenticationManager authenticationManager;
-	private final JwtProvider jwtProvider;
+	private final JwtService jwtService;
+	private final RefreshTokenService refreshTokenService;
 	
-	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtService jwtService, RefreshTokenService refreshTokenService) {
 		this.authenticationManager = authenticationManager;
-		this.jwtProvider = jwtProvider;
+		this.jwtService = jwtService;
+		this.refreshTokenService = refreshTokenService;
 	}
 
 	@Override
@@ -94,25 +101,21 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		
 		
 		// Create and Sign JWT
+		String token = jwtService.generateToken(authResult);
 		
-		String token = jwtProvider.generateToken(authResult);
-		// TODO: Create Refresh Token and store inside HttpOnly Cookie
-		// TODO: Send JWT as response instead of header?
+		// Create Refresh Token and store inside HttpOnly Cookie
+		Cookie refreshCookie = refreshTokenService.generateRefreshTokenCookie(authResult.getName());
+		response.addCookie(refreshCookie);
 		
 		// Add token to response header to return to client
-		System.out.println("Authentication Success. Returning Username and JWT Access Token in response. Returning Refresh Cookie");
-		System.out.println("Bearer " + token);
-		response.addHeader("Authorization", "Bearer " + token);
+		// response.addHeader("Authorization", "Bearer " + token);
 		
 		response.setContentType("application/json");
 		AuthenticationResponse responseBody = new AuthenticationResponse(token, authResult.getName());
 		Gson gson = new Gson();
 		String responseBodyJSONString = gson.toJson(responseBody);
-		
 		PrintWriter writer = response.getWriter();
 	    writer.write(responseBodyJSONString);
-
-		//response.addCookie(cookie);
 	}
 	
 	

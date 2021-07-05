@@ -7,8 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
-import com.bernardguiang.SnackOverflow.dto.RefreshTokenRequest;
 import com.bernardguiang.SnackOverflow.dto.RegisterRequest;
+import com.bernardguiang.SnackOverflow.model.RefreshToken;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.UserRepository;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
@@ -19,12 +19,14 @@ public class AuthService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final RefreshTokenService refreshTokenService;
+	private final JwtService jwtprovider;
 	
 	@Autowired
-	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService) {
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, JwtService jwtprovider) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.refreshTokenService = refreshTokenService;
+		this.jwtprovider = jwtprovider;
 	}
 
 	// Customer Signup
@@ -39,11 +41,22 @@ public class AuthService {
 	}
 	
 	// Refresh Token
-	public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+	public AuthenticationResponse refreshToken(String refreshTokenString) {
 		
-		refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+		// Validate refresh token on db. Will throw runtime exception if invalid
+		RefreshToken refreshToken = refreshTokenService.validateAndRetrieveRefreshToken(refreshTokenString);
 		
-		return null;
+		System.out.println("Validated Token: " + refreshToken.toString());
+		
+		// Generate new Access token
+		String accessToken = jwtprovider.generateTokenWithUser(refreshToken.getUser());
+		
+		AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+		authenticationResponse.setAuthenticationToken(accessToken);
+		authenticationResponse.setUsername(refreshToken.getUser().getUsername());
+		
+		// Return Access Token and username in response object
+		return authenticationResponse;
 	}
 	
 	@EventListener(classes = { ContextRefreshedEvent.class})

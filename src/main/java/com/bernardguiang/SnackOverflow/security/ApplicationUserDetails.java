@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.auth;
+package com.bernardguiang.SnackOverflow.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,11 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.bernardguiang.SnackOverflow.model.User;
-import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
 
 public class ApplicationUserDetails implements UserDetails{
 	
-	private final User user;
 	private final List<? extends GrantedAuthority> grantedAuthorities;
 	private String username;
 	private String password;
@@ -22,7 +20,6 @@ public class ApplicationUserDetails implements UserDetails{
 	private final boolean isEnabled;
 	
 	public ApplicationUserDetails(User user) {
-		this.user = user;
 		// Get granted authorities from user role
 		String userRole = user.getRole();
 		if(userRole.equalsIgnoreCase("CUSTOMER")) {

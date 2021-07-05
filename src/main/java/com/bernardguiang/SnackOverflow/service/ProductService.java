@@ -51,7 +51,6 @@ public class ProductService
 		return productDTOs;
 	}
 	
-	// Is this doable with just CrudRepository syntax?
 	public List<ProductDTO> findAllByCategoryName(String categoryName)
 	{
 		List<ProductDTO> productDTOs = new ArrayList<>();
