@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -39,6 +40,9 @@ public class Product {
 	// Changes to Product will cascade to the Category as well
 	@ManyToMany 
 	private Set<Category> categories = new HashSet<>();
+	
+	@OneToMany(mappedBy="product")
+	private List<OrderItem> orderedItems;
 	
 	public Product() {
 		
@@ -99,6 +103,16 @@ public class Product {
 
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
+	}
+	
+	
+
+	public List<OrderItem> getOrderedItems() {
+		return orderedItems;
+	}
+
+	public void setOrderedItems(List<OrderItem> orderedItems) {
+		this.orderedItems = orderedItems;
 	}
 
 	@Override

@@ -16,32 +16,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.bernardguiang.SnackOverflow.security.requestfilter.JwtTokenVerifierFilter;
 import com.bernardguiang.SnackOverflow.security.requestfilter.JwtUsernameAndPasswordAuthenticationFilter;
 import com.bernardguiang.SnackOverflow.service.ApplicationUserDetailsService;
-import com.bernardguiang.SnackOverflow.service.JwtService;
-import com.bernardguiang.SnackOverflow.service.RefreshTokenService;
+import com.bernardguiang.SnackOverflow.service.AuthService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	
 	private final PasswordEncoder passwordEncoder;
 	private final ApplicationUserDetailsService applicationUserService;
-	private final JwtService jwtService;
 	private final JwtConfig jwtConfig;
-	private final RefreshTokenService refreshTokenService;
+	private final AuthService authService;
 	
 	@Autowired
 	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, 
 			ApplicationUserDetailsService applicationUserService, 
-			JwtService jwtService, 
 			JwtConfig jwtConfig, 
-			RefreshTokenService refreshTokenService) {
+			AuthService authService) {
 		this.passwordEncoder = passwordEncoder;
 		this.applicationUserService = applicationUserService;
-		this.jwtService = jwtService;
 		this.jwtConfig = jwtConfig;
-		this.refreshTokenService = refreshTokenService;
+		this.authService = authService;
 	}
 	
 	// Authentication vs Authorization
@@ -108,7 +103,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			.csrf().disable() // csrf attacks mainly happen when there are sessions and when using cookies for authentication
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWTs are stateless
 			.and() // then add JWT Authentication by UsernamePasswordAuthenticationFilter created
-			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtService, refreshTokenService))
+			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), authService))
 			.addFilterAfter(new JwtTokenVerifierFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class) // username/password check first before trying to verify token
 			
 			.headers().frameOptions().sameOrigin().and() // To enable H2 DB. Comment out if not using H2

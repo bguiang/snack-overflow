@@ -15,18 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
 import com.bernardguiang.SnackOverflow.dto.RegisterRequest;
 import com.bernardguiang.SnackOverflow.service.AuthService;
-import com.bernardguiang.SnackOverflow.service.RefreshTokenService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 	
 	private final AuthService authService;
-	private final RefreshTokenService refreshTokenService;
 	
-	public AuthController(AuthService authService, RefreshTokenService refreshTokenService) {
+	public AuthController(AuthService authService) {
 		this.authService = authService;
-		this.refreshTokenService = refreshTokenService;
 	}
 	
 	// Login is handled by JwtUsernameAndPasswordAuthentication Filter
@@ -41,6 +38,7 @@ public class AuthController {
 	// Token BlackListing but it defeats the purpose of using JWTs (supposedly stateless). 
 	//  Storing tokens on the db and requiring  a lookup for authorization makes it stateful
 	//	However performance could be improved with an in-memory db
+	// TODO: implement logout
 	public void Logout() {
 		// Delete Refresh Token
 		// remove current token from client
@@ -61,7 +59,7 @@ public class AuthController {
 		AuthenticationResponse authenticationResponse =  authService.refreshToken(refreshToken);
 		
 		// Generate new and update refresh token and store in an http only cookie
-		Cookie refreshCookie = refreshTokenService.generateRefreshTokenCookie(authenticationResponse.getUsername());
+		Cookie refreshCookie = authService.generateRefreshTokenCookie(authenticationResponse.getUsername());
 		response.addCookie(refreshCookie);
 		
 		return authenticationResponse;

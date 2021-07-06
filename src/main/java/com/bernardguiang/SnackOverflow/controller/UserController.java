@@ -2,6 +2,7 @@ package com.bernardguiang.SnackOverflow.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +20,8 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	//TODO: admin only
 	@GetMapping
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<UserDTO> getUsers() {
 		List<UserDTO> users = userService.findAll();
 	    

@@ -37,7 +37,13 @@ public class UserService {
 		return userDTOs;
 	}
 	
-	public UserDTO findByUsername(String username) {
+	public User findById(long id) {
+		Optional<User> user = userRepository.findById(id);
+		user.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + id));
+		return user.get();
+	}
+	
+	public UserDTO findUserDTOByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
 		user.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
 		UserDTO userDTO = userEntityToDTO(user.get());

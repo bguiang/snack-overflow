@@ -2,10 +2,6 @@ package com.bernardguiang.SnackOverflow.security.requestfilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,7 +9,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,14 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
 import com.bernardguiang.SnackOverflow.dto.UsernameAndPasswordAuthenticationRequest;
-import com.bernardguiang.SnackOverflow.model.RefreshToken;
-import com.bernardguiang.SnackOverflow.service.JwtService;
-import com.bernardguiang.SnackOverflow.service.RefreshTokenService;
+import com.bernardguiang.SnackOverflow.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 // This class validates credentials. Spring already does this but we want to make our own
 // Requests go through every Request Filter before reaching the API
@@ -38,13 +28,13 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
 	private final AuthenticationManager authenticationManager;
-	private final JwtService jwtService;
-	private final RefreshTokenService refreshTokenService;
+	private final AuthService authService;
 	
-	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtService jwtService, RefreshTokenService refreshTokenService) {
+	public JwtUsernameAndPasswordAuthenticationFilter(
+			AuthenticationManager authenticationManager, 
+			AuthService authService) {
 		this.authenticationManager = authenticationManager;
-		this.jwtService = jwtService;
-		this.refreshTokenService = refreshTokenService;
+		this.authService = authService;
 	}
 
 	@Override
@@ -101,10 +91,10 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		
 		
 		// Create and Sign JWT
-		String token = jwtService.generateToken(authResult);
+		String token = authService.generateJwt(authResult.getName(), authResult.getAuthorities());
 		
 		// Create Refresh Token and store inside HttpOnly Cookie
-		Cookie refreshCookie = refreshTokenService.generateRefreshTokenCookie(authResult.getName());
+		Cookie refreshCookie = authService.generateRefreshTokenCookie(authResult.getName());
 		response.addCookie(refreshCookie);
 		
 		// Add token to response header to return to client

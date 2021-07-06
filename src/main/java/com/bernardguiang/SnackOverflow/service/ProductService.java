@@ -17,23 +17,20 @@ import com.bernardguiang.SnackOverflow.repository.ProductRepository;
 @Service
 public class ProductService 
 {
+	private final ProductRepository productRepository;
+	private final CategoryRepository categoryRepository;
+	
 	@Autowired
-	private ProductRepository productRepository;
-	 
-	@Autowired
-	private CategoryRepository categoryRepository;
+	public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
+	}
 	 
 	public ProductDTO save(ProductDTO productDTO)
 	{
-		System.out.println("Converting DTO: " + productDTO.toString());
-		Product product = productDTOToEntity(productDTO);
-		System.out.println("Saving: " + product.toString());
-		
+		Product product = dtoToProduct(productDTO);
 		Product saved = productRepository.save(product);
-		ProductDTO productDTOSaved = productEntityToDTO(saved);
-		
-		
-		System.out.println("Saved: " + saved.toString());
+		ProductDTO productDTOSaved = productToDTO(saved);
 		
 		return productDTOSaved;
 	}
@@ -44,7 +41,7 @@ public class ProductService
 		List<ProductDTO> productDTOs = new ArrayList<>();
 		for(Product product : productsIterator)
 		{
-			ProductDTO productDTO = productEntityToDTO(product);
+			ProductDTO productDTO = productToDTO(product);
 			productDTOs.add(productDTO);
 		}
 		
@@ -60,7 +57,7 @@ public class ProductService
 		{
 			for(Product product: category.get().getProducts())
 			{
-				productDTOs.add(productEntityToDTO(product));
+				productDTOs.add(productToDTO(product));
 			}
 		}
 		
@@ -68,7 +65,7 @@ public class ProductService
 	}
 	
 	// TODO: make this the constructor method of ProductDTO?
-	private ProductDTO productEntityToDTO(Product product)
+	private ProductDTO productToDTO(Product product)
 	{
 		ProductDTO productDTO = new ProductDTO();
 		
@@ -88,7 +85,7 @@ public class ProductService
 		return productDTO;
 	}
 	
-	private Product productDTOToEntity(ProductDTO productDTO)
+	private Product dtoToProduct(ProductDTO productDTO)
 	{
 		Product product = new Product();
 		product.setId(productDTO.getId());

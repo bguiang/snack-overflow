@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.bernardguiang.SnackOverflow.model.User;
 
 public class ApplicationUserDetails implements UserDetails{
-	
+	private User user;
 	private final List<? extends GrantedAuthority> grantedAuthorities;
 	private String username;
 	private String password;
@@ -20,6 +20,7 @@ public class ApplicationUserDetails implements UserDetails{
 	private final boolean isEnabled;
 	
 	public ApplicationUserDetails(User user) {
+		this.user = user;
 		// Get granted authorities from user role
 		String userRole = user.getRole();
 		if(userRole.equalsIgnoreCase("CUSTOMER")) {
@@ -39,6 +40,11 @@ public class ApplicationUserDetails implements UserDetails{
 		this.isCredentialsNonExpired = true;
 		this.isEnabled = true;	
 	}
+	
+	public User getUser() {
+		return user;
+	}
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

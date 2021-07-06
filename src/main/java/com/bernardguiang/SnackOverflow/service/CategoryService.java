@@ -12,8 +12,13 @@ import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 
 @Service
 public class CategoryService {
+	
+	private final CategoryRepository categoryRepository;
+	
 	@Autowired
-	CategoryRepository categoryRepository;
+	public CategoryService(CategoryRepository categoryRepository) {
+		this.categoryRepository = categoryRepository;
+	}
 	
 	public CategoryDTO save(CategoryDTO categoryDTO) 
 	{
