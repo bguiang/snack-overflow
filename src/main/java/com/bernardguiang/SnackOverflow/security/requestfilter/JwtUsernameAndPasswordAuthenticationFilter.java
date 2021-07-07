@@ -35,6 +35,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 			AuthService authService) {
 		this.authenticationManager = authenticationManager;
 		this.authService = authService;
+		
+		setFilterProcessesUrl("/api/v1/auth/login");
 	}
 
 	@Override
