@@ -7,15 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
-import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.Category;
-import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 
 @Service
 public class CategoryService {
+	
+	private final CategoryRepository categoryRepository;
+	
 	@Autowired
-	CategoryRepository categoryRepository;
+	public CategoryService(CategoryRepository categoryRepository) {
+		this.categoryRepository = categoryRepository;
+	}
 	
 	public CategoryDTO save(CategoryDTO categoryDTO) 
 	{

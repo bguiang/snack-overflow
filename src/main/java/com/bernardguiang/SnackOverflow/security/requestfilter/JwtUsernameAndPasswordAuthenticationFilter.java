@@ -1,18 +1,14 @@
-package com.bernardguiang.SnackOverflow.jwt;
+package com.bernardguiang.SnackOverflow.security.requestfilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,11 +16,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
+import com.bernardguiang.SnackOverflow.dto.UsernameAndPasswordAuthenticationRequest;
+import com.bernardguiang.SnackOverflow.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 // This class validates credentials. Spring already does this but we want to make our own
 // Requests go through every Request Filter before reaching the API
@@ -33,11 +28,15 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
 	private final AuthenticationManager authenticationManager;
-	private final JwtProvider jwtProvider;
+	private final AuthService authService;
 	
-	public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+	public JwtUsernameAndPasswordAuthenticationFilter(
+			AuthenticationManager authenticationManager, 
+			AuthService authService) {
 		this.authenticationManager = authenticationManager;
-		this.jwtProvider = jwtProvider;
+		this.authService = authService;
+		
+		setFilterProcessesUrl("/api/v1/auth/login");
 	}
 
 	@Override
@@ -94,25 +93,21 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		
 		
 		// Create and Sign JWT
+		String token = authService.generateJwt(authResult.getName(), authResult.getAuthorities());
 		
-		String token = jwtProvider.generateToken(authResult);
-		// TODO: Create Refresh Token and store inside HttpOnly Cookie
-		// TODO: Send JWT as response instead of header?
+		// Create Refresh Token and store inside HttpOnly Cookie
+		Cookie refreshCookie = authService.generateRefreshTokenCookie(authResult.getName());
+		response.addCookie(refreshCookie);
 		
 		// Add token to response header to return to client
-		System.out.println("Authentication Success. Returning Username and JWT Access Token in response. Returning Refresh Cookie");
-		System.out.println("Bearer " + token);
-		response.addHeader("Authorization", "Bearer " + token);
+		// response.addHeader("Authorization", "Bearer " + token);
 		
 		response.setContentType("application/json");
 		AuthenticationResponse responseBody = new AuthenticationResponse(token, authResult.getName());
 		Gson gson = new Gson();
 		String responseBodyJSONString = gson.toJson(responseBody);
-		
 		PrintWriter writer = response.getWriter();
 	    writer.write(responseBodyJSONString);
-
-		//response.addCookie(cookie);
 	}
 	
 	

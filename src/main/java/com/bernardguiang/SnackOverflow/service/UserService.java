@@ -1,39 +1,26 @@
 package com.bernardguiang.SnackOverflow.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
-import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.model.Category;
-import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.UserRepository;
-import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
 
 @Service
 public class UserService {
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	public UserService (UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserService (UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
 	}
 	
-	// TODO: Duplicate of AuthService.signup
-	public void createNewUser(User user) {
+	public void save(User user) {
 		userRepository.save(user);
 	}
 	
@@ -50,6 +37,24 @@ public class UserService {
 		return userDTOs;
 	}
 	
+	public User findById(long id) {
+		Optional<User> user = userRepository.findById(id);
+		user.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + id));
+		return user.get();
+	}
+	
+	public UserDTO findUserDTOByUsername(String username) {
+		Optional<User> user = userRepository.findByUsername(username);
+		user.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
+		UserDTO userDTO = userEntityToDTO(user.get());
+		return userDTO;
+	}
+	
+	public User findUserByUsername(String username) {
+		return userRepository.findByUsername(username)
+				.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
+	}
+	
 	private UserDTO userEntityToDTO(User user) {
 		UserDTO userDTO = new UserDTO();
 		
@@ -57,7 +62,6 @@ public class UserService {
 		userDTO.setEmail(user.getEmail());
 		userDTO.setFullName(user.getFullName());
 		userDTO.setId(user.getId());
-		userDTO.setPassword(user.getPassword());
 		userDTO.setRole(user.getRole());
 		
 		return userDTO;

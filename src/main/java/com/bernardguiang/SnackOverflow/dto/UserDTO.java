@@ -2,7 +2,6 @@ package com.bernardguiang.SnackOverflow.dto;
 
 import javax.validation.constraints.NotBlank;
 
-// TODO: remove password later
 public class UserDTO {
 	private long id;
 	
@@ -11,9 +10,6 @@ public class UserDTO {
 	
 	@NotBlank
 	private String username;
-	
-	@NotBlank
-	private String password;
 	
 	@NotBlank
 	private String fullName;
@@ -45,14 +41,6 @@ public class UserDTO {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getFullName() {

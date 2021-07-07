@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.jwt;
+package com.bernardguiang.SnackOverflow.dto;
 
 public class UsernameAndPasswordAuthenticationRequest {
 

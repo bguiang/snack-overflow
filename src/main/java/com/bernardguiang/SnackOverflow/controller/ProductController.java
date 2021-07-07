@@ -2,9 +2,7 @@ package com.bernardguiang.SnackOverflow.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -18,13 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
-import com.bernardguiang.SnackOverflow.model.User;
-import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
 import com.bernardguiang.SnackOverflow.service.CategoryService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
 

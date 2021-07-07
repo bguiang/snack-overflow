@@ -9,5 +9,5 @@ import com.bernardguiang.SnackOverflow.model.RefreshToken;
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Long>{
 
 	void deleteByToken(String token);
-	Optional<String> findByToken(String token);
+	Optional<RefreshToken> findByToken(String token);
 }

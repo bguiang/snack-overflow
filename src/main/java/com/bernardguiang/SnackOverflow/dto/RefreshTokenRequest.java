@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 public class RefreshTokenRequest {
 	@NotBlank
 	private String refreshToken;
+	@NotBlank
 	private String username;
 
 	public RefreshTokenRequest() {
