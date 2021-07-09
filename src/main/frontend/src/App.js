@@ -1,58 +1,77 @@
 import "./App.css";
 import { useState } from "react";
 import "@fontsource/roboto";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Snacks from "./components/Snacks";
 import Snack from "./components/Snack";
 import Footer from "./components/Footer";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
+import LoginSignup from "./components/LoginSignup";
+import Account from "./components/Account";
 import { CssBaseline, Container } from "@material-ui/core";
-import useStyles from "./styles";
+import {
+  ThemeProvider,
+  createTheme,
+  makeStyles,
+} from "@material-ui/core/styles";
+import { AuthProvider } from "./context/AuthContext";
+import { Routes } from "./Routes";
 
 function App() {
+  // Theme colors
+  // Blue: #00B1C6 or rgb(0,177,198)
+  // Yellow: #F8EB37 or rgb(248,235,55)
+  // Orange: #F3AB1C or rgb(243,171,28)
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#00B1C6",
+      },
+      secondary: {
+        main: "#F8EB37",
+      },
+    },
+  });
+
+  // Not using the styles.js because the theme created isn't being applied to the classes in App.js
+  // The theme does get applied to useStyles from styles.js when used on child components
+  const useStyles = makeStyles((theme) => ({
+    app: {
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+    },
+    main: {
+      paddingTop: 186,
+      backgroundImage: `url(${process.env.PUBLIC_URL + "/pattern.png"})`,
+      display: "flex",
+      flex: 1,
+    },
+    container: {
+      backgroundColor: theme.palette.background.paper,
+      padding: 20,
+    },
+  }));
+
   const classes = useStyles();
-  const [user, setUser] = useState({ user: {} });
 
   return (
-    //<userContext.Provider value={user}>
-    <Router>
-      <div className={classes.app}>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Navbar />
-        <main className={classes.main}>
-          <Container className={classes.container} maxWidth="lg" flexGrow={1}>
-            <Switch>
-              <Route path="/snacks/:id">
-                <Snack />
-              </Route>
-              <Route path="/about">
-                <About />
-              </Route>
-              <Route path="/contact">
-                <Contact />
-              </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/signup">
-                <SignUp />
-              </Route>
-              <Route path="/">
-                <Snacks />
-              </Route>
-            </Switch>
-          </Container>
-        </main>
-        <footer className={classes.footer}>
-          <Container>
+        <Router>
+          <div className={classes.app}>
+            <Navbar />
+            <main className={classes.main}>
+              <Container className={classes.container} maxWidth="lg">
+                <Routes />
+              </Container>
+            </main>
             <Footer />
-          </Container>
-        </footer>
-      </div>
-    </Router>
-    //</userContext.Provider>
+          </div>
+        </Router>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

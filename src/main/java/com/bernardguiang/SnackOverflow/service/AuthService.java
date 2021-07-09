@@ -107,6 +107,15 @@ public class AuthService {
 		return generateJwt(user.getUsername(), authorities);
 	}
 	
+	public Cookie generateEmptyRefreshTokenCookie() {
+		Cookie emptyRefreshCookie = new Cookie("refresh-token", null);
+		emptyRefreshCookie.setSecure(false);
+		emptyRefreshCookie.setHttpOnly(true);
+		emptyRefreshCookie.setPath("/api/v1/auth");
+		
+		return emptyRefreshCookie;
+	}
+	
 	public Cookie generateRefreshTokenCookie(String username) {
 		User user = userRepository.findByUsername(username)
 			.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));

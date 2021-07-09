@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Link } from "@material-ui/core";
+import { Container, Typography, Link } from "@material-ui/core";
+import useStyles from "../styles";
 
 function Copyright() {
   return (
@@ -15,10 +16,15 @@ function Copyright() {
 }
 
 const Footer = () => {
+  const classes = useStyles();
   return (
-    <div>
-      <Copyright />
-    </div>
+    <footer className={classes.footer}>
+      <Container>
+        <div>
+          <Copyright />
+        </div>
+      </Container>
+    </footer>
   );
 };
 

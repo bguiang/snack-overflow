@@ -1,19 +1,15 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 // Theme colors
-// Blue: #00B1C6 or rgb(0,177,198)
-// Yellow: #F8EB37 or rgb(248,235,55)
+// theme.palette.primary.main - Blue: #00B1C6 or rgb(0,177,198)
+// theme.palette.secondary.main - Yellow: #F8EB37 or rgb(248,235,55)
+// Orange: #F3AB1C or rgb(243,171,28)
 
 // style hook
 // uses the theme provider https://material-ui.com/customization/theming/
 const useStyles = makeStyles((theme) => ({
-  app: {
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-  },
   appbar: {
-    backgroundColor: "#F8EB37",
+    backgroundColor: theme.palette.secondary.main,
   },
   toolbarContainer: {
     paddingLeft: 0,
@@ -78,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   bottomToolbar: {
-    backgroundColor: "#00B1C6",
+    backgroundColor: theme.palette.primary.main,
   },
   toolbar2: {
     paddingTop: 10,
@@ -99,6 +95,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     alignItems: "center",
   },
+  toolbar2MenuItem: {
+    fontWeight: "bold",
+    color: "white",
+  },
   toolbar2MenuMobile: {
     [theme.breakpoints.down("md")]: {
       display: "flex",
@@ -115,6 +115,10 @@ const useStyles = makeStyles((theme) => ({
       flex: 1,
       marginRight: 36,
     },
+    [theme.breakpoints.up("md")]: {
+      flex: 1,
+      marginRight: 32,
+    },
     width: 400,
     padding: "2px 4px",
     display: "flex",
@@ -124,14 +128,8 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     flex: 1,
   },
-  main: {
-    paddingTop: 186,
-    backgroundImage: `url(${process.env.PUBLIC_URL + "/pattern.png"})`,
-    display: "flex",
-    flex: 1,
-  },
   footer: {
-    backgroundColor: "#00B1C6",
+    backgroundColor: theme.palette.primary.main,
     height: 50,
   },
   shop: {
@@ -144,9 +142,36 @@ const useStyles = makeStyles((theme) => ({
   control: {
     padding: theme.spacing(2),
   },
-  container: {
-    backgroundColor: theme.palette.background.paper,
-    padding: 20,
+  loginSignUp: {
+    display: "flex",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+    },
+  },
+  login: {
+    flex: 1,
+    display: "flex",
+  },
+  flexLineBetween: {
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 16,
+      marginBottom: 16,
+      borderTop: "1px",
+      borderTopStyle: "solid",
+      borderTopColor: theme.palette.primary.main,
+    },
+    [theme.breakpoints.up("sm")]: {
+      borderLeft: "1px",
+      borderLeftStyle: "solid",
+      borderLeftColor: theme.palette.primary.main,
+    },
+  },
+  signUp: {
+    flex: 1,
+    display: "flex",
   },
 }));
 

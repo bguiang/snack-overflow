@@ -2,6 +2,7 @@ package com.bernardguiang.SnackOverflow.controller;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class AuthController {
 	// Login is handled by JwtUsernameAndPasswordAuthentication Filter
 	
 	@PostMapping("/signup")
-	public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
+	public ResponseEntity<String> signup(@RequestBody @Valid RegisterRequest registerRequest) {
 		authService.customerSignup(registerRequest);
 		return new ResponseEntity<>("User Registration Successful", HttpStatus.CREATED);
 	}
@@ -39,9 +40,14 @@ public class AuthController {
 	//  Storing tokens on the db and requiring  a lookup for authorization makes it stateful
 	//	However performance could be improved with an in-memory db
 	// TODO: implement logout
-	public void Logout() {
+	@GetMapping("/logout")
+	public ResponseEntity<String> Logout(HttpServletResponse response) {
 		// Delete Refresh Token
 		// remove current token from client
+		// Generate new and update refresh token and store in an http only cookie
+		Cookie refreshCookie = authService.generateEmptyRefreshTokenCookie();
+		response.addCookie(refreshCookie);
+		return new ResponseEntity<>("Logout Successful", HttpStatus.OK); 
 	}
 
 	//TODO: IMPORTANT - when generating refresh token cookies, you have to set secure to false or it won't work without https

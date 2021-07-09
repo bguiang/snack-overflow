@@ -1,18 +1,11 @@
-/* light-theme.css */
-/* body {
-    color: #222;
-    background: #fff;
-  }
-  a {
-    color: #0033cc;
-  } */
-
-/* dark-theme.css */
 body {
-    font-family: "Roboto";
-    height: 100%;
+  font-family: "Roboto";
+  height: 100%;
 }
 
-html, body, #app, #app>div {
-  height: 100%
+html,
+body,
+#app,
+#app > div {
+  height: 100%;
 }
