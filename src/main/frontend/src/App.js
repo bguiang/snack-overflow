@@ -15,7 +15,7 @@ import {
   makeStyles,
 } from "@material-ui/core/styles";
 import { AuthProvider } from "./context/AuthContext";
-import { Routes } from "./Routes";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   // Theme colors
@@ -64,7 +64,26 @@ function App() {
             <Navbar />
             <main className={classes.main}>
               <Container className={classes.container} maxWidth="lg">
-                <Routes />
+                <Switch>
+                  <Route path="/snacks/:id">
+                    <Snack />
+                  </Route>
+                  <Route path="/about">
+                    <Snack />
+                  </Route>
+                  <Route path="/contact">
+                    <Snack />
+                  </Route>
+                  <Route path="/login">
+                    <LoginSignup />
+                  </Route>
+                  <PrivateRoute path="/account">
+                    <Account />
+                  </PrivateRoute>
+                  <Route path="/">
+                    <Snacks />
+                  </Route>
+                </Switch>
               </Container>
             </main>
             <Footer />

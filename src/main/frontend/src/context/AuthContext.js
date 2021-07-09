@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const login = async (username, password) => {
+  const login = async (username, password, callback) => {
     try {
       let loginRequest = { username: username, password: password };
       const response = await SnackOverflow.post("/auth/login", loginRequest);
@@ -63,6 +63,8 @@ export function AuthProvider({ children }) {
         setCurrentUser(response.data);
         // Set refresh timer function
         setRefreshTimer(response.data.authenticationToken);
+        // execute callback function to redirect
+        callback();
       }
     } catch (error) {
       console.log(error);
