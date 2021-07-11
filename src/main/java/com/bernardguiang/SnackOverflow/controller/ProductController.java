@@ -2,26 +2,35 @@ package com.bernardguiang.SnackOverflow.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.service.CategoryService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -37,6 +46,11 @@ public class ProductController
 	public List<ProductDTO> getProducts() 
 	{
 		return productService.findAll();
+	}
+	@GetMapping("/{productId}")
+	public ProductDTO getProductById(@PathVariable long productId) 
+	{
+		return productService.findById(productId);
 	}
 	
 	@PostMapping
@@ -74,6 +88,7 @@ public class ProductController
 	
 	@EventListener(classes = { ContextRefreshedEvent.class})
 	public void setInitialProducts() {
+		
 		CategoryDTO cdto1 = new CategoryDTO();
 		cdto1.setName("Japan");
 		CategoryDTO category1 = categoryService.save(cdto1);
@@ -90,60 +105,63 @@ public class ProductController
 		cdto1.setName("Australia");
 		CategoryDTO category4 = categoryService.save(cdto1);
 		
+		List<String> categories = new ArrayList<>();
+		categories.add(category1.getName());
+		categories.add(category2.getName());
+		categories.add(category3.getName());
+		categories.add(category4.getName());
 		
-		ProductDTO pdto1 = new ProductDTO();
-		pdto1.setName("Pocky Chocolate");
-		List<String> pdto1Cat = new ArrayList<>();
-		pdto1Cat.add(cdto1.getName()); // Japan
-		pdto1.setDescription("snack");
-		pdto1.setPrice(new BigDecimal("1.99"));
-		pdto1.setCategories(pdto1Cat);
-		productService.save(pdto1);
+		List<String> descriptions = new ArrayList<>();
+		descriptions.add("Duis nec nisi neque. Quisque imperdiet ultrices nunc, vitae rutrum sem eleifend quis. Cras id aliquam purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer tempor enim tellus, at hendrerit mi molestie consequat. Morbi sit amet justo a eros maximus tincidunt sed sit amet elit. Nulla facilisi. Sed aliquam lacus nisl, ac interdum dolor sollicitudin elementum. Quisque faucibus rhoncus lacus, quis rhoncus urna pretium eu. Nunc ac commodo mauris, in laoreet ante. Integer et fringilla odio.");
+		descriptions.add("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie justo eget sem sollicitudin, maximus faucibus lectus pharetra. Etiam pellentesque nisl in tristique laoreet. Sed lacus ligula, tempor sit amet lacus quis, egestas mollis ligula. Mauris dignissim condimentum nunc efficitur fringilla. Duis maximus in lorem eget dignissim. Nulla elementum massa magna, et faucibus lectus varius et. Duis non nibh pretium, suscipit erat eleifend, porttitor mauris. Nunc consectetur risus eget ante tempor vehicula. Nam posuere nunc vel commodo lobortis.");
+		descriptions.add("In cursus risus orci, eu elementum turpis interdum id. Donec eu consectetur nunc, a blandit dolor. Nam leo arcu, convallis quis venenatis ut, mattis ac sapien. Etiam sed aliquam dui, quis dictum ante. Praesent ac massa sed quam consectetur ullamcorper. Proin lacus ipsum, tincidunt in nulla vel, euismod tristique urna. Quisque maximus varius ullamcorper.");
+		descriptions.add("Sed vel quam vitae odio tempor porta. Vivamus in ante neque. Fusce ultrices arcu sed nulla vehicula congue. Etiam et semper massa, id sodales ante. Sed gravida massa nec arcu finibus finibus. Fusce faucibus, enim ut ultrices malesuada, leo arcu sagittis lacus, sit amet pharetra lectus felis non erat. Etiam vel turpis leo. Sed fringilla dui est, non efficitur tellus feugiat eu. Fusce convallis nulla justo, sit amet iaculis dolor dignissim a. Morbi et eros ac metus hendrerit bibendum et non nulla. Aenean lacinia elementum tellus dapibus vehicula.");
+		descriptions.add("Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam sollicitudin convallis mauris, id pulvinar elit cursus vitae. Donec facilisis erat tortor, vel lacinia massa maximus id. In nulla orci, rutrum ac blandit id, auctor et lorem. Donec facilisis, neque in sagittis sollicitudin, leo velit tempor nulla, vitae varius nibh justo ut diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut ipsum nec arcu rhoncus volutpat. Vivamus porttitor nisl eu libero ultricies, quis consequat purus cursus. Nulla ut augue suscipit, efficitur augue ut, blandit mi. Proin vitae nisi vitae quam semper sagittis. Sed ac eros vel tellus egestas lacinia. Suspendisse potenti. Proin sem dui, imperdiet eget nulla sed, consectetur ornare elit.");
 		
-		ProductDTO pdto2 = new ProductDTO();
-		pdto2.setName("Pocky Strawberry");
-		List<String> pdto2Cat = new ArrayList<>();
-		pdto2Cat.add(cdto1.getName()); // Japan
-		pdto2.setDescription("snack");
-		pdto2.setPrice(new BigDecimal("1.99"));
-		pdto2.setCategories(pdto2Cat);
-		productService.save(pdto2);
+		List<BigDecimal> prices = new ArrayList<>();
+		prices.add(new BigDecimal("1.00"));
+		prices.add(new BigDecimal("2.00"));
+		prices.add(new BigDecimal("3.50"));
+		prices.add(new BigDecimal("10.00"));
+		prices.add(new BigDecimal("7.00"));
+		prices.add(new BigDecimal("0.50"));
 		
-		ProductDTO pdto3 = new ProductDTO();
-		pdto3.setName("Taiyaki");
-		List<String> pdto3Cat = new ArrayList<>();
-		pdto3Cat.add(cdto1.getName()); // Japan
-		pdto3.setDescription("snack");
-		pdto3.setPrice(new BigDecimal("1.99"));
-		pdto3.setCategories(pdto3Cat);
-		productService.save(pdto3);
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = 
+				restTemplate.getForEntity("https://api.unsplash.com/search/photos?query=snack&client_id=c2NQDAjFaYJlpeiF7tbI-txpgQLMnQ6Zgl1g0WdAwn4&per_page=30", String.class);
 		
-		ProductDTO pdto4 = new ProductDTO();
-		pdto4.setName("Tim Tam1");
-		List<String> pdto4Cat = new ArrayList<>();
-		pdto4Cat.add(cdto4.getName()); // Australia
-		pdto4.setDescription("snack");
-		pdto4.setPrice(new BigDecimal("1.99"));
-		pdto4.setCategories(pdto4Cat);
-		productService.save(pdto4);
+		String responseString = response.getBody();
 		
-		ProductDTO pdto5 = new ProductDTO();
-		pdto5.setName("Tim Tam2");
-		List<String> pdto5Cat = new ArrayList<>();
-		pdto5Cat.add(cdto4.getName()); // Australia
-		pdto5.setDescription("snack");
-		pdto5.setPrice(new BigDecimal("1.99"));
-		pdto5.setCategories(pdto5Cat);
-		productService.save(pdto5);
-		
-		ProductDTO pdto6 = new ProductDTO();
-		pdto6.setName("Tim Tam3");
-		List<String> pdto6Cat = new ArrayList<>();
-		pdto6Cat.add(cdto4.getName()); // Australia
-		pdto6.setDescription("snack");
-		pdto6.setPrice(new BigDecimal("1.99"));
-		pdto6.setCategories(pdto6Cat);
-		productService.save(pdto6);
+	
+		try {
+		     JSONObject responseObject = new JSONObject(responseString);
+		     JSONArray results = responseObject.getJSONArray("results");
+		     for(int i = 0; i < results.length(); i++) {
+		    	JSONObject current = results.getJSONObject(i);
+		    	JSONObject urls = current.getJSONObject("urls");
+		    	String url = urls.getString("small");
+		    	
+		    	ProductDTO productDTO = new ProductDTO();
+		    	productDTO.setName(current.getString("alt_description"));
+		 		List<String> productCategories = new ArrayList<>();
+		 		productCategories.add((String) getRandom(categories)); // random category from collection
+		 		productDTO.setDescription((String) getRandom(descriptions));
+		 		productDTO.setPrice((BigDecimal) getRandom(prices));
+		 		productDTO.setCategories(productCategories);
+		 		List<String> images = new ArrayList<>();
+		 		images.add(url);
+		 		productDTO.setImages(images);
+		 		productService.save(productDTO);
+		     }
+		}catch (JSONException err){
+		     err.printStackTrace();
+		}
+	}
+	
+	public static <T> T getRandom(Collection<T> coll) {
+	    int num = (int) (Math.random() * coll.size());
+	    for(T t: coll) if (--num < 0) return t;
+	    throw new AssertionError();
 	}
 	
 }

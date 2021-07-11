@@ -1,48 +1,32 @@
 import React from "react";
 import useSnacks from "../hooks/useSnacks";
-
-import { makeStyles } from "@material-ui/core/styles";
+import useStyles from "../styles";
 import {
   Grid,
   Typography,
   InputBase,
   Paper,
   IconButton,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Button,
+  TextField,
 } from "@material-ui/core";
 
-import { useHistory } from "react-router-dom";
-import useStyles from "../styles";
+import SnackCard from "./SnackCard";
 
 const Snacks = () => {
-  const classes = useStyles();
   const [snacks] = useSnacks();
-  const history = useHistory();
-
-  const snackClick = (snack) => {
-    history.push(`/snacks/${snack.id}`);
-  };
 
   return (
     <div>
-      <Grid container className={classes.shop} spacing={2}>
-        <Grid item xs={8}>
-          <Grid container justify="center" spacing={2}>
-            {snacks.map((snack) => (
-              <Grid key={snack} item xs={8} sm={6} md={4}>
-                <Paper
-                  className={classes.shopItem}
-                  onClick={() => snackClick(snack)}
-                >
-                  <Typography variant="h6">{snack.name}</Typography>
-                  <Typography variant="subtitle1">
-                    {snack.description}
-                  </Typography>
-                  <Typography variant="subtitle1">${snack.price}</Typography>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
+      <Grid container spacing={5} justifyContent="center" alignItems="center">
+        {snacks.map((snack) => (
+          <SnackCard snack={snack} />
+        ))}
       </Grid>
     </div>
   );

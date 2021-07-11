@@ -32,11 +32,14 @@ import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
   const { currentUser } = useAuth();
+  const { cart, getItemCount } = useCart();
+
   const accountButtonText = currentUser ? currentUser.username : "Account";
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -84,7 +87,7 @@ const Navbar = () => {
           <Box className={classes.toolbarMenu}>
             <Button size="large" className={classes.margin}>
               <ShoppingCartIcon />
-              Cart (0)
+              Cart ({getItemCount()})
             </Button>
             <Button
               onClick={() => handleClick("/account")}
@@ -97,8 +100,7 @@ const Navbar = () => {
           </Box>
           <Box className={classes.toolbarMenuMobile}>
             <Button size="large" className={classes.shoppingCartButton}>
-              <ShoppingCartIcon />
-              (0)
+              <ShoppingCartIcon />({getItemCount()})
             </Button>
             <Button
               onClick={() => handleClick("/account")}
@@ -114,33 +116,25 @@ const Navbar = () => {
         <Container className={classes.toolbarContainer}>
           <Toolbar className={classes.toolbar2}>
             <Box className={classes.toolbar2Menu}>
-              <Button
-                onClick={() => handleClick("/")}
-                size="large"
-                className={classes.toolbar2MenuItem}
-              >
-                Home
+              <Button onClick={() => handleClick("/")} size="large">
+                <Typography className={classes.toolbar2MenuItem} variant="h6">
+                  Home
+                </Typography>
               </Button>
-              <Button
-                onClick={() => handleClick("/")}
-                size="large"
-                className={classes.toolbar2MenuItem}
-              >
-                Snacks
+              <Button onClick={() => handleClick("/")} size="large">
+                <Typography className={classes.toolbar2MenuItem} variant="h6">
+                  Snacks
+                </Typography>
               </Button>
-              <Button
-                onClick={() => handleClick("/contact")}
-                size="large"
-                className={classes.toolbar2MenuItem}
-              >
-                Subscriptions
+              <Button onClick={() => handleClick("/contact")} size="large">
+                <Typography className={classes.toolbar2MenuItem} variant="h6">
+                  Subscriptions
+                </Typography>
               </Button>
-              <Button
-                onClick={() => handleClick("/contact")}
-                size="large"
-                className={classes.toolbar2MenuItem}
-              >
-                Contact Us
+              <Button onClick={() => handleClick("/contact")} size="large">
+                <Typography className={classes.toolbar2MenuItem} variant="h6">
+                  Contact Us
+                </Typography>
               </Button>
               <Menu
                 id="mobile-menu"
@@ -177,7 +171,6 @@ const Navbar = () => {
             </Box>
             <Paper className={classes.toolbar2SearchContainer}>
               <InputBase
-                //flexGrow={1}
                 className={classes.search}
                 placeholder="Search Snacks"
                 inputProps={{ "aria-label": "search snacks" }}

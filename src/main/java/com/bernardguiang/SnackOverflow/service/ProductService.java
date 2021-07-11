@@ -35,6 +35,11 @@ public class ProductService
 		return productDTOSaved;
 	}
 	
+	public ProductDTO findById(long id){
+		Product product =  productRepository.findById(id).orElseThrow(() -> new IllegalStateException("Could not find product " + id));
+		return productToDTO(product);
+	}
+	
 	public List<ProductDTO> findAll(){
 		Iterable<Product> productsIterator =  productRepository.findAll();
 		

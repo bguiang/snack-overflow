@@ -77,6 +77,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   toolbar2: {
+    [theme.breakpoints.up("sm")]: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
     paddingTop: 10,
     paddingBottom: 10,
     flex: 1,
@@ -91,11 +95,13 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
     },
     flex: 1,
-    justifyContent: "flex-start",
+    //justifyContent: "flex-start",
+    justifyContent: "space-between",
     padding: "2px 4px",
     alignItems: "center",
   },
   toolbar2MenuItem: {
+    textTransform: "capitalize",
     fontWeight: "bold",
     color: "white",
   },
@@ -111,15 +117,23 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   toolbar2SearchContainer: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: 0,
       flex: 1,
       marginRight: 36,
     },
     [theme.breakpoints.up("md")]: {
-      flex: 1,
-      marginRight: 32,
+      marginLeft: "10%",
+      width: 375,
+      //marginRight: 32,
+      marginRight: 24,
     },
-    width: 400,
+    [theme.breakpoints.up("lg")]: {
+      marginLeft: "10%",
+      width: 450,
+      //marginRight: 32,
+      marginRight: 0,
+    },
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
@@ -131,16 +145,6 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     backgroundColor: theme.palette.primary.main,
     height: 50,
-  },
-  shop: {
-    flexGrow: 1,
-  },
-  shopItem: {
-    height: 200,
-    width: 150,
-  },
-  control: {
-    padding: theme.spacing(2),
   },
   loginSignUp: {
     display: "flex",
@@ -173,6 +177,34 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     display: "flex",
   },
+  snackCardContainer: {
+    display: "flex",
+  },
+  snackCard: {
+    flex: 1,
+  },
+  snackCardImage: {
+    height: 140,
+  },
+  snackCardContent: {
+    height: 200,
+    overflow: "hidden",
+  },
+  snackCardActions: {
+    marginTop: 4,
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  snackCardQuantity: {
+    width: 80,
+  },
+  snackPageContainer: { display: "flex" },
+  snackPageImageContainer: {},
+  snackPageImage: {
+    minHeight: 250,
+    flex: 1,
+  },
+  snackPageDetailsContainer: {},
 }));
 
 export default useStyles;

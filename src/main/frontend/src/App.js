@@ -16,6 +16,7 @@ import {
 } from "@material-ui/core/styles";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import { CartProvider } from "./context/CartContext";
 
 function App() {
   // Theme colors
@@ -58,48 +59,42 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <div className={classes.app}>
-            <Navbar />
-            <main className={classes.main}>
-              <Container className={classes.container} maxWidth="lg">
-                <Switch>
-                  <Route path="/snacks/:id">
-                    <Snack />
-                  </Route>
-                  <Route path="/about">
-                    <Snack />
-                  </Route>
-                  <Route path="/contact">
-                    <Snack />
-                  </Route>
-                  <Route path="/login">
-                    <LoginSignup />
-                  </Route>
-                  <PrivateRoute path="/account">
-                    <Account />
-                  </PrivateRoute>
-                  <Route path="/">
-                    <Snacks />
-                  </Route>
-                </Switch>
-              </Container>
-            </main>
-            <Footer />
-          </div>
-        </Router>
+        <CartProvider>
+          <CssBaseline />
+          <Router>
+            <div className={classes.app}>
+              <Navbar />
+              <main className={classes.main}>
+                <Container className={classes.container} maxWidth="lg">
+                  <Switch>
+                    <Route path="/snacks/:id">
+                      <Snack />
+                    </Route>
+                    <Route path="/about">
+                      <Snack />
+                    </Route>
+                    <Route path="/contact">
+                      <Snack />
+                    </Route>
+                    <Route path="/login">
+                      <LoginSignup />
+                    </Route>
+                    <PrivateRoute path="/account">
+                      <Account />
+                    </PrivateRoute>
+                    <Route path="/">
+                      <Snacks />
+                    </Route>
+                  </Switch>
+                </Container>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </CartProvider>
       </ThemeProvider>
     </AuthProvider>
   );
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Contact() {
-  return <h2>Contact</h2>;
 }
 
 export default App;

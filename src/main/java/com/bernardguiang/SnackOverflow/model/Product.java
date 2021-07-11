@@ -27,6 +27,7 @@ public class Product {
 	private String name;
 	
 	@NotBlank
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	
 	@NotNull

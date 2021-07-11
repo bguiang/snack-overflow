@@ -1,53 +1,87 @@
 import React from "react";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import { useState, useEffect, useReducer } from "react";
 import SnackOverflow from "../api/SnackOverflow";
+import { useParams } from "react-router-dom";
+import useSnack from "../hooks/useSnack";
+import useStyles from "../styles";
 import {
-    useParams
-  } from "react-router-dom";
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      height: 200,
-      width: 150,
-    },
-    control: {
-      padding: theme.spacing(2),
-    },
-  }));
-
-  
+  Grid,
+  Typography,
+  TextField,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Button,
+} from "@material-ui/core";
+import { useCart } from "../context/CartContext";
 
 const Snack = () => {
-    const classes = useStyles();
-    let { id } = useParams();
-    const [snack, setSnack]  = useState({});
+  const classes = useStyles();
+  let { id } = useParams();
+  const [snack] = useSnack(id);
+  const { addItem } = useCart();
+  const [quantity, setQuantity] = useState(1);
 
-    const getSnacks = async () => {
-        try {
-            let response = await SnackOverflow.get(`/products/${id}`);
-            setSnack(response.data);
-            console.log(response.data);
-        } 
-        catch (error) {
-            console.log(error);
-        }
-    };
+  const addToCartClick = (snack) => {
+    if (!isNaN(quantity) && quantity > 0)
+      addItem({ quantity, productId: snack.id, name: snack.name });
+  };
 
-    // Call Get Snacks Once
-    useEffect(() => {
-        getSnacks();
-    },[])
-
-    return (
-        <div>
-            <h3>Snacks</h3>
-        </div>
-    );
-}
+  return (
+    <div>
+      <Grid container spacing={2} justifyContent="center" alignItems="center">
+        <Grid item className={classes.snackPageImageContainer} xs={12} sm={5}>
+          <CardMedia
+            className={classes.snackPageImage}
+            image={snack.images ? snack.images[0] : null}
+            title={snack.name}
+          />
+        </Grid>
+        <Grid item className={classes.snackPageDetailsContainer} xs={12} sm={5}>
+          <Typography gutterBottom variant="h5" component="h5">
+            {snack.name}
+          </Typography>
+          <Typography variant="h6" component="h6">
+            ${snack.price ? snack.price.toFixed(2) : "0.00"}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.snackCardDescription}
+          >
+            {snack.description}
+          </Typography>
+          <CardActions className={classes.snackCardActions}>
+            <TextField
+              className={classes.snackCardQuantity}
+              label="Quantity"
+              variant="outlined"
+              size="small"
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={(event) => {
+                let val = parseInt(event.target.value);
+                if (isNaN(val)) val = 1;
+                if (val < 1) val = 1;
+                setQuantity(val);
+              }}
+            />
+            <Button
+              size="small"
+              color="primary"
+              onClick={() => addToCartClick(snack)}
+            >
+              Add To Cart
+            </Button>
+          </CardActions>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
 
 export default Snack;
