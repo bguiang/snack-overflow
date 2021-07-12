@@ -161,7 +161,7 @@ export function CartProvider({ children }) {
     return cartTotal.toFixed(2);
   };
 
-  const getSnacks = async (cartItemIds) => {
+  const getSnacksById = async (cartItemIds) => {
     try {
       let response = await SnackOverflow.get(
         `/products?productIds=${cartItemIds.toString()}`
@@ -180,7 +180,7 @@ export function CartProvider({ children }) {
       cartItemIds.push(cart[i].productId);
     }
 
-    let cartItemInfo = await getSnacks(cartItemIds);
+    let cartItemInfo = await getSnacksById(cartItemIds);
     console.log("INFO ON CART PRODUCTS");
     console.log(cartItemInfo);
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useState, useEffect } from "react";
 import useStyles from "../styles";
 import {
   Grid,
@@ -18,7 +18,7 @@ const Cart = () => {
   const classes = useStyles();
   const { getCartInfo } = useCart();
 
-  console.log(JSON.stringify(getCartInfo()));
+  const [cartInfo, setCartInfo] = useState({items:[]});
 
   const history = useHistory();
 
@@ -26,17 +26,28 @@ const Cart = () => {
     history.push(`/snacks/${snack.id}`);
   };
 
+  useEffect(() => {
+    const fetchCartInfo = async() => {
+      let info = await getCartInfo(); 
+      setCartInfo(info);
+      console.log(info)
+    }
+
+    fetchCartInfo()
+  }, [])
+
+  console.log("RENDER")
   return (
     <div>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        {/* {cart.map((cartItem) => (
+        {cartInfo.items.map((cartItem) => (
           <Grid
             item
             className={classes.snackCardContainer}
             xs={12}
             sm={5}
             md={4}
-            key={snack.id}
+            key={cartItem.product.id}
           >
             <Card className={classes.snackCard}>
               <CardActionArea
@@ -44,15 +55,15 @@ const Cart = () => {
               >
                 <CardMedia
                   className={classes.snackCardImage}
-                  image={snack.images[0] ? snack.images[0] : null}
-                  title={snack.name}
+                  image={cartItem.product.images[0] ? cartItem.product.images[0] : null}
+                  title={cartItem.product.name}
                 />
                 <CardContent className={classes.snackCardContent}>
                   <Typography gutterBottom variant="h5" component="h5">
-                    {snack.name}
+                    {cartItem.product.name}
                   </Typography>
                   <Typography variant="h6" component="h6">
-                    ${snack.price.toFixed(2)}
+                    ${cartItem.product.price.toFixed(2)}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -60,37 +71,13 @@ const Cart = () => {
                     component="p"
                     className={classes.snackCardDescription}
                   >
-                    {snack.description}
+                    {cartItem.product.description}
                   </Typography>
                 </CardContent>
               </CardActionArea>
-              <CardActions className={classes.snackCardActions}>
-                <TextField
-                  className={classes.snackCardQuantity}
-                  label="Quantity"
-                  variant="outlined"
-                  size="small"
-                  type="number"
-                  min={1}
-                  value={quantity}
-                  onChange={(event) => {
-                    let val = parseInt(event.target.value);
-                    if (isNaN(val)) val = 1;
-                    if (val < 1) val = 1;
-                    setQuantity(val);
-                  }}
-                />
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={() => addToCartClick(snack)}
-                >
-                  Add To Cart
-                </Button>
-              </CardActions>
             </Card>
           </Grid>
-        ))} */}
+        ))}
       </Grid>
     </div>
   );
