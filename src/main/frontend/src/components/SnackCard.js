@@ -53,12 +53,7 @@ const SnackCard = ({ snack }) => {
             <Typography variant="h6" component="h6">
               ${snack.price.toFixed(2)}
             </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              className={classes.snackCardDescription}
-            >
+            <Typography variant="body2" color="textSecondary" component="p">
               {snack.description}
             </Typography>
           </CardContent>

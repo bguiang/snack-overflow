@@ -209,6 +209,7 @@ export function CartProvider({ children }) {
   };
 
   const cartContextValue = {
+    cart,
     getCartInfo,
     addItem,
     removeItem,

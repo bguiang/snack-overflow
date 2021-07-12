@@ -32,26 +32,21 @@ const Snack = () => {
   return (
     <div>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item className={classes.snackPageImageContainer} xs={12} sm={5}>
+        <Grid item xs={12} sm={5}>
           <CardMedia
             className={classes.snackPageImage}
             image={snack.images ? snack.images[0] : null}
             title={snack.name}
           />
         </Grid>
-        <Grid item className={classes.snackPageDetailsContainer} xs={12} sm={5}>
+        <Grid item xs={12} sm={5}>
           <Typography gutterBottom variant="h5" component="h5">
             {snack.name}
           </Typography>
           <Typography variant="h6" component="h6">
             ${snack.price ? snack.price.toFixed(2) : "0.00"}
           </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="p"
-            className={classes.snackCardDescription}
-          >
+          <Typography variant="body2" color="textSecondary" component="p">
             {snack.description}
           </Typography>
           <CardActions className={classes.snackCardActions}>

@@ -199,12 +199,37 @@ const useStyles = makeStyles((theme) => ({
     width: 80,
   },
   snackPageContainer: { display: "flex" },
-  snackPageImageContainer: {},
   snackPageImage: {
     minHeight: 250,
     flex: 1,
   },
-  snackPageDetailsContainer: {},
+  cartItemCard: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cartItemCardActionArea: {
+    display: "flex",
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  cartItemCardImage: {
+    height: 100,
+    width: 100,
+    margin: 16,
+  },
+  cartItemName: {
+    flex: 1,
+  },
+  cartItemQuantity: {
+    width: 100,
+  },
+  cartItemCardActions: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
 }));
 
 export default useStyles;
