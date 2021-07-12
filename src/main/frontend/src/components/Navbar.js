@@ -38,7 +38,7 @@ const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
   const { currentUser } = useAuth();
-  const { cart, getItemCount } = useCart();
+  const { getItemCount } = useCart();
 
   const accountButtonText = currentUser ? currentUser.username : "Account";
 
@@ -85,7 +85,11 @@ const Navbar = () => {
             />
           </Box>
           <Box className={classes.toolbarMenu}>
-            <Button size="large" className={classes.margin}>
+            <Button
+              size="large"
+              className={classes.margin}
+              onClick={() => handleClick("/cart")}
+            >
               <ShoppingCartIcon />
               Cart ({getItemCount()})
             </Button>
@@ -99,7 +103,11 @@ const Navbar = () => {
             </Button>
           </Box>
           <Box className={classes.toolbarMenuMobile}>
-            <Button size="large" className={classes.shoppingCartButton}>
+            <Button
+              size="large"
+              className={classes.shoppingCartButton}
+              onClick={() => handleClick("/cart")}
+            >
               <ShoppingCartIcon />({getItemCount()})
             </Button>
             <Button

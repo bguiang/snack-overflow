@@ -3,7 +3,9 @@ package com.bernardguiang.SnackOverflow.controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -51,6 +53,16 @@ public class ProductController
 	public ProductDTO getProductById(@PathVariable long productId) 
 	{
 		return productService.findById(productId);
+	}
+	@GetMapping(params="productIds")
+	public Map<Long, ProductDTO> getProductsByIds(@RequestParam List<Long> productIds) 
+	{
+		Map<Long, ProductDTO> idToProductMap = new HashMap<>();
+		for(Long id : productIds) {
+			ProductDTO productInfo = productService.findById(id);
+			idToProductMap.put(id, productInfo);
+		}
+		return idToProductMap;
 	}
 	
 	@PostMapping

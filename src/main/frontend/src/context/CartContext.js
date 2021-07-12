@@ -1,3 +1,4 @@
+import { AcUnitTwoTone } from "@material-ui/icons";
 import React, {
   useContext,
   useState,
@@ -5,6 +6,7 @@ import React, {
   useEffect,
   useReducer,
 } from "react";
+import SnackOverflow from "../api/SnackOverflow";
 
 const SNACK_OVERFLOW_CART = "snackoverflow-cart";
 
@@ -47,8 +49,8 @@ const cartReducer = (state, action) => {
       } else {
         console.log("CART ITEM NOT MATCHED, ADD NEW ITEM");
         let newItem = {
+          productName: action.productName,
           productId: action.productId,
-          name: action.name,
           quantity: action.quantity,
         };
         state.push(newItem);
@@ -112,9 +114,9 @@ export function CartProvider({ children }) {
     localStorage.setItem(SNACK_OVERFLOW_CART, JSON.stringify(cart));
   }, [cart]);
 
-  const addItem = ({ quantity, productId, name }) => {
+  const addItem = ({ quantity, productId, productName }) => {
     console.log("addItem: " + productId + ", " + "x" + quantity);
-    let action = { type: ACTIONS.ADD_ITEM, quantity, productId, name };
+    let action = { type: ACTIONS.ADD_ITEM, quantity, productId, productName };
     dispatch(action);
   };
 
@@ -147,18 +149,67 @@ export function CartProvider({ children }) {
     return cartItemCount;
   };
 
-  const getCartTotal = () => {
+  const getCartTotal = (cartItems) => {
+    console.log("Calculating Cart Total");
     let i;
     let cartTotal = 0;
-    for (i = 0; i < cart.length; i++) {
-      let item = cart[i];
-      cartTotal += item.quantity * item.price;
+    for (i = 0; i < cartItems.length; i++) {
+      let item = cartItems[i];
+      console.log("Item: " + JSON.stringify(item));
+      cartTotal += item.quantity * item.product.price;
     }
     return cartTotal.toFixed(2);
   };
 
+  const getSnacks = async (cartItemIds) => {
+    try {
+      let response = await SnackOverflow.get(
+        `/products?productIds=${cartItemIds.toString()}`
+      );
+      console.log("Returning getSnacks reponse...");
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCartInfo = async () => {
+    let cartItemIds = [];
+    let i;
+    for (i = 0; i < cart.length; i++) {
+      cartItemIds.push(cart[i].productId);
+    }
+
+    let cartItemInfo = await getSnacks(cartItemIds);
+    console.log("INFO ON CART PRODUCTS");
+    console.log(cartItemInfo);
+
+    // Build Cart Info
+    let updatedCart = {};
+
+    let cartItems = [];
+
+    // Set Items
+    for (i = 0; i < cart.length; i++) {
+      let cartItem = {};
+      // Quantity
+      cartItem.quantity = cart[i].quantity;
+      // Product Info
+      cartItem.product = cartItemInfo[cart[i].productId];
+
+      cartItems.push(cartItem);
+    }
+    updatedCart.items = cartItems;
+
+    // Total
+    let cartTotal = getCartTotal(cartItems);
+    updatedCart.total = cartTotal;
+
+    return updatedCart;
+  };
+
   const cartContextValue = {
-    cart,
+    getCartInfo,
     addItem,
     removeItem,
     updateItemQuantity,

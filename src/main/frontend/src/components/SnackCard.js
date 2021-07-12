@@ -27,8 +27,9 @@ const SnackCard = ({ snack }) => {
 
   const addToCartClick = (snack) => {
     if (!isNaN(quantity) && quantity > 0)
-      addItem({ quantity, productId: snack.id, name: snack.name });
+      addItem({ quantity, productId: snack.id, productName: snack.name });
   };
+
   return (
     <Grid
       item

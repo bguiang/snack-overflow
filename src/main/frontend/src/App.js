@@ -17,6 +17,7 @@ import {
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import { CartProvider } from "./context/CartContext";
+import Cart from "./components/Cart";
 
 function App() {
   // Theme colors
@@ -78,6 +79,9 @@ function App() {
                     </Route>
                     <Route path="/login">
                       <LoginSignup />
+                    </Route>
+                    <Route path="/cart">
+                      <Cart />
                     </Route>
                     <PrivateRoute path="/account">
                       <Account />
