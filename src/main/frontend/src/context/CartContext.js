@@ -58,23 +58,25 @@ const cartReducer = (state, action) => {
       console.log(state);
       return Array.from(state);
     }
-    case ACTIONS.ACTIONSREMOVE_ITEM: {
+    case ACTIONS.REMOVE_ITEM: {
       let cartItemMatchedIndex = findCartItemIndexByProductId(
         state,
         action.productId
       );
-      if (cartItemMatchedIndex) {
+      if (cartItemMatchedIndex !== null) {
         state.splice(cartItemMatchedIndex, 1);
       }
       return Array.from(state);
     }
     case ACTIONS.UPDATE_ITEM_QUANTITY: {
+      console.log("UPDATE_ITEM_QUANTITY");
       let cartItemMatchedIndex = findCartItemIndexByProductId(
         state,
         action.productId
       );
-      if (cartItemMatchedIndex) {
+      if (cartItemMatchedIndex !== null) {
         state[cartItemMatchedIndex].quantity = action.quantity;
+      } else {
       }
       return Array.from(state);
     }
@@ -155,7 +157,6 @@ export function CartProvider({ children }) {
     let cartTotal = 0;
     for (i = 0; i < cartItems.length; i++) {
       let item = cartItems[i];
-      console.log("Item: " + JSON.stringify(item));
       cartTotal += item.quantity * item.product.price;
     }
     return cartTotal.toFixed(2);
@@ -166,7 +167,6 @@ export function CartProvider({ children }) {
       let response = await SnackOverflow.get(
         `/products?productIds=${cartItemIds.toString()}`
       );
-      console.log("Returning getSnacks reponse...");
       return response.data;
     } catch (error) {
       console.log(error);
@@ -181,7 +181,7 @@ export function CartProvider({ children }) {
     }
 
     let cartItemInfo = await getSnacksById(cartItemIds);
-    console.log("INFO ON CART PRODUCTS");
+    console.log("CART INFO");
     console.log(cartItemInfo);
 
     // Build Cart Info

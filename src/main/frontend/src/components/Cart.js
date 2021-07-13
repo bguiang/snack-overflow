@@ -15,6 +15,7 @@ import {
 import { useCart } from "../context/CartContext";
 import { useHistory } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CartItem from "./CartItem";
 
 const Cart = () => {
   const classes = useStyles();
@@ -34,76 +35,24 @@ const Cart = () => {
     fetchCartInfo();
   }, [cart]);
 
-  const itemClick = (snack) => {
-    history.push(`/snacks/${snack.id}`);
+  const handleClick = (url) => {
+    history.push(url);
   };
-
-  const updateClick = () => {};
-
   return (
     <div>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={10} key="title">
-          <h2>Shopping Cart</h2>
-          <Button>Checkout</Button>
+        <Grid item xs={12} md={10} key="title" className={classes.cartHeader}>
+          <h2 className={classes.cartHeaderTitle}>Shopping Cart</h2>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleClick("/checkout")}
+          >
+            Checkout
+          </Button>
         </Grid>
         {cartInfo.items.map((cartItem) => (
-          <Grid item xs={10} key={cartItem.product.id}>
-            <Card className={classes.cartItemCard}>
-              <CardActionArea
-                className={classes.cartItemCardActionArea}
-                onClick={() => itemClick(`/snack/${cartItem.product.id}`)}
-              >
-                <CardMedia
-                  className={classes.cartItemCardImage}
-                  image={
-                    cartItem.product.images[0]
-                      ? cartItem.product.images[0]
-                      : null
-                  }
-                  title={cartItem.product.name}
-                />
-                <Typography
-                  variant="h5"
-                  component="h5"
-                  className={classes.cartItemName}
-                >
-                  {cartItem.product.name}
-                </Typography>
-                <Typography variant="h6" component="h6">
-                  ${cartItem.product.price.toFixed(2)}
-                </Typography>
-              </CardActionArea>
-              <CardActions className={classes.cartItemCardActions}>
-                <TextField
-                  className={classes.cartItemQuantity}
-                  label="Quantity"
-                  variant="outlined"
-                  size="large"
-                  type="number"
-                  min={1}
-                  value={1}
-                  // value={quantity}
-                  // onChange={(event) => {
-                  //   let val = parseInt(event.target.value);
-                  //   if (isNaN(val)) val = 1;
-                  //   if (val < 1) val = 1;
-                  //   setQuantity(val);
-                  // }}
-                />
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={() => updateClick(cartItem)}
-                >
-                  Update
-                </Button>
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              </CardActions>
-            </Card>
-          </Grid>
+          <CartItem cartItem={cartItem} />
         ))}
       </Grid>
     </div>

@@ -203,9 +203,20 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 250,
     flex: 1,
   },
+  cartHeader: {
+    display: "flex",
+  },
+  cartHeaderTitle: {
+    flex: 1,
+  },
   cartItemCard: {
     display: "flex",
-    flexDirection: "row",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+    },
     alignItems: "center",
   },
   cartItemCardActionArea: {
@@ -223,12 +234,16 @@ const useStyles = makeStyles((theme) => ({
   cartItemName: {
     flex: 1,
   },
+  cartItemPrice: { paddingLeft: 8, paddingRight: 8 },
   cartItemQuantity: {
     width: 100,
   },
   cartItemCardActions: {
     display: "flex",
     justifyContent: "flex-end",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
 }));
 
