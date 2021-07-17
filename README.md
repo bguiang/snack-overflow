@@ -1,6 +1,7 @@
 # SnackOverflow
 
 #Environment Setup
+
 The React frontend stores the stripe public api key in src/main/frontend/.env but is gitignored
 - create a ".env" file in the root folder of the react frontend and add a variable called "REACT_APP_STRIPE_PUBLIC_KEY" and set it equal to your Stripe publishable key
 
