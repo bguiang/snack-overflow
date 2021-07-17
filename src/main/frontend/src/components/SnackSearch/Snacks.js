@@ -1,5 +1,5 @@
 import React from "react";
-import useSnacks from "../hooks/useSnacks";
+import useSnacks from "../../hooks/useSnacks";
 import { Grid } from "@material-ui/core";
 
 import SnackCard from "./SnackCard";
@@ -11,7 +11,7 @@ const Snacks = () => {
     <div>
       <Grid container spacing={5} justifyContent="center" alignItems="center">
         {snacks.map((snack) => (
-          <SnackCard snack={snack} />
+          <SnackCard snack={snack} key={snack.id} />
         ))}
       </Grid>
     </div>

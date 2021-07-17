@@ -1,41 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import useStyles from "../styles";
-import { useAuth } from "../context/AuthContext";
-import SnackOverflow from "../api/SnackOverflow";
+import useStyles from "../../styles";
+import { useAuth } from "../../context/AuthContext";
+import SnackOverflow from "../../api/SnackOverflow";
 import { useHistory, useLocation } from "react-router-dom";
 
 const LoginSignup = () => {
-  const { currentuser, login } = useAuth();
+  const { currentUser, login } = useAuth();
   const classes = useStyles();
   return (
     <div className={classes.loginSignUp}>
-      <Login login={login} classes={classes} />
+      <Login login={login} classes={classes} currentUser={currentUser} />
       <div className={classes.flexLineBetween}></div>
       <SignUp classes={classes} />
     </div>
   );
 };
 
-const Login = ({ login, classes }) => {
+const Login = ({ login, classes, currentUser }) => {
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  // Send User to landing page "/" or to previous route if it was a private route
+  const callback = () => {
+    history.replace(from);
+  };
+
+  // Handle both login and soft token refresh on background. currently stuck on login page on page refresh which nulls the AuthContext values until the refresh is called
+  useEffect(() => {
+    if (currentUser !== null) {
+      callback();
+    }
+  }, [currentUser]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const callback = () => {
-      console.log("Calling history.replace");
-      history.replace(from);
-    };
-    login(username, password, callback);
+    login(username, password);
   };
   return (
     <Container component="main" maxWidth="xs">

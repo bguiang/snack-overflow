@@ -7,12 +7,12 @@ import { Route, Redirect } from "react-router-dom";
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 function PrivateRoute({ children, ...rest }) {
-  let auth = useAuth();
+  let { currentUser } = useAuth();
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.currentUser ? ( // check if authenticated
+        currentUser ? ( // check if authenticated
           children
         ) : (
           <Redirect

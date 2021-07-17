@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
-import useStyles from "../styles";
+import React, { useState } from "react";
+import useStyles from "../../styles";
 import {
   Grid,
   Typography,
   Card,
   CardActionArea,
   CardActions,
-  CardContent,
   CardMedia,
   Button,
   TextField,
   IconButton,
 } from "@material-ui/core";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import { useHistory } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 

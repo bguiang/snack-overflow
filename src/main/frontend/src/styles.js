@@ -245,6 +245,9 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+  checkoutForm: {
+    flex: 1,
+  },
 }));
 
 export default useStyles;

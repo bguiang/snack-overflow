@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,6 +44,9 @@ public class ProductController
 	
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private Environment env;
 	
 	@GetMapping
 	public List<ProductDTO> getProducts() 
@@ -139,8 +143,9 @@ public class ProductController
 		prices.add(new BigDecimal("0.50"));
 		
 		RestTemplate restTemplate = new RestTemplate();
+		String unsplashAccessToken = env.getProperty("unsplash_access_token");
 		ResponseEntity<String> response = 
-				restTemplate.getForEntity("https://api.unsplash.com/search/photos?query=snack&client_id=c2NQDAjFaYJlpeiF7tbI-txpgQLMnQ6Zgl1g0WdAwn4&per_page=30", String.class);
+				restTemplate.getForEntity("https://api.unsplash.com/search/photos?query=snack&client_id=" + unsplashAccessToken +"&per_page=30", String.class);
 		
 		String responseString = response.getBody();
 		

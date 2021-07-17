@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useStyles from "../styles";
+import useStyles from "../../styles";
 import {
   Grid,
   Typography,
@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 
 import { useHistory } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 
 const SnackCard = ({ snack }) => {
   const classes = useStyles();

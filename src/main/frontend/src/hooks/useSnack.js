@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect } from "react";
 import SnackOverflow from "../api/SnackOverflow";
 
 export default (id) => {
@@ -8,7 +8,6 @@ export default (id) => {
     try {
       let response = await SnackOverflow.get(`/products/${id}`);
       setSnack(response.data);
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }

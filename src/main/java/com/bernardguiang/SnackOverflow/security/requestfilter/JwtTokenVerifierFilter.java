@@ -36,7 +36,6 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 	}
 	
 	public static String getBody(HttpServletRequest request) throws IOException {
-
 	    String body = null;
 	    StringBuilder stringBuilder = new StringBuilder();
 	    BufferedReader bufferedReader = null;
@@ -72,8 +71,6 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
-		//System.out.println("Request Body: " + getBody(request));
 		
 		// Get Token From Request Header
 		String authorizationHeader = request.getHeader("Authorization");
@@ -88,6 +85,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 			// We don't reject here for the case where the User is getting his/her username and password authenticated to get a token back (login)
 			
 			// Pass on request and response to the next filter and initiate
+			System.out.println("Verifying JWT: AUTH IS NULL OR EMPTY");
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -144,7 +142,6 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 			// IF no errors are thrown when parsing the token claims, then the JWT is valid
 			// Set this request as authenticated
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			
 			// Pass on request and response to the next filter and initiate
 			filterChain.doFilter(request, response);
 			return;

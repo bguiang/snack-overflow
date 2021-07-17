@@ -1,21 +1,18 @@
 import React from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
-import { useState, useEffect, useReducer } from "react";
-import SnackOverflow from "../api/SnackOverflow";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import useSnack from "../hooks/useSnack";
-import useStyles from "../styles";
+import useSnack from "../../hooks/useSnack";
+import useStyles from "../../styles";
 import {
   Grid,
   Typography,
   TextField,
   CardActions,
-  CardContent,
   CardMedia,
   Button,
 } from "@material-ui/core";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 
 const Snack = () => {
   const classes = useStyles();
@@ -33,11 +30,13 @@ const Snack = () => {
     <div>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} sm={5}>
-          <CardMedia
-            className={classes.snackPageImage}
-            image={snack.images ? snack.images[0] : null}
-            title={snack.name}
-          />
+          {snack.images ? (
+            <CardMedia
+              image={snack.images[0]}
+              className={classes.snackPageImage}
+              title={snack.name}
+            />
+          ) : null}
         </Grid>
         <Grid item xs={12} sm={5}>
           <Typography gutterBottom variant="h5" component="h5">

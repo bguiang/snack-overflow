@@ -1,13 +1,6 @@
 import "./App.css";
-import { useState } from "react";
 import "@fontsource/roboto";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Snacks from "./components/Snacks";
-import Snack from "./components/Snack";
-import Footer from "./components/Footer";
-import LoginSignup from "./components/LoginSignup";
-import Account from "./components/Account";
 import { CssBaseline, Container } from "@material-ui/core";
 import {
   ThemeProvider,
@@ -17,8 +10,15 @@ import {
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import { CartProvider } from "./context/CartContext";
-import Cart from "./components/Cart";
-import Checkout from "./components/Checkout";
+
+import Navbar from "./components/Navbar";
+import Snacks from "./components/SnackSearch/Snacks";
+import Snack from "./components/SnackPage/Snack";
+import Footer from "./components/Footer";
+import LoginSignup from "./components/Account/LoginSignup";
+import Account from "./components/Account/LoginSignup";
+import Cart from "./components/Cart/Cart";
+import Checkout from "./components/Checkout/Checkout";
 
 function App() {
   // Theme colors

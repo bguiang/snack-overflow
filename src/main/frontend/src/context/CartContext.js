@@ -22,15 +22,11 @@ const ACTIONS = {
 const CartContext = createContext();
 
 const findCartItemIndexByProductId = (cart, productId) => {
-  console.log("findCartItemIndexByProductId()");
   let i;
   for (i = 0; i < cart.length; i++) {
-    console.log("INDEX: " + i + ", Item: " + JSON.stringify(cart[i]));
     if (cart[i].productId === productId) {
-      console.log("MATCHED!!!!!!!!!!!!!!!!!");
       return i;
     }
-    console.log("NOT MATCHED");
   }
   return null;
 };
@@ -38,16 +34,13 @@ const findCartItemIndexByProductId = (cart, productId) => {
 const cartReducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.ADD_ITEM: {
-      console.log("ADD ITEM WITH ID: " + action.productId);
       let cartItemMatchedIndex = findCartItemIndexByProductId(
         state,
         action.productId
       );
       if (cartItemMatchedIndex !== null) {
-        console.log("CART ITEM MATCHED, ADD TO QUANTITY");
         state[cartItemMatchedIndex].quantity += action.quantity;
       } else {
-        console.log("CART ITEM NOT MATCHED, ADD NEW ITEM");
         let newItem = {
           productName: action.productName,
           productId: action.productId,
@@ -55,7 +48,6 @@ const cartReducer = (state, action) => {
         };
         state.push(newItem);
       }
-      console.log(state);
       return Array.from(state);
     }
     case ACTIONS.REMOVE_ITEM: {
@@ -69,7 +61,6 @@ const cartReducer = (state, action) => {
       return Array.from(state);
     }
     case ACTIONS.UPDATE_ITEM_QUANTITY: {
-      console.log("UPDATE_ITEM_QUANTITY");
       let cartItemMatchedIndex = findCartItemIndexByProductId(
         state,
         action.productId
@@ -106,18 +97,15 @@ export function CartProvider({ children }) {
 
   // Load Cart Data from Local Storage on mount
   useEffect(() => {
-    console.log("App Reloaded, Load Cart From LocalStorage");
     loadCart();
   }, []);
 
   // Save Cart to Local Storage whenever Cart is Updated
   useEffect(() => {
-    console.log("Cart Updated, Save Cart to LocalStorage");
     localStorage.setItem(SNACK_OVERFLOW_CART, JSON.stringify(cart));
   }, [cart]);
 
   const addItem = ({ quantity, productId, productName }) => {
-    console.log("addItem: " + productId + ", " + "x" + quantity);
     let action = { type: ACTIONS.ADD_ITEM, quantity, productId, productName };
     dispatch(action);
   };
@@ -152,7 +140,6 @@ export function CartProvider({ children }) {
   };
 
   const getCartTotal = (cartItems) => {
-    console.log("Calculating Cart Total");
     let i;
     let cartTotal = 0;
     for (i = 0; i < cartItems.length; i++) {
@@ -181,8 +168,6 @@ export function CartProvider({ children }) {
     }
 
     let cartItemInfo = await getSnacksById(cartItemIds);
-    console.log("CART INFO");
-    console.log(cartItemInfo);
 
     // Build Cart Info
     let updatedCart = {};
