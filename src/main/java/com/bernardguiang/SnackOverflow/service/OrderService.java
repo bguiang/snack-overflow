@@ -5,11 +5,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
 import com.bernardguiang.SnackOverflow.dto.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.OrderItemDTO;
+import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
+import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
+import com.bernardguiang.SnackOverflow.model.OrderStatus;
 import com.bernardguiang.SnackOverflow.model.Product;
+import com.bernardguiang.SnackOverflow.model.ShippingDetails;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.OrderRepository;
 import com.bernardguiang.SnackOverflow.repository.ProductRepository;
@@ -56,12 +61,13 @@ public class OrderService {
 		dto.setItems(itemDTOs);
 		dto.setCreatedDate(order.getCreatedDate());
 		dto.setNotes(order.getNotes());
-		dto.setBillingName(order.getBillingName());
-		dto.setBillingAddress(order.getBillingAddress());
-		dto.setShippingName(order.getShippingName());
-		dto.setShippingAddress(order.getShippingAddress());
+		BillingDetailsDTO billing = entityToBillingDetailsDTO(order.getBillingDetails());
+		dto.setBillingDetails(billing);
+		ShippingDetailsDTO shipping = entityToShippingDetailsDTO(order.getShippingDetails());
+		dto.setShippingDetails(shipping);
 		dto.setShippingSameAsBilling(order.isShippingSameAsBilling());
 		dto.setUserId(order.getUser().getId());
+		dto.setStatus(order.getStatus());
 		
 		return dto;
 	}
@@ -89,15 +95,78 @@ public class OrderService {
 		order.setId(orderDTO.getId());
 		order.setItems(items);
 		order.setCreatedDate(orderDTO.getCreatedDate());
-		order.setBillingName(orderDTO.getBillingName());
-		order.setBillingAddress(orderDTO.getBillingAddress());
-		order.setShippingName(orderDTO.getShippingName());
-		order.setShippingAddress(orderDTO.getShippingAddress());
+		order.setBillingDetails(dtoToBillingDetails(orderDTO.getBillingDetails()));
+		order.setShippingDetails(dtoToShippingDetails(orderDTO.getShippingDetails()));
 		order.setShippingSameAsBilling(orderDTO.isShippingSameAsBilling());
 		order.setNotes(orderDTO.getNotes());
 		order.setUser(user);
+		if(orderDTO.getStatus() != null)
+			order.setStatus(orderDTO.getStatus());
 		
 		return order;
 	}
+	
+	
+	private BillingDetailsDTO entityToBillingDetailsDTO(BillingDetails billingDetails) {
+		if(billingDetails == null)
+			return null;
+		
+		BillingDetailsDTO dto = new BillingDetailsDTO();
+		dto.setId(billingDetails.getId());
+		dto.setAddress(billingDetails.getAddress());
+		dto.setName(billingDetails.getName());
+		dto.setPhone(billingDetails.getPhone());
+		dto.setEmail(billingDetails.getEmail());
+		dto.setOrderId(billingDetails.getOrder().getId());
+		
+		return dto;
+	}
+	
+	private BillingDetails dtoToBillingDetails(BillingDetailsDTO dto) {
+		
+		Order order = orderRepository.findById(dto.getOrderId())
+				.orElseThrow(() -> new IllegalStateException("Could not find order with id: " + dto.getOrderId()));
+		
+		BillingDetails entity = new BillingDetails();
+		entity.setId(dto.getId());
+		entity.setAddress(dto.getAddress());
+		entity.setOrder(order);
+		entity.setEmail(dto.getEmail());
+		entity.setPhone(dto.getPhone());
+		entity.setName(dto.getName());
+		
+		return entity;
+	}
+
+	
+	private ShippingDetailsDTO entityToShippingDetailsDTO(ShippingDetails shippingDetails) {
+		
+		if(shippingDetails == null)
+			return null;
+		ShippingDetailsDTO dto = new ShippingDetailsDTO();
+		dto.setId(shippingDetails.getId());
+		dto.setAddress(shippingDetails.getAddress());
+		dto.setName(shippingDetails.getName());
+		dto.setPhone(shippingDetails.getPhone());
+		dto.setOrderId(shippingDetails.getOrder().getId());
+		
+		return dto;
+	}
+	
+	private ShippingDetails dtoToShippingDetails(ShippingDetailsDTO dto) {
+		
+		Order order = orderRepository.findById(dto.getOrderId())
+				.orElseThrow(() -> new IllegalStateException("Could not find order with id: " + dto.getOrderId()));
+		
+		ShippingDetails entity = new ShippingDetails();
+		entity.setId(dto.getId());
+		entity.setAddress(dto.getAddress());
+		entity.setOrder(order);
+		entity.setPhone(dto.getPhone());
+		entity.setName(dto.getName());
+		
+		return entity;
+	}
+
 
 }

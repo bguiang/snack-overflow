@@ -1,11 +1,4 @@
-import { AcUnitTwoTone } from "@material-ui/icons";
-import React, {
-  useContext,
-  useState,
-  createContext,
-  useEffect,
-  useReducer,
-} from "react";
+import React, { useContext, createContext, useEffect, useReducer } from "react";
 import SnackOverflow from "../api/SnackOverflow";
 
 const SNACK_OVERFLOW_CART = "snackoverflow-cart";

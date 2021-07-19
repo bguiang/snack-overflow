@@ -3,11 +3,12 @@ package com.bernardguiang.SnackOverflow.dto;
 import java.time.Instant;
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.bernardguiang.SnackOverflow.model.Address;
+import com.bernardguiang.SnackOverflow.model.BillingDetails;
+import com.bernardguiang.SnackOverflow.model.OrderStatus;
+import com.bernardguiang.SnackOverflow.model.ShippingDetails;
 
 public class OrderDTO {
 
@@ -16,14 +17,12 @@ public class OrderDTO {
 	private List<OrderItemDTO> items;
 	private Instant createdDate;
 	private String notes;
-	@NotEmpty
-	private String billingName;
 	@NotNull
-	private Address billingAddress;
-	private String shippingName;
-	private Address shippingAddress; // shipping can be null if same as billing
+	private BillingDetailsDTO billingDetails;
+	private ShippingDetailsDTO shippingDetails; // shipping can be null if same as billing
 	private boolean isShippingSameAsBilling;
 	private long userId; //TODO: validation for id?
+	private OrderStatus status;
 
 	public OrderDTO() {
 	}
@@ -60,36 +59,20 @@ public class OrderDTO {
 		this.notes = notes;
 	}
 
-	public String getBillingName() {
-		return billingName;
+	public BillingDetailsDTO getBillingDetails() {
+		return billingDetails;
 	}
 
-	public void setBillingName(String billingName) {
-		this.billingName = billingName;
+	public void setBillingDetails(BillingDetailsDTO billingDetails) {
+		this.billingDetails = billingDetails;
 	}
 
-	public Address getBillingAddress() {
-		return billingAddress;
+	public ShippingDetailsDTO getShippingDetails() {
+		return shippingDetails;
 	}
 
-	public void setBillingAddress(Address billingAddress) {
-		this.billingAddress = billingAddress;
-	}
-
-	public String getShippingName() {
-		return shippingName;
-	}
-
-	public void setShippingName(String shippingName) {
-		this.shippingName = shippingName;
-	}
-
-	public Address getShippingAddress() {
-		return shippingAddress;
-	}
-
-	public void setShippingAddress(Address shippingAddress) {
-		this.shippingAddress = shippingAddress;
+	public void setShippingDetails(ShippingDetailsDTO shippingDetails) {
+		this.shippingDetails = shippingDetails;
 	}
 
 	public boolean isShippingSameAsBilling() {
@@ -108,15 +91,11 @@ public class OrderDTO {
 		this.userId = userId;
 	}
 
-	@Override
-	public String toString() {
-		String toprint = "OrderDTO [id=" + id + ", createdDate=" + createdDate + ", notes=" + notes
-				+ ", billingName=" + billingName + ", billingAddress=" + billingAddress + ", shippingName="
-				+ shippingName + ", shippingAddress=" + shippingAddress + ", isShippingSameAsBilling="
-				+ isShippingSameAsBilling + ", userId=" + userId + "]\n";
-		for(OrderItemDTO item : items) {
-			toprint += item.toString() + "\n";
-		}
-		return toprint;
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 }

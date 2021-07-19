@@ -3,11 +3,7 @@ package com.bernardguiang.SnackOverflow.model;
 import java.time.Instant;
 import java.util.List;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -43,36 +40,22 @@ public class Order {
 	
 	private Instant createdDate;
 	
-	private String billingName;
-	//TODO: embedding the address like this makes the table really flat. Need to Normalize the table. Refactor later with inheritance
-	@Embedded
-	@AttributeOverrides({
-		  @AttributeOverride( name = "addressLineOne", column = @Column(name = "billing_address_line_one")),
-		  @AttributeOverride( name = "addressLineTwo", column = @Column(name = "billing_address_line_two")),
-		  @AttributeOverride( name = "city", column = @Column(name = "billing_city")),
-		  @AttributeOverride( name = "state", column = @Column(name = "billing_state")),
-		  @AttributeOverride( name = "postalCode", column = @Column(name = "billing_postal_code")),
-		  @AttributeOverride( name = "country", column = @Column(name = "billing_country"))
-	})
-	private Address billingAddress;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "billing_details_id", referencedColumnName = "id") // owning side contains the @JoinColumns (owns the foreign key column). Must save billing through order
+	private BillingDetails billingDetails;
 	
-	private String shippingName;
-	@Embedded
-	@AttributeOverrides({
-		  @AttributeOverride( name = "addressLineOne", column = @Column(name = "shipping_address_line_one")),
-		  @AttributeOverride( name = "addressLineTwo", column = @Column(name = "shipping_address_line_two")),
-		  @AttributeOverride( name = "city", column = @Column(name = "shipping_city")),
-		  @AttributeOverride( name = "state", column = @Column(name = "shipping_state")),
-		  @AttributeOverride( name = "postalCode", column = @Column(name = "shipping_postal_code")),
-		  @AttributeOverride( name = "country", column = @Column(name = "shipping_country"))
-	})
-	private Address shippingAddress;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "shipping_details_id", referencedColumnName = "id") // owning side contains the @JoinColumns (owns the foreign key column). Must save shipping through order
+	private ShippingDetails shippingDetails;
+	
 	private boolean isShippingSameAsBilling;
 	private String notes;
 	
 	@ManyToOne
 	@JoinColumn(name="user_id", nullable=false)
 	private User user;
+	
+	private OrderStatus status = OrderStatus.CREATED;
 
 	public Order() {
 	}
@@ -101,36 +84,20 @@ public class Order {
 		this.createdDate = createdDate;
 	}
 
-	public String getBillingName() {
-		return billingName;
+	public BillingDetails getBillingDetails() {
+		return billingDetails;
 	}
 
-	public void setBillingName(String billingName) {
-		this.billingName = billingName;
+	public void setBillingDetails(BillingDetails billingDetails) {
+		this.billingDetails = billingDetails;
 	}
 
-	public Address getBillingAddress() {
-		return billingAddress;
+	public ShippingDetails getShippingDetails() {
+		return shippingDetails;
 	}
 
-	public void setBillingAddress(Address billingAddress) {
-		this.billingAddress = billingAddress;
-	}
-
-	public String getShippingName() {
-		return shippingName;
-	}
-
-	public void setShippingName(String shippingName) {
-		this.shippingName = shippingName;
-	}
-
-	public Address getShippingAddress() {
-		return shippingAddress;
-	}
-
-	public void setShippingAddress(Address shippingAddress) {
-		this.shippingAddress = shippingAddress;
+	public void setShippingDetails(ShippingDetails shippingDetails) {
+		this.shippingDetails = shippingDetails;
 	}
 
 	public boolean isShippingSameAsBilling() {
@@ -157,6 +124,13 @@ public class Order {
 		this.user = user;
 	}
 
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
+	}
 	
 	
 }

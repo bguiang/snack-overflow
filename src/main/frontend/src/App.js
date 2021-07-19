@@ -19,6 +19,7 @@ import LoginSignup from "./components/Account/LoginSignup";
 import Account from "./components/Account/LoginSignup";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
+import CheckoutSuccess from "./components/Checkout/CheckoutSuccess";
 
 function App() {
   // Theme colors
@@ -86,6 +87,9 @@ function App() {
                     </Route>
                     <PrivateRoute path="/account">
                       <Account />
+                    </PrivateRoute>
+                    <PrivateRoute path="/checkout/success">
+                      <CheckoutSuccess />
                     </PrivateRoute>
                     <PrivateRoute path="/checkout">
                       <Checkout />

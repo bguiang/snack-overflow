@@ -39,7 +39,6 @@ public class AuthController {
 	// Token BlackListing but it defeats the purpose of using JWTs (supposedly stateless). 
 	//  Storing tokens on the db and requiring  a lookup for authorization makes it stateful
 	//	However performance could be improved with an in-memory db
-	// TODO: implement logout
 	@GetMapping("/logout")
 	public ResponseEntity<String> Logout(HttpServletResponse response) {
 		// Delete Refresh Token
