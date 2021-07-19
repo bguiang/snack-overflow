@@ -1,11 +1,14 @@
 package com.bernardguiang.SnackOverflow.service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
+import com.bernardguiang.SnackOverflow.dto.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.CheckoutRequest;
 import com.bernardguiang.SnackOverflow.dto.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.OrderItemDTO;
 import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
@@ -36,12 +39,52 @@ public class OrderService {
 		this.userRepository = userRepository;
 	}
 	
+	public OrderDTO saveOrderFromCheckoutForUser(CheckoutRequest checkoutRequest,  Long userId) {
+		
+		
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + userId));
+		
+		Order order = checkoutRequestToOrder(checkoutRequest,user);
+		Order saved = orderRepository.save(order);
+		
+		return orderToDTO(saved);
+	}
+	
 	public OrderDTO save(OrderDTO orderDTO) {
 		
 		Order order = dtoToOrder(orderDTO);
 		Order saved = orderRepository.save(order);
 		
 		return orderToDTO(saved);
+	}
+	
+	private Order checkoutRequestToOrder(CheckoutRequest checkoutRequest, User  user) {
+		Order order = new Order();
+		
+		List<OrderItem> items = new ArrayList<>();
+		for(CartInfoRequestItem requestItem : checkoutRequest.getItems()) {
+			Product product = productRepository.findById(requestItem.getProductId())
+				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + requestItem.getProductId()));
+			OrderItem item = new OrderItem();
+			item.setOrder(order); // set order
+			item.setProduct(product); // set product
+			item.setPrice(product.getPrice());
+			item.setQuantity(requestItem.getQuantity());
+			
+			items.add(item);
+		}
+		
+		order.setItems(items);
+		order.setCreatedDate(Instant.now());
+		order.setBillingDetails(dtoToBillingDetails(checkoutRequest.getBillingDetails()));
+		order.setShippingDetails(dtoToShippingDetails(checkoutRequest.getShippingDetails()));
+		order.setShippingSameAsBilling(checkoutRequest.isShippingSameAsBilling());
+		order.setNotes(checkoutRequest.getNotes());
+		order.setUser(user);
+		order.setStatus(OrderStatus.CREATED);
+		
+		return order;
 	}
 	
 	private OrderDTO orderToDTO(Order order) {

@@ -5,8 +5,9 @@ import { useHistory } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 
 import CardSection from "./CardSection";
+import SnackOverflow from "../../api/SnackOverflow";
 
-const CheckoutForm = ({ clientSecret }) => {
+const CheckoutForm = ({ clientSecret, cartInfo }) => {
   const { clearItems } = useCart();
   const history = useHistory();
   const classes = useStyles();
@@ -40,6 +41,41 @@ const CheckoutForm = ({ clientSecret }) => {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
+    }
+
+    try {
+      const orderRequest = {
+        
+        billingDetails: {
+          address: {
+            line1: billingAddressLine1,
+            line2: billingAddressLine1,
+            city: billingCity,
+            state: billingState,
+            postal_code: billingPostalCode,
+            country: billingCountry,
+          },
+          name: billingName,
+          phone: billingPhone,
+          email: billingEmail,
+        },
+        shippingDetails: {
+          address: {
+            line1: shippingAddressLine1,
+            line2: shippingAddressLine2,
+            city: shippingCity,
+            state: shippingState,
+            postal_code: shippingPostalCode,
+            country: shippingCountry,
+          },
+          name: shippingName,
+          phone: shippingPhone,
+        },
+      }
+      const order = await SnackOverflow.post("/checkout", orderRequest);
+
+    }catch(error) {
+      console.log(error);
     }
 
     const result = await stripe.confirmCardPayment(clientSecret, {

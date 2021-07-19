@@ -5,8 +5,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class CartInfoRequestItem {
-	@NotEmpty
-	String productName;
 	@NotNull
 	Long productId;
 	@Min(value = 1, message = "Item quantity cannot be zero")
@@ -15,18 +13,6 @@ public class CartInfoRequestItem {
 	public CartInfoRequestItem() {
 	}
 	
-	public CartInfoRequestItem(@NotEmpty String productName, @NotNull Long productId,
-			@Min(value = 1, message = "Item quantity cannot be zero") int quantity) {
-		this.productName = productName;
-		this.productId = productId;
-		this.quantity = quantity;
-	}
-	public String getProductName() {
-		return productName;
-	}
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
 	public Long getProductId() {
 		return productId;
 	}

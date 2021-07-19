@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.Cart;
 import com.bernardguiang.SnackOverflow.dto.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.CheckoutRequest;
 import com.bernardguiang.SnackOverflow.dto.OrderDTO;
 import com.bernardguiang.SnackOverflow.service.CartService;
 import com.bernardguiang.SnackOverflow.service.OrderService;
@@ -80,10 +81,10 @@ public class CheckoutController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Map<String, Object>> createOrder(@RequestBody @Valid OrderDTO orderDTO) throws StripeException {
+	public ResponseEntity<Map<String, Object>> createOrder(@RequestBody @Valid CheckoutRequest checkoutRequest) throws StripeException {
 		
-		//TODO: add order status
-		OrderDTO savedOrderDTO = orderService.save(orderDTO);
+		//TODO: get userid
+		OrderDTO savedOrderDTO = orderService.saveOrderFromCheckout(checkoutRequest, userId);
 		
 		Map<String, Object> data = new HashMap<>();
 		data.put("orderId", savedOrderDTO.getId());

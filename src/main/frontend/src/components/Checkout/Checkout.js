@@ -15,6 +15,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 const Checkout = () => {
   const classes = useStyles();
   const { cart } = useCart();
+  const  [cartInfo, setCartInfo] = useState(null);
   const { currentUser } = useAuth();
   const [token, setToken] = useState(null);
   const [clientSecret, setClientSecret] = useState("");
@@ -34,6 +35,7 @@ const Checkout = () => {
         console.log("client_secret: " + response.data.client_secret);
         console.log(response.data);
         setClientSecret(response.data.client_secret);
+        setCartInfo(response.data.cart);
       } else {
         //history.push("/cart");
       }
@@ -60,6 +62,7 @@ const Checkout = () => {
           stripe={stripe}
           elements={elements}
           clientSecret={clientSecret}
+          cartInfo={cartInfo}
         />
       )}
     </ElementsConsumer>
