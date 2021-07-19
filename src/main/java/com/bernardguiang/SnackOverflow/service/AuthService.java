@@ -172,6 +172,7 @@ public class AuthService {
 		
 		User user = new User();
 		user.setUsername("bernard");
+		user.setEmail("bernardguiang@gmail.com");
 		user.setPassword(passwordEncoder.encode("password"));
 		user.setRole(ApplicationUserRole.ADMIN.name());
 		user.setFullName("Bernard Guiang");

@@ -5,34 +5,30 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class CheckoutRequest {
-	@NotEmpty
-	List<CartInfoRequestItem> items;
-	//private Instant createdDate;
-	private String notes;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class UpdateBillingAndShippingRequest {
+	@NotNull
+	private Long id;
 	@NotNull
 	private BillingDetailsDTO billingDetails;
 	private ShippingDetailsDTO shippingDetails; // shipping can be null if same as billing
-	private boolean isShippingSameAsBilling;
-	//private OrderStatus status;
+	@JsonProperty
+	private boolean isShippingSameAsBilling; // @JsonProperty is required because jackson doesn't like getters without the word "get"
 	
-	public CheckoutRequest() {
+	public UpdateBillingAndShippingRequest() {
 
 	}
 	
-	public List<CartInfoRequestItem> getItems() {
-		return items;
-	}
 	
-	public void setItems(List<CartInfoRequestItem> items) {
-		this.items = items;
+	public Long getId() {
+		return id;
 	}
-	public String getNotes() {
-		return notes;
+
+	public void setId(Long id) {
+		this.id = id;
 	}
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+
 	public BillingDetailsDTO getBillingDetails() {
 		return billingDetails;
 	}

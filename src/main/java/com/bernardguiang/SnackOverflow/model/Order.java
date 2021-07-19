@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,13 +51,15 @@ public class Order {
 	private ShippingDetails shippingDetails;
 	
 	private boolean isShippingSameAsBilling;
-	private String notes;
 	
 	@ManyToOne
 	@JoinColumn(name="user_id", nullable=false)
 	private User user;
 	
+	@Enumerated(EnumType.STRING)
 	private OrderStatus status = OrderStatus.CREATED;
+	
+	private String clientSecret;
 
 	public Order() {
 	}
@@ -108,14 +112,6 @@ public class Order {
 		this.isShippingSameAsBilling = isShippingSameAsBilling;
 	}
 
-	public String getNotes() {
-		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -131,6 +127,13 @@ public class Order {
 	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
-	
+
+	public String getClientSecret() {
+		return clientSecret;
+	}
+
+	public void setClientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
+	}
 	
 }

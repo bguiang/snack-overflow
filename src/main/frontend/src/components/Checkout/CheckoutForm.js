@@ -7,7 +7,7 @@ import { useCart } from "../../context/CartContext";
 import CardSection from "./CardSection";
 import SnackOverflow from "../../api/SnackOverflow";
 
-const CheckoutForm = ({ clientSecret, cartInfo }) => {
+const CheckoutForm = ({ clientSecret, token, orderId }) => {
   const { clearItems } = useCart();
   const history = useHistory();
   const classes = useStyles();
@@ -32,52 +32,7 @@ const CheckoutForm = ({ clientSecret, cartInfo }) => {
   const [shippingPostalCode, setShippingPostalCode] = useState("");
   const [shippingCountry, setShippingCountry] = useState("US");
 
-  const handleSubmit = async (event) => {
-    // We don't want to let default form submission happen here,
-    // which would refresh the page.
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
-
-    try {
-      const orderRequest = {
-        
-        billingDetails: {
-          address: {
-            line1: billingAddressLine1,
-            line2: billingAddressLine1,
-            city: billingCity,
-            state: billingState,
-            postal_code: billingPostalCode,
-            country: billingCountry,
-          },
-          name: billingName,
-          phone: billingPhone,
-          email: billingEmail,
-        },
-        shippingDetails: {
-          address: {
-            line1: shippingAddressLine1,
-            line2: shippingAddressLine2,
-            city: shippingCity,
-            state: shippingState,
-            postal_code: shippingPostalCode,
-            country: shippingCountry,
-          },
-          name: shippingName,
-          phone: shippingPhone,
-        },
-      }
-      const order = await SnackOverflow.post("/checkout", orderRequest);
-
-    }catch(error) {
-      console.log(error);
-    }
-
+  const confirmPayment = async () => {
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: elements.getElement(CardElement),
@@ -126,6 +81,63 @@ const CheckoutForm = ({ clientSecret, cartInfo }) => {
         history.push("/checkout/success");
       }
       console.log(result);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    // We don't want to let default form submission happen here,
+    // which would refresh the page.
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    try {
+      const updateRequest = {
+        id: orderId,
+        billingDetails: {
+          address: {
+            addressLineOne: billingAddressLine1,
+            addressLineTwo: billingAddressLine2,
+            city: billingCity,
+            state: billingState,
+            postalCode: billingPostalCode,
+            country: billingCountry,
+          },
+          name: billingName,
+          phone: billingPhone,
+          email: billingEmail,
+        },
+        shippingDetails: {
+          address: {
+            addressLineOne: shippingAddressLine1,
+            addressLineTwo: shippingAddressLine2,
+            city: shippingCity,
+            state: shippingState,
+            postalCode: shippingPostalCode,
+            country: shippingCountry,
+          },
+          name: shippingName,
+          phone: shippingPhone,
+        },
+        isShippingSameAsBilling,
+      };
+      const response = await SnackOverflow.put(
+        "/checkout/updateBillingAndShipping",
+        updateRequest,
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      if (response.status === 200) {
+        confirmPayment();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

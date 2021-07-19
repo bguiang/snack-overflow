@@ -16,10 +16,11 @@ import Snacks from "./components/SnackSearch/Snacks";
 import Snack from "./components/SnackPage/Snack";
 import Footer from "./components/Footer";
 import LoginSignup from "./components/Account/LoginSignup";
-import Account from "./components/Account/LoginSignup";
+import Account from "./components/Account/Account";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
 import CheckoutSuccess from "./components/Checkout/CheckoutSuccess";
+import CartRoute from "./components/Checkout/CheckoutRoute";
 
 function App() {
   // Theme colors
@@ -92,7 +93,9 @@ function App() {
                       <CheckoutSuccess />
                     </PrivateRoute>
                     <PrivateRoute path="/checkout">
-                      <Checkout />
+                      <CartRoute path="/checkout">
+                        <Checkout />
+                      </CartRoute>
                     </PrivateRoute>
                     <Route path="/">
                       <Snacks />

@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
 import com.bernardguiang.SnackOverflow.dto.CartInfoRequestItem;
-import com.bernardguiang.SnackOverflow.dto.CheckoutRequest;
+import com.bernardguiang.SnackOverflow.dto.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.dto.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.OrderItemDTO;
+import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
@@ -39,13 +40,40 @@ public class OrderService {
 		this.userRepository = userRepository;
 	}
 	
-	public OrderDTO saveOrderFromCheckoutForUser(CheckoutRequest checkoutRequest,  Long userId) {
+	public List<OrderDTO> findAllByUser(User user){
+		Iterable<Order> ordersIterator = orderRepository.findAllByUser(user);
+		List<OrderDTO> orderDTOs = new ArrayList<>();
+		for(Order order : ordersIterator)
+		{
+			OrderDTO orderDTO = orderToDTO(order);
+			orderDTOs.add(orderDTO);
+		}
+		return orderDTOs;
+	}
+	
+	public OrderDTO createOrderWithCartItemsAndClientSecret(List<CartInfoRequestItem> cartItems, String clientSecret, User user) {
 		
+		Order order = cartItemsToOrder(cartItems, clientSecret, user);
+		Order saved = orderRepository.save(order);
 		
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + userId));
+		return orderToDTO(saved);
+	}
+	
+	public OrderDTO updateBillingAndShipping(UpdateBillingAndShippingRequest update,  User user) {
 		
-		Order order = checkoutRequestToOrder(checkoutRequest,user);
+		Order order = orderRepository.findById(update.getId())
+				.orElseThrow(() -> new IllegalStateException("Invalid refresh Order ID: " + update.getId()));	
+		
+		order.setCreatedDate(Instant.now());
+		
+		BillingDetails billing = dtoToBillingDetails(update.getBillingDetails());
+		billing.setOrder(order);
+		order.setBillingDetails(billing);
+		ShippingDetails shipping = dtoToShippingDetails(update.getShippingDetails());
+		shipping.setOrder(order);
+		order.setShippingDetails(shipping);
+		order.setShippingSameAsBilling(update.isShippingSameAsBilling());
+		order.setStatus(OrderStatus.PAYMENT_PENDING);
 		Order saved = orderRepository.save(order);
 		
 		return orderToDTO(saved);
@@ -59,11 +87,21 @@ public class OrderService {
 		return orderToDTO(saved);
 	}
 	
-	private Order checkoutRequestToOrder(CheckoutRequest checkoutRequest, User  user) {
+	public OrderDTO updateStatusByClientSecret(String clientSecret, OrderStatus status) {
+		Order order = orderRepository.findByClientSecret(clientSecret)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with Client Secret: " + clientSecret));
+		
+		order.setStatus(OrderStatus.PROCESSING);
+		
+		return orderToDTO(order);
+	}
+	
+	private Order cartItemsToOrder(List<CartInfoRequestItem> cartItems, String clientSecret, User user) {
 		Order order = new Order();
+		order.setClientSecret(clientSecret);
 		
 		List<OrderItem> items = new ArrayList<>();
-		for(CartInfoRequestItem requestItem : checkoutRequest.getItems()) {
+		for(CartInfoRequestItem requestItem : cartItems) {
 			Product product = productRepository.findById(requestItem.getProductId())
 				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + requestItem.getProductId()));
 			OrderItem item = new OrderItem();
@@ -76,11 +114,6 @@ public class OrderService {
 		}
 		
 		order.setItems(items);
-		order.setCreatedDate(Instant.now());
-		order.setBillingDetails(dtoToBillingDetails(checkoutRequest.getBillingDetails()));
-		order.setShippingDetails(dtoToShippingDetails(checkoutRequest.getShippingDetails()));
-		order.setShippingSameAsBilling(checkoutRequest.isShippingSameAsBilling());
-		order.setNotes(checkoutRequest.getNotes());
 		order.setUser(user);
 		order.setStatus(OrderStatus.CREATED);
 		
@@ -103,7 +136,6 @@ public class OrderService {
 		dto.setId(order.getId());
 		dto.setItems(itemDTOs);
 		dto.setCreatedDate(order.getCreatedDate());
-		dto.setNotes(order.getNotes());
 		BillingDetailsDTO billing = entityToBillingDetailsDTO(order.getBillingDetails());
 		dto.setBillingDetails(billing);
 		ShippingDetailsDTO shipping = entityToShippingDetailsDTO(order.getShippingDetails());
@@ -141,7 +173,6 @@ public class OrderService {
 		order.setBillingDetails(dtoToBillingDetails(orderDTO.getBillingDetails()));
 		order.setShippingDetails(dtoToShippingDetails(orderDTO.getShippingDetails()));
 		order.setShippingSameAsBilling(orderDTO.isShippingSameAsBilling());
-		order.setNotes(orderDTO.getNotes());
 		order.setUser(user);
 		if(orderDTO.getStatus() != null)
 			order.setStatus(orderDTO.getStatus());
@@ -167,16 +198,18 @@ public class OrderService {
 	
 	private BillingDetails dtoToBillingDetails(BillingDetailsDTO dto) {
 		
-		Order order = orderRepository.findById(dto.getOrderId())
-				.orElseThrow(() -> new IllegalStateException("Could not find order with id: " + dto.getOrderId()));
 		
 		BillingDetails entity = new BillingDetails();
-		entity.setId(dto.getId());
+		if(dto.getId() != null)
+			entity.setId(dto.getId());
 		entity.setAddress(dto.getAddress());
-		entity.setOrder(order);
 		entity.setEmail(dto.getEmail());
 		entity.setPhone(dto.getPhone());
 		entity.setName(dto.getName());
+		if(dto.getOrderId() != null) {
+			Order order = orderRepository.findById(dto.getOrderId()).orElse(null);
+			entity.setOrder(order);
+			}
 		
 		return entity;
 	}
@@ -198,16 +231,16 @@ public class OrderService {
 	
 	private ShippingDetails dtoToShippingDetails(ShippingDetailsDTO dto) {
 		
-		Order order = orderRepository.findById(dto.getOrderId())
-				.orElseThrow(() -> new IllegalStateException("Could not find order with id: " + dto.getOrderId()));
-		
 		ShippingDetails entity = new ShippingDetails();
-		entity.setId(dto.getId());
+		if(dto.getId() != null)
+			entity.setId(dto.getId());
 		entity.setAddress(dto.getAddress());
-		entity.setOrder(order);
 		entity.setPhone(dto.getPhone());
 		entity.setName(dto.getName());
-		
+		if(dto.getOrderId() != null) {
+			Order order = orderRepository.findById(dto.getOrderId()).orElse(null);
+			entity.setOrder(order);
+		}
 		return entity;
 	}
 
