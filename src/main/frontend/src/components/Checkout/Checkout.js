@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Card } from "@material-ui/core";
 import useStyles from "../../styles";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
@@ -7,6 +7,8 @@ import SnackOverflow from "../../api/SnackOverflow";
 import { Elements, ElementsConsumer } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./CheckoutForm";
+import CheckoutItem from "./CheckoutItem";
+import { Typography } from "@material-ui/core";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -15,7 +17,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 const Checkout = () => {
   const classes = useStyles();
   const { cart } = useCart();
-  const [cartInfo, setCartInfo] = useState(null);
+  const [cartInfo, setCartInfo] = useState({ items: [], total: 0 });
   const { currentUser } = useAuth();
   const [orderId, setOrderId] = useState(null);
   const [token, setToken] = useState(null);
@@ -75,28 +77,34 @@ const Checkout = () => {
   return (
     <div>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={12} md={10} key="title" className={classes.cartHeader}>
-          <h2 className={classes.cartHeaderTitle}>Checkout</h2>
+        <Grid item xs={12} key="title" className={classes.checkoutHeader}>
+          <h2 className={classes.checkoutHeaderTitle}>Checkout</h2>
         </Grid>
         <Grid
-          item
-          xs={12}
-          md={10}
-          key="orderInfo"
-          className={classes.cartHeader}
+          container
+          spacing={1}
+          justifyContent="center"
+          alignItems="flex-start"
         >
-          <h2 className={classes.cartHeaderTitle}>Order Info</h2>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={10}
-          key="checkout"
-          className={classes.cartHeader}
-        >
-          <Elements stripe={stripePromise}>
-            <InjectedCheckoutForm />
-          </Elements>
+          <Grid item sm={12} md={6} key="order-info">
+            <Card className={classes.checkoutOrderInfo}>
+              <Typography variant="h6">Order Info</Typography>
+              {cartInfo.items.map((checkoutItem) => (
+                <CheckoutItem
+                  checkoutItem={checkoutItem}
+                  key={checkoutItem.product.id}
+                />
+              ))}
+              <Typography variant="subtitle1" className={classes.checkoutTotal}>
+                Total ${cartInfo.total.toFixed(2)}
+              </Typography>
+            </Card>
+          </Grid>
+          <Grid item sm={12} md={6} key="checkout" flex>
+            <Elements stripe={stripePromise}>
+              <InjectedCheckoutForm />
+            </Elements>
+          </Grid>
         </Grid>
       </Grid>
     </div>

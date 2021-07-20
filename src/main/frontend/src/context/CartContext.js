@@ -132,63 +132,8 @@ export function CartProvider({ children }) {
     return cartItemCount;
   };
 
-  const getCartTotal = (cartItems) => {
-    let i;
-    let cartTotal = 0;
-    for (i = 0; i < cartItems.length; i++) {
-      let item = cartItems[i];
-      cartTotal += item.quantity * item.product.price;
-    }
-    return cartTotal.toFixed(2);
-  };
-
-  const getSnacksById = async (cartItemIds) => {
-    try {
-      let response = await SnackOverflow.get(
-        `/products?productIds=${cartItemIds.toString()}`
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getCartInfo = async () => {
-    let cartItemIds = [];
-    let i;
-    for (i = 0; i < cart.length; i++) {
-      cartItemIds.push(cart[i].productId);
-    }
-
-    let cartItemInfo = await getSnacksById(cartItemIds);
-
-    // Build Cart Info
-    let updatedCart = {};
-
-    let cartItems = [];
-
-    // Set Items
-    for (i = 0; i < cart.length; i++) {
-      let cartItem = {};
-      // Quantity
-      cartItem.quantity = cart[i].quantity;
-      // Product Info
-      cartItem.product = cartItemInfo[cart[i].productId];
-
-      cartItems.push(cartItem);
-    }
-    updatedCart.items = cartItems;
-
-    // Total
-    let cartTotal = getCartTotal(cartItems);
-    updatedCart.total = cartTotal;
-
-    return updatedCart;
-  };
-
   const cartContextValue = {
     cart,
-    getCartInfo,
     addItem,
     removeItem,
     updateItemQuantity,

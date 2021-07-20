@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState } from "react";
 import useStyles from "../../styles";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useHistory } from "react-router-dom";
@@ -6,6 +6,18 @@ import { useCart } from "../../context/CartContext";
 
 import CardSection from "./CardSection";
 import SnackOverflow from "../../api/SnackOverflow";
+import {
+  Card,
+  Typography,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+} from "@material-ui/core";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { CheckBox } from "@material-ui/icons";
 
 const CheckoutForm = ({ clientSecret, token, orderId }) => {
   const { clearItems } = useCart();
@@ -111,20 +123,27 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
           phone: billingPhone,
           email: billingEmail,
         },
-        shippingDetails: {
-          address: {
-            addressLineOne: shippingAddressLine1,
-            addressLineTwo: shippingAddressLine2,
-            city: shippingCity,
-            state: shippingState,
-            postalCode: shippingPostalCode,
-            country: shippingCountry,
-          },
-          name: shippingName,
-          phone: shippingPhone,
-        },
         isShippingSameAsBilling,
       };
+      const shippingDetails = {
+        address: {
+          addressLineOne: shippingAddressLine1,
+          addressLineTwo: shippingAddressLine2,
+          city: shippingCity,
+          state: shippingState,
+          postalCode: shippingPostalCode,
+          country: shippingCountry,
+        },
+        name: shippingName,
+        phone: shippingPhone,
+      };
+
+      if (!isShippingSameAsBilling)
+        updateRequest.shippingDetails = shippingDetails;
+
+      console.log("Update Request");
+      console.log(updateRequest);
+
       const response = await SnackOverflow.put(
         "/checkout/updateBillingAndShipping",
         updateRequest,
@@ -144,291 +163,290 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
   return (
     <form onSubmit={handleSubmit} className={classes.checkoutForm}>
       <div>
-        <h3>Shipping &amp; Billing Information</h3>
-        <section>
-          <h4>Billing</h4>
-          <fieldset>
-            <div>
-              <label>
-                <span>Name</span>
-                <input
-                  name="name"
-                  className="field"
-                  placeholder="Jenny Rosen"
-                  required
-                  value={billingName}
-                  onChange={(e) => setBillingName(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>Email</span>
-                <input
-                  name="email"
-                  type="email"
-                  className="field"
-                  placeholder="jenny@example.com"
-                  required
-                  value={billingEmail}
-                  onChange={(e) => setBillingEmail(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>Phone</span>
-                <input
-                  name="phone"
-                  type="phone"
-                  className="field"
-                  value={billingPhone}
-                  onChange={(e) => setBillingPhone(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>Address Line 1</span>
-                <input
-                  name="address"
-                  className="field"
-                  placeholder="185 Berry Street Suite 550"
-                  required
-                  value={billingAddressLine1}
-                  onChange={(e) => setBillingAddressLine1(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>Address Line 2</span>
-                <input
-                  name="address"
-                  className="field"
-                  value={billingAddressLine2}
-                  onChange={(e) => setBillingAddressLine2(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>City</span>
-                <input
-                  name="city"
-                  className="field"
-                  placeholder="San Francisco"
-                  required
-                  value={billingCity}
-                  onChange={(e) => setBillingCity(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>State</span>
-                <input
-                  name="state"
-                  className="field"
-                  placeholder="CA"
-                  required
-                  value={billingState}
-                  onChange={(e) => setBillingState(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>ZIP</span>
-                <input
-                  name="postal_code"
-                  className="field"
-                  placeholder="94107"
-                  required
-                  value={billingPostalCode}
-                  onChange={(e) => setBillingPostalCode(e.target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                <span>Country</span>
-                <div id="country" className="field US">
-                  <select
-                    name="country"
-                    value={billingCountry}
-                    onChange={(e) => setBillingCountry(e.target.value)}
-                  >
-                    <option value="AU">Australia</option>
-                    <option value="AT">Austria</option>
-                    <option value="BE">Belgium</option>
-                    <option value="BR">Brazil</option>
-                    <option value="CA">Canada</option>
-                    <option value="CN">China</option>
-                    <option value="DK">Denmark</option>
-                    <option value="FI">Finland</option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option>
-                    <option value="HK">Hong Kong</option>
-                    <option value="IE">Ireland</option>
-                    <option value="IT">Italy</option>
-                    <option value="JP">Japan</option>
-                    <option value="LU">Luxembourg</option>
-                    <option value="MY">Malaysia</option>
-                    <option value="MX">Mexico</option>
-                    <option value="NL">Netherlands</option>
-                    <option value="NZ">New Zealand</option>
-                    <option value="NO">Norway</option>
-                    <option value="PL">Poland</option>
-                    <option value="PT">Portugal</option>
-                    <option value="SG">Singapore</option>
-                    <option value="ES">Spain</option>
-                    <option value="SE">Sweden</option>
-                    <option value="CH">Switzerland</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="US">United States</option>
-                  </select>
-                </div>
-              </label>
-            </div>
-          </fieldset>
-        </section>
-        <label>
-          Use Billing as Shipping Address:
+        <Card className={classes.addressCard}>
+          <Typography variant="h6">Billing Details</Typography>
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            required
+            fullWidth
+            label="name"
+            onChange={(event) => {
+              setBillingName(event.target.value);
+            }}
+            autoComplete="name"
+          />
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            required
+            fullWidth
+            label="email"
+            onChange={(event) => {
+              setBillingEmail(event.target.value);
+            }}
+            autoComplete="email"
+          />
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            required
+            fullWidth
+            label="phone"
+            onChange={(event) => {
+              setBillingPhone(event.target.value);
+            }}
+            autoComplete="phone"
+          />
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            required
+            fullWidth
+            label="address line 1"
+            onChange={(event) => {
+              setBillingAddressLine1(event.target.value);
+            }}
+            autoComplete="address-line1"
+          />
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            fullWidth
+            label="address line 2"
+            onChange={(event) => {
+              setBillingAddressLine2(event.target.value);
+            }}
+            autoComplete="address-line2"
+          />
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            required
+            fullWidth
+            label="city"
+            onChange={(event) => {
+              setBillingCity(event.target.value);
+            }}
+            autoComplete="address-level2"
+          />
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            required
+            fullWidth
+            label="state"
+            onChange={(event) => {
+              setBillingState(event.target.value);
+            }}
+            autoComplete="address-level1"
+          />
+          <TextField
+            variant="outlined"
+            size="small"
+            margin="dense"
+            required
+            fullWidth
+            label="postal code"
+            onChange={(event) => {
+              setBillingPostalCode(event.target.value);
+            }}
+            autoComplete="postal-code"
+          />
+          <FormControl className={classes.formControl}>
+            <InputLabel>Country</InputLabel>
+            <Select
+              value={billingCountry}
+              onChange={(event) => setBillingCountry(event.target.value)}
+            >
+              <MenuItem value="AU">Australia</MenuItem>
+              <MenuItem value="AT">Austria</MenuItem>
+              <MenuItem value="BE">Belgium</MenuItem>
+              <MenuItem value="BR">Brazil</MenuItem>
+              <MenuItem value="CA">Canada</MenuItem>
+              <MenuItem value="CN">China</MenuItem>
+              <MenuItem value="DK">Denmark</MenuItem>
+              <MenuItem value="FI">Finland</MenuItem>
+              <MenuItem value="FR">France</MenuItem>
+              <MenuItem value="DE">Germany</MenuItem>
+              <MenuItem value="HK">Hong Kong</MenuItem>
+              <MenuItem value="IE">Ireland</MenuItem>
+              <MenuItem value="IT">Italy</MenuItem>
+              <MenuItem value="JP">Japan</MenuItem>
+              <MenuItem value="LU">Luxembourg</MenuItem>
+              <MenuItem value="MY">Malaysia</MenuItem>
+              <MenuItem value="MX">Mexico</MenuItem>
+              <MenuItem value="NL">Netherlands</MenuItem>
+              <MenuItem value="NZ">New Zealand</MenuItem>
+              <MenuItem value="NO">Norway</MenuItem>
+              <MenuItem value="PL">Poland</MenuItem>
+              <MenuItem value="PT">Portugal</MenuItem>
+              <MenuItem value="SG">Singapore</MenuItem>
+              <MenuItem value="ES">Spain</MenuItem>
+              <MenuItem value="SE">Sweden</MenuItem>
+              <MenuItem value="CH">Switzerland</MenuItem>
+              <MenuItem value="GB">United Kingdom</MenuItem>
+              <MenuItem value="US">United States</MenuItem>
+            </Select>
+          </FormControl>
+        </Card>
+        {/* Material UI checkbox is broken
+        <FormControlLabel
+          control={
+            <CheckBox
+              color="primary"
+              checked={isShippingSameAsBilling}
+              onClick={() => {
+                setIsShippingSameAsBilling(
+                  (isShippingSameAsBilling) => !isShippingSameAsBilling
+                );
+              }}
+            />
+          }
+          label="Ship to this address"
+        /> */}
+        <Typography variant="subtitle1" className={classes.checkoutItemName}>
           <input
             name="isGoing"
             type="checkbox"
             checked={isShippingSameAsBilling}
             onChange={(e) => setIsShippingSameAsBilling(e.target.checked)}
           />
-        </label>
+          Ship to this address
+        </Typography>
         {isShippingSameAsBilling ? null : (
-          <section>
-            <h4>Shipping</h4>
-            <fieldset>
-              <div>
-                <label>
-                  <span>Name</span>
-                  <input
-                    name="name"
-                    className="field"
-                    placeholder="Jenny Rosen"
-                    required
-                    value={shippingName}
-                    onChange={(e) => setShippingName(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <span>Address Line 1</span>
-                  <input
-                    name="address"
-                    className="field"
-                    placeholder="185 Berry Street Suite 550"
-                    required
-                    value={shippingAddressLine1}
-                    onChange={(e) => setShippingAddressLine1(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <span>Address Line 2</span>
-                  <input
-                    name="address"
-                    className="field"
-                    value={shippingAddressLine2}
-                    onChange={(e) => setShippingAddressLine2(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <span>City</span>
-                  <input
-                    name="city"
-                    className="field"
-                    placeholder="San Francisco"
-                    required
-                    value={shippingCity}
-                    onChange={(e) => setShippingCity(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <span>State</span>
-                  <input
-                    name="state"
-                    className="field"
-                    placeholder="CA"
-                    required
-                    value={shippingState}
-                    onChange={(e) => setShippingState(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <span>ZIP</span>
-                  <input
-                    name="postal_code"
-                    className="field"
-                    placeholder="94107"
-                    required
-                    value={shippingPostalCode}
-                    onChange={(e) => setShippingPostalCode(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <span>Country</span>
-                  <div id="country" className="field US">
-                    <select
-                      name="country"
-                      value={shippingCountry}
-                      onChange={(e) => setShippingCountry(e.target.value)}
-                    >
-                      <option value="AU">Australia</option>
-                      <option value="AT">Austria</option>
-                      <option value="BE">Belgium</option>
-                      <option value="BR">Brazil</option>
-                      <option value="CA">Canada</option>
-                      <option value="CN">China</option>
-                      <option value="DK">Denmark</option>
-                      <option value="FI">Finland</option>
-                      <option value="FR">France</option>
-                      <option value="DE">Germany</option>
-                      <option value="HK">Hong Kong</option>
-                      <option value="IE">Ireland</option>
-                      <option value="IT">Italy</option>
-                      <option value="JP">Japan</option>
-                      <option value="LU">Luxembourg</option>
-                      <option value="MY">Malaysia</option>
-                      <option value="MX">Mexico</option>
-                      <option value="NL">Netherlands</option>
-                      <option value="NZ">New Zealand</option>
-                      <option value="NO">Norway</option>
-                      <option value="PL">Poland</option>
-                      <option value="PT">Portugal</option>
-                      <option value="SG">Singapore</option>
-                      <option value="ES">Spain</option>
-                      <option value="SE">Sweden</option>
-                      <option value="CH">Switzerland</option>
-                      <option value="GB">United Kingdom</option>
-                      <option value="US">United States</option>
-                    </select>
-                  </div>
-                </label>
-              </div>
-            </fieldset>
-          </section>
+          <Card className={classes.addressCard}>
+            <Typography variant="h6">Shipping Details</Typography>
+            <TextField
+              variant="outlined"
+              size="small"
+              margin="dense"
+              required
+              fullWidth
+              label="name"
+              onChange={(event) => {
+                setShippingName(event.target.value);
+              }}
+              autoComplete="name"
+            />
+            <TextField
+              variant="outlined"
+              size="small"
+              margin="dense"
+              required
+              fullWidth
+              label="address line 1"
+              onChange={(event) => {
+                setShippingAddressLine1(event.target.value);
+              }}
+              autoComplete="address-line1"
+            />
+            <TextField
+              variant="outlined"
+              size="small"
+              margin="dense"
+              fullWidth
+              label="address line 2"
+              onChange={(event) => {
+                setShippingAddressLine2(event.target.value);
+              }}
+              autoComplete="address-line2"
+            />
+            <TextField
+              variant="outlined"
+              size="small"
+              margin="dense"
+              required
+              fullWidth
+              label="city"
+              onChange={(event) => {
+                setShippingCity(event.target.value);
+              }}
+              autoComplete="address-level2"
+            />
+            <TextField
+              variant="outlined"
+              size="small"
+              margin="dense"
+              required
+              fullWidth
+              label="state"
+              onChange={(event) => {
+                setShippingState(event.target.value);
+              }}
+              autoComplete="address-level1"
+            />
+            <TextField
+              variant="outlined"
+              size="small"
+              margin="dense"
+              required
+              fullWidth
+              label="postal code"
+              onChange={(event) => {
+                setShippingPostalCode(event.target.value);
+              }}
+              autoComplete="postal-code"
+            />
+            <FormControl flex>
+              <InputLabel>Country</InputLabel>
+              <Select
+                value={shippingCountry}
+                onChange={(event) => setShippingCountry(event.target.value)}
+              >
+                <MenuItem value="AU">Australia</MenuItem>
+                <MenuItem value="AT">Austria</MenuItem>
+                <MenuItem value="BE">Belgium</MenuItem>
+                <MenuItem value="BR">Brazil</MenuItem>
+                <MenuItem value="CA">Canada</MenuItem>
+                <MenuItem value="CN">China</MenuItem>
+                <MenuItem value="DK">Denmark</MenuItem>
+                <MenuItem value="FI">Finland</MenuItem>
+                <MenuItem value="FR">France</MenuItem>
+                <MenuItem value="DE">Germany</MenuItem>
+                <MenuItem value="HK">Hong Kong</MenuItem>
+                <MenuItem value="IE">Ireland</MenuItem>
+                <MenuItem value="IT">Italy</MenuItem>
+                <MenuItem value="JP">Japan</MenuItem>
+                <MenuItem value="LU">Luxembourg</MenuItem>
+                <MenuItem value="MY">Malaysia</MenuItem>
+                <MenuItem value="MX">Mexico</MenuItem>
+                <MenuItem value="NL">Netherlands</MenuItem>
+                <MenuItem value="NZ">New Zealand</MenuItem>
+                <MenuItem value="NO">Norway</MenuItem>
+                <MenuItem value="PL">Poland</MenuItem>
+                <MenuItem value="PT">Portugal</MenuItem>
+                <MenuItem value="SG">Singapore</MenuItem>
+                <MenuItem value="ES">Spain</MenuItem>
+                <MenuItem value="SE">Sweden</MenuItem>
+                <MenuItem value="CH">Switzerland</MenuItem>
+                <MenuItem value="GB">United Kingdom</MenuItem>
+                <MenuItem value="US">United States</MenuItem>
+              </Select>
+            </FormControl>
+          </Card>
         )}
       </div>
-      <CardSection />
-      <button disabled={!stripe}>Confirm order</button>
+      <Card>
+        <CardSection />
+        <Button
+          type="submit"
+          fullWidth
+          disabled={!stripe}
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+        >
+          Confirm Order
+        </Button>
+      </Card>
     </form>
   );
 };

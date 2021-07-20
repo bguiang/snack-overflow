@@ -123,6 +123,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/api/v1/users/**") // TODO: remove this later
 				.permitAll()
 			.antMatchers("/h2-console/**").permitAll() // h2 db
+			.antMatchers(HttpMethod.POST, "/api/v1/stripe").permitAll() // Stripe Webhook
+			.antMatchers(HttpMethod.POST, "/api/v1/cart/info").permitAll() // load cart info
 			.anyRequest()	// any request (secures all routes)
 			.authenticated(); // must be authenticated
 		

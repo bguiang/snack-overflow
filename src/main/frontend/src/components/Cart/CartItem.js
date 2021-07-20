@@ -34,7 +34,7 @@ const CartItem = ({ cartItem }) => {
   };
 
   return (
-    <Grid item xs={12} md={10} key={cartItem.product.id}>
+    <Grid item xs={12} key={cartItem.product.id}>
       <Card className={classes.cartItemCard}>
         <CardActionArea
           className={classes.cartItemCardActionArea}
@@ -47,23 +47,16 @@ const CartItem = ({ cartItem }) => {
             }
             title={cartItem.product.name}
           />
-          <Typography
-            variant="h5"
-            component="h5"
-            className={classes.cartItemName}
-          >
+          <Typography variant="h6" className={classes.cartItemName}>
             {cartItem.product.name}
           </Typography>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.cartItemPrice}
-          >
+          <Typography variant="h6" className={classes.cartItemPrice}>
             ${cartItem.product.price.toFixed(2)}
           </Typography>
         </CardActionArea>
         <CardActions className={classes.cartItemCardActions}>
           <TextField
+            inputProps={{ style: { textAlign: "center" } }}
             className={classes.cartItemQuantity}
             label="Quantity"
             variant="outlined"

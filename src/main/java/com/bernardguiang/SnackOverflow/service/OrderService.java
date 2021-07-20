@@ -62,7 +62,7 @@ public class OrderService {
 	public OrderDTO updateBillingAndShipping(UpdateBillingAndShippingRequest update,  User user) {
 		
 		Order order = orderRepository.findById(update.getId())
-				.orElseThrow(() -> new IllegalStateException("Invalid refresh Order ID: " + update.getId()));	
+				.orElseThrow(() -> new IllegalStateException("Invalid order ID: " + update.getId()));	
 		
 		order.setCreatedDate(Instant.now());
 		
@@ -70,10 +70,10 @@ public class OrderService {
 		billing.setOrder(order);
 		order.setBillingDetails(billing);
 		ShippingDetails shipping = dtoToShippingDetails(update.getShippingDetails());
-		shipping.setOrder(order);
+		if(shipping != null)
+			shipping.setOrder(order);
 		order.setShippingDetails(shipping);
 		order.setShippingSameAsBilling(update.isShippingSameAsBilling());
-		order.setStatus(OrderStatus.PAYMENT_PENDING);
 		Order saved = orderRepository.save(order);
 		
 		return orderToDTO(saved);
@@ -93,7 +93,12 @@ public class OrderService {
 		
 		order.setStatus(OrderStatus.PROCESSING);
 		
-		return orderToDTO(order);
+		Order saved = orderRepository.save(order);
+		
+		
+		System.out.println("ORDER STATUS UPDATED!!!");
+		
+		return orderToDTO(saved);
 	}
 	
 	private Order cartItemsToOrder(List<CartInfoRequestItem> cartItems, String clientSecret, User user) {
@@ -230,6 +235,9 @@ public class OrderService {
 	}
 	
 	private ShippingDetails dtoToShippingDetails(ShippingDetailsDTO dto) {
+		
+		if(dto == null)
+			return null;
 		
 		ShippingDetails entity = new ShippingDetails();
 		if(dto.getId() != null)

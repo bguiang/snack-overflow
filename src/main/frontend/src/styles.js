@@ -203,6 +203,8 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 250,
     flex: 1,
   },
+
+  // Cart
   cartHeader: {
     display: "flex",
   },
@@ -230,6 +232,10 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
     width: 100,
     margin: 16,
+    [theme.breakpoints.down("xs")]: {
+      height: 80,
+      width: 80,
+    },
   },
   cartItemName: {
     flex: 1,
@@ -237,6 +243,7 @@ const useStyles = makeStyles((theme) => ({
   cartItemPrice: { paddingLeft: 8, paddingRight: 8 },
   cartItemQuantity: {
     width: 100,
+    textAlign: "center",
   },
   cartItemCardActions: {
     display: "flex",
@@ -245,8 +252,45 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+
+  // Checkout
+  checkoutHeader: {
+    display: "flex",
+    padding: 0,
+  },
+  checkoutHeaderTitle: {
+    flex: 1,
+  },
   checkoutForm: {
     flex: 1,
+  },
+  checkoutItem: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "row",
+  },
+  checkoutItemName: {
+    flex: 1,
+  },
+  checkoutItemPrice: { paddingLeft: 8, paddingRight: 8 },
+  checkoutItemQuantity: {
+    width: 80,
+    textAlign: "center",
+  },
+  checkoutTotal: {
+    textAlign: "right",
+    paddingTop: 8,
+    borderTop: "1px",
+    borderTopStyle: "solid",
+    borderTopColor: theme.palette.primary.main,
+    fontWeight: "bold",
+  },
+  checkoutOrderInfo: {
+    flex: 1,
+    padding: 16,
+  },
+  addressCard: {
+    padding: 16,
   },
 }));
 
