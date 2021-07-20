@@ -9,6 +9,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import CheckoutItem from "./CheckoutItem";
 import { Typography } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -16,6 +17,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const Checkout = () => {
   const classes = useStyles();
+  const history = useHistory();
   const { cart } = useCart();
   const [cartInfo, setCartInfo] = useState({ items: [], total: 0 });
   const { currentUser } = useAuth();
@@ -25,7 +27,6 @@ const Checkout = () => {
 
   const startCheckoutAndCreatePaymentIntent = async () => {
     try {
-      //TODO: use retrievePaymentIntent later so payment intents are not always created
       console.log("Cart");
       const response = await SnackOverflow.post(
         "/checkout/startCheckout",
@@ -42,11 +43,11 @@ const Checkout = () => {
         setCartInfo(response.data.cart);
         setOrderId(response.data.orderId);
       } else {
-        //history.push("/cart");
+        history.push("/");
       }
     } catch (error) {
       console.log(error);
-      //history.push("/cart");
+      history.push("/");
     }
   };
 
