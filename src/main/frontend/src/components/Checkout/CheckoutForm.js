@@ -345,6 +345,18 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
               margin="dense"
               required
               fullWidth
+              label="phone"
+              onChange={(event) => {
+                setShippingPhone(event.target.value);
+              }}
+              autoComplete="phone"
+            />
+            <TextField
+              variant="outlined"
+              size="small"
+              margin="dense"
+              required
+              fullWidth
               label="address line 1"
               onChange={(event) => {
                 setShippingAddressLine1(event.target.value);

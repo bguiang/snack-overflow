@@ -340,6 +340,51 @@ const useStyles = makeStyles((theme) => ({
   orderCardActionAreaItem2: {
     flex: 2,
   },
+  orderItem: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    padding: 16,
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+    },
+  },
+  orderItemImageContainer: {
+    width: 100,
+  },
+  orderItemImage: { height: 100 },
+  orderItemName: {
+    flex: 1,
+    padding: 16,
+  },
+  orderItemPrice: {
+    padding: 16,
+  },
+  orderItemQuantity: {
+    padding: 16,
+  },
+  orderDetailsBillingAndShipping: {
+    flex: 1,
+    display: "flex",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+    },
+  },
+  orderBillingAndShippingCard: {
+    flex: 1,
+    [theme.breakpoints.down("sm")]: {
+      margin: 8,
+    },
+    [theme.breakpoints.up("sm")]: {
+      marginRight: 8,
+    },
+  },
 }));
 
 export default useStyles;

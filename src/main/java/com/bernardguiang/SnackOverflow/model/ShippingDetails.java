@@ -18,7 +18,7 @@ public class ShippingDetails {
 	@Embedded
 	private Address address;
 	
-	@OneToOne(mappedBy = "billingDetails")
+	@OneToOne(mappedBy = "shippingDetails")
 	private Order order;
 	
 	public ShippingDetails() {

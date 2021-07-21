@@ -53,7 +53,7 @@ public class OrderDTO {
 			ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
 			this.setShippingDetails(shipping);
 		}
-		this.setShippingSameAsBilling(order.isShippingSameAsBilling());
+		this.setIsShippingSameAsBilling(order.isShippingSameAsBilling());
 		this.setUserId(order.getUser().getId());
 		this.setStatus(order.getStatus());
 	}
@@ -107,11 +107,11 @@ public class OrderDTO {
 		this.shippingDetails = shippingDetails;
 	}
 
-	public boolean isShippingSameAsBilling() {
+	public boolean getIsShippingSameAsBilling() {
 		return isShippingSameAsBilling;
 	}
 
-	public void setShippingSameAsBilling(boolean isShippingSameAsBilling) {
+	public void setIsShippingSameAsBilling(boolean isShippingSameAsBilling) {
 		this.isShippingSameAsBilling = isShippingSameAsBilling;
 	}
 

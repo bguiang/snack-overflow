@@ -4,7 +4,7 @@ import { Grid } from "@material-ui/core";
 import { useAuth } from "../../context/AuthContext";
 import useStyles from "../../styles";
 import useOrders from "../../hooks/useOrders";
-import OrderItem from "./OrderItem";
+import OrderCard from "./OrderCard";
 
 const Account = () => {
   const { currentUser, logout } = useAuth();
@@ -62,7 +62,7 @@ const Account = () => {
             </div>
           </Grid>
           {orders.map((order) => (
-            <OrderItem order={order} />
+            <OrderCard order={order} />
           ))}
         </Grid>
       </Grid>

@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, CardActionArea, Typography } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+} from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { useAuth } from "../../context/AuthContext";
 import useStyles from "../../styles";
-import OrderItem from "./OrderItem";
 import SnackOverflow from "../../api/SnackOverflow";
 import { useHistory, useParams } from "react-router-dom";
+import OrderItem from "./OrderItem";
 
 const Order = () => {
   const { currentUser, logout } = useAuth();
@@ -13,17 +19,19 @@ const Order = () => {
   const classes = useStyles();
   const [token, setToken] = useState(null);
 
-  const [order, setOrder] = useState({
-    id: null,
-    items: [],
-    total: 0,
-    createdDate: null,
-    billingDetails: null,
-    shippingDetails: null,
-    isShippingSameAsBilling: false,
-    userId: null,
-    status: null,
-  });
+  // const [order, setOrder] = useState({
+  //   id: null,
+  //   items: [],
+  //   total: 0,
+  //   createdDate: null,
+  //   billingDetails: null,
+  //   shippingDetails: null,
+  //   isShippingSameAsBilling: false,
+  //   userId: null,
+  //   status: null,
+  // });
+  const [order, setOrder] = useState(null);
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -39,6 +47,7 @@ const Order = () => {
         });
 
         if (response.status === 200) {
+          console.log(response.data);
           setOrder(response.data);
         } else {
           history.push("/account");
@@ -53,6 +62,8 @@ const Order = () => {
       getOrder();
     }
   }, [id, token]);
+
+  if (order === null) return <></>;
 
   return (
     <div>
@@ -74,37 +85,104 @@ const Order = () => {
             key={"orderListTitle"}
             className={classes.orderListTitle}
           >
-            <div className={classes.orderCard}>
-              <div className={classes.orderCardActionArea}>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem}
-                >
-                  #{order.id}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
+            <Card className={classes.orderDetailsCard}>
+              <CardActionArea>
+                {order.items.map((item) => (
+                  <OrderItem orderItem={item} />
+                ))}
+              </CardActionArea>
+              <CardContent>
+                <Typography variant="subtitle1" align="right">
+                  Created:{" "}
                   {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
                   {new Date(order.createdDate).toLocaleTimeString("en-US")}
                 </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
-                  {order.status}
+                <Typography variant="subtitle1" align="right">
+                  Status: {order.status}
                 </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem}
-                >
-                  ${order.total.toFixed(2)}
-                </Typography>
-              </div>
-            </div>
+                <div>
+                  <Typography variant="subtitle1" align="right">
+                    Total ${order.total.toFixed(2)}
+                  </Typography>
+                </div>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
+        <div
+          item
+          key="billingAndShipping"
+          className={classes.orderDetailsBillingAndShipping}
+        >
+          <Card className={classes.orderBillingAndShippingCard}>
+            <CardContent>
+              <Typography variant="h6">Billing</Typography>
+              <Typography variant="subtitle1">
+                {order.billingDetails.name}
+              </Typography>
+              <Typography variant="subtitle1">
+                {order.billingDetails.email}
+              </Typography>
+              <Typography variant="subtitle1">
+                {order.billingDetails.phone}
+              </Typography>
+              <Typography variant="subtitle1">
+                {order.billingDetails.address.addressLineOne}
+              </Typography>
+              {order.billingDetails.address.addressLineTwo ? (
+                <Typography variant="subtitle1">
+                  {order.billingDetails.address.addressLineTwo}
+                </Typography>
+              ) : null}
+              <Typography variant="subtitle1">
+                {order.billingDetails.address.city}
+              </Typography>
+              <Typography variant="subtitle1">
+                {order.billingDetails.address.postalCode}
+              </Typography>
+              <Typography variant="subtitle1">
+                {order.billingDetails.address.country}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card className={classes.orderBillingAndShippingCard}>
+            {order.isShippingSameAsBilling ? (
+              <CardContent>
+                <Typography variant="h6">Shipping</Typography>
+                <Typography variant="subtitle1">
+                  Shipped to the billing address
+                </Typography>
+              </CardContent>
+            ) : (
+              <CardContent>
+                <Typography variant="h6">Shipping</Typography>
+                <Typography variant="subtitle1">
+                  {order.shippingDetails.name}
+                </Typography>
+                <Typography variant="subtitle1">
+                  {order.shippingDetails.phone}
+                </Typography>
+                <Typography variant="subtitle1">
+                  {order.shippingDetails.address.addressLineOne}
+                </Typography>
+                {order.shippingDetails.address.addressLineTwo ? (
+                  <Typography variant="subtitle1">
+                    {order.shippingDetails.address.addressLineTwo}
+                  </Typography>
+                ) : null}
+                <Typography variant="subtitle1">
+                  {order.shippingDetails.address.city}
+                </Typography>
+                <Typography variant="subtitle1">
+                  {order.shippingDetails.address.postalCode}
+                </Typography>
+                <Typography variant="subtitle1">
+                  {order.shippingDetails.address.country}
+                </Typography>
+              </CardContent>
+            )}
+          </Card>
+        </div>
       </Grid>
     </div>
   );

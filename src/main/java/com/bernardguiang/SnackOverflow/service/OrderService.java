@@ -188,7 +188,7 @@ public class OrderService {
 		order.setCreatedDate(orderDTO.getCreatedDate());
 		order.setBillingDetails(dtoToBillingDetails(orderDTO.getBillingDetails()));
 		order.setShippingDetails(dtoToShippingDetails(orderDTO.getShippingDetails()));
-		order.setShippingSameAsBilling(orderDTO.isShippingSameAsBilling());
+		order.setShippingSameAsBilling(orderDTO.getIsShippingSameAsBilling());
 		order.setUser(user);
 		if(orderDTO.getStatus() != null)
 			order.setStatus(orderDTO.getStatus());

@@ -1,94 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
 import useStyles from "../../styles";
-import {
-  Grid,
-  Typography,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardActions,
-  CardMedia,
-  Button,
-  TextField,
-  IconButton,
-} from "@material-ui/core";
+import { Grid, Typography, Card, CardMedia } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ orderItem }) => {
   const classes = useStyles();
   const history = useHistory();
 
   const itemClick = (id) => {
     console.log("Item Clicked: " + id);
-    history.push(`/account/orders/${id}`);
+    history.push(`/snacks/${id}`);
   };
   return (
-    <Grid item xs={12} key={order.id}>
-      <Card className={classes.orderCardMobile}>
-        <CardActionArea
-          onClick={() => itemClick(order.id)}
-          className={classes.orderCardActionAreaMobile}
-        >
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            Order: #{order.id}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            Created: {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-            {new Date(order.createdDate).toLocaleTimeString("en-US")}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            Status: {order.status}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            Total: ${order.total.toFixed(2)}
-          </Typography>
-        </CardActionArea>
+    <div
+      onClick={() => itemClick(orderItem.product.id)}
+      className={classes.orderItem}
+      key={orderItem.id}
+    >
+      <Card className={classes.orderItemImageContainer}>
+        <CardMedia
+          className={classes.orderItemImage}
+          image={
+            orderItem.product.images[0] ? orderItem.product.images[0] : null
+          }
+          title={orderItem.product.name}
+        />
       </Card>
-      <Card className={classes.orderCard}>
-        <CardActionArea
-          onClick={() => itemClick(order.id)}
-          className={classes.orderCardActionArea}
-        >
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            #{order.id}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-            {new Date(order.createdDate).toLocaleTimeString("en-US")}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {order.status}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            ${order.total.toFixed(2)}
-          </Typography>
-        </CardActionArea>
-      </Card>
-    </Grid>
+      <Typography variant="subtitle1" className={classes.orderItemName}>
+        {orderItem.product.name}
+      </Typography>
+      <Typography variant="subtitle1" className={classes.orderItemPrice}>
+        Price: ${orderItem.price.toFixed(2)}
+      </Typography>
+      <Typography variant="subtitle1" className={classes.orderItemQuantity}>
+        Quantity: {orderItem.quantity}
+      </Typography>
+    </div>
   );
 };
 
