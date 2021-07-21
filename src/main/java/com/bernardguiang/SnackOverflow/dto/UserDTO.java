@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import com.bernardguiang.SnackOverflow.model.User;
 
 public class UserDTO {
-	private long id;
+	private Long id;
 	
 	@NotBlank
 	private String email;
@@ -24,6 +24,7 @@ public class UserDTO {
 	}
 	
 	public UserDTO(User user) {
+		this.setId(user.getId());
 		this.setUsername(user.getUsername());
 		this.setEmail(user.getEmail());
 		this.setFullName(user.getFullName());
@@ -31,11 +32,11 @@ public class UserDTO {
 		this.setRole(user.getRole());
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

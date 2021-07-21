@@ -11,19 +11,11 @@ import javax.persistence.OneToOne;
 public class ShippingDetails {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	private String name;
 	private String phone;
 	
 	@Embedded
-//	@AttributeOverrides({
-//		  @AttributeOverride( name = "addressLineOne", column = @Column(name = "billing_address_line_one")),
-//		  @AttributeOverride( name = "addressLineTwo", column = @Column(name = "billing_address_line_two")),
-//		  @AttributeOverride( name = "city", column = @Column(name = "billing_city")),
-//		  @AttributeOverride( name = "state", column = @Column(name = "billing_state")),
-//		  @AttributeOverride( name = "postalCode", column = @Column(name = "billing_postal_code")),
-//		  @AttributeOverride( name = "country", column = @Column(name = "billing_country"))
-//	})
 	private Address address;
 	
 	@OneToOne(mappedBy = "billingDetails")
@@ -33,12 +25,12 @@ public class ShippingDetails {
 	}
 	
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

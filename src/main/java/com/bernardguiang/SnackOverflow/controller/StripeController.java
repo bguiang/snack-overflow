@@ -41,8 +41,6 @@ public class StripeController {
 	public ResponseEntity<String> stripeWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader)
 			throws StripeException {
 		System.out.println("STRIPE EVENT");
-		System.out.println("Payload: " + payload);
-		System.out.println("Header: " + sigHeader);
 		Event event = null;
 
 		// Verify Stripe Signature and Payload Structure
@@ -51,12 +49,12 @@ public class StripeController {
 		} catch (JsonSyntaxException e) {
 			// Invalid payload
 			System.out.println("INVALID PAYLOAD");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return new ResponseEntity<>("Invalid Payload", HttpStatus.BAD_REQUEST);
 		} catch (SignatureVerificationException e) {
 			// Invalid signature
 			System.out.println("INVALID SIGNATURE");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return new ResponseEntity<>("Invalid Payload", HttpStatus.BAD_REQUEST);
 		}
 

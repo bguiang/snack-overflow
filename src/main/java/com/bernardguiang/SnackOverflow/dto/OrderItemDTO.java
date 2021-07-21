@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
 
 public class OrderItemDTO {
-	private long id;
+	private Long id;
 	private ProductDTO product;
 	@NotNull
 	private BigDecimal price;
@@ -26,11 +26,11 @@ public class OrderItemDTO {
 		this.setQuantity(orderItem.getQuantity());
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

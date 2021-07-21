@@ -34,18 +34,25 @@ public class OrderDTO {
 	public OrderDTO(Order order) {
 		List<OrderItemDTO> itemDTOs = new ArrayList<>();
 		for(OrderItem item : order.getItems()) {
-			
 			OrderItemDTO itemDTO = new OrderItemDTO(item);
+			itemDTOs.add(itemDTO);
 		}
 		
 		this.setId(order.getId());
 		this.setItems(itemDTOs);
 		this.setTotal(order.getTotal());
 		this.setCreatedDate(order.getCreatedDate());
-		BillingDetailsDTO billing = new BillingDetailsDTO(order.getBillingDetails());
-		this.setBillingDetails(billing);
-		ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
-		this.setShippingDetails(shipping);
+		
+		// TODO: this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
+		if(order.getBillingDetails() != null) {
+			BillingDetailsDTO billing = new BillingDetailsDTO(order.getBillingDetails());
+			this.setBillingDetails(billing);
+		}
+		// TODO: this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
+		if(order.getShippingDetails() != null) {
+			ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
+			this.setShippingDetails(shipping);
+		}
 		this.setShippingSameAsBilling(order.isShippingSameAsBilling());
 		this.setUserId(order.getUser().getId());
 		this.setStatus(order.getStatus());

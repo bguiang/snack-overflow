@@ -37,7 +37,6 @@ public class ProductDTO
 	}
 	
 	public ProductDTO(Product product) {
-		
 		this.setId(product.getId());
 		this.setName(product.getName());
 		this.setDescription(product.getDescription());

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -45,15 +46,21 @@ public class OrderService {
 		this.userRepository = userRepository;
 	}
 	
-	public List<OrderDTO> findAllByUser(User user){
-		Iterable<Order> ordersIterator = orderRepository.findAllByUser(user);
-		List<OrderDTO> orderDTOs = new ArrayList<>();
-		for(Order order : ordersIterator)
-		{
-			OrderDTO orderDTO = new OrderDTO(order);
-			orderDTOs.add(orderDTO);
-		}
-		return orderDTOs;
+//	public List<OrderDTO> findAllByUser(User user){
+//		Iterable<Order> ordersIterator = orderRepository.findAllByUser(user);
+//		List<OrderDTO> orderDTOs = new ArrayList<>();
+//		for(Order order : ordersIterator)
+//		{
+//			OrderDTO orderDTO = new OrderDTO(order);
+//			orderDTOs.add(orderDTO);
+//		}
+//		return orderDTOs;
+//	}
+	
+	public OrderDTO findByIdAndUser(Long id, User user) {
+		Order order = orderRepository.findByIdAndUser(id, user)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id + " and user: " + user.getUsername()));
+		return new OrderDTO(order);
 	}
 	
 	public List<OrderDTO> findAllByUserAndStatusNot(User user, OrderStatus status) {
@@ -67,10 +74,9 @@ public class OrderService {
 		return orderDTOs;
 	}
 	
-	public OrderDTO createOrderWithCartItemsAndClientSecret(List<CartInfoRequestItem> cartItems, String clientSecret, User user) {
+	public Long createOrderWithCartItemsAndClientSecret(List<CartInfoRequestItem> cartItems, String clientSecret, User user) {
 		
 		Order order = new Order();
-		order.setClientSecret(clientSecret);
 		
 		BigDecimal total = getCartTotal(cartItems);
 		
@@ -90,12 +96,13 @@ public class OrderService {
 		order.setItems(items);
 		order.setTotal(total);
 		order.setUser(user);
+		order.setClientSecret(clientSecret);
 		order.setStatus(OrderStatus.CREATED);
 		
 		
 		Order saved = orderRepository.save(order);
 		
-		return new OrderDTO(saved);
+		return saved.getId();
 	}
 	
 	public OrderDTO updateBillingAndShipping(UpdateBillingAndShippingRequest update,  User user) {

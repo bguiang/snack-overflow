@@ -44,11 +44,11 @@ public class OrderController {
 	
 	@GetMapping("/{orderId}")
 	@PreAuthorize("hasAuthority('order:read')")
-	public List<OrderDTO> getOrderByCurrentUser(@PathVariable long orderId, Authentication authentication) {
+	public OrderDTO getOrderByCurrentUser(@PathVariable long orderId, Authentication authentication) {
 		String username = authentication.getName();
 		User user = userService.findUserByUsername(username);
 		
-		return orderService.findAllByUserAndStatusNot(user, OrderStatus.CREATED);
+		return orderService.findByIdAndUser(orderId, user); // TODO: will throw if not found. create custom exception
 	}
 
 //	@PostMapping

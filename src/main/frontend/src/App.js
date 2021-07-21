@@ -23,6 +23,7 @@ import CheckoutSuccess from "./components/Checkout/CheckoutSuccess";
 import CartRoute from "./components/Checkout/CheckoutRoute";
 import Contact from "./components/Contact/Contact";
 import Subscriptions from "./components/Subscriptions/Subscriptions";
+import Order from "./components/Account/Order";
 
 function App() {
   // Theme colors
@@ -89,6 +90,9 @@ function App() {
                     <Route path="/cart">
                       <Cart />
                     </Route>
+                    <PrivateRoute path="/account/orders/:id">
+                      <Order />
+                    </PrivateRoute>
                     <PrivateRoute path="/account">
                       <Account />
                     </PrivateRoute>

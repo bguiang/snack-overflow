@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 public class BillingDetails {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	private String name;
 	private String email;
 	private String phone;
@@ -33,11 +33,11 @@ public class BillingDetails {
 	}
 	
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

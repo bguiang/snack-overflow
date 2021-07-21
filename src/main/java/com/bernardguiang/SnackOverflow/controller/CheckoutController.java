@@ -88,12 +88,12 @@ public class CheckoutController {
 		PaymentIntent intent = PaymentIntent.create(params);
 		String clientSecret = intent.getClientSecret();
 
-		OrderDTO savedOrderDTO = orderService.createOrderWithCartItemsAndClientSecret(cartItems, clientSecret, user);
+		Long savedOrderId = orderService.createOrderWithCartItemsAndClientSecret(cartItems, clientSecret, user);
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("client_secret", clientSecret);
 		map.put("cart", cart);
-		map.put("orderId", savedOrderDTO.getId());
+		map.put("orderId", savedOrderId);
 
 		return new ResponseEntity<>(map, HttpStatus.CREATED);
 	}
