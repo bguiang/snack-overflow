@@ -147,17 +147,6 @@ const Navbar = () => {
                   Contact Us
                 </Typography>
               </Button>
-              <Menu
-                id="mobile-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={handleMenuClose}>Snacks</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Subscriptions</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Contact</MenuItem>
-              </Menu>
             </Box>
             <Box className={classes.toolbar2MenuMobile}>
               <IconButton
@@ -174,10 +163,38 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleMenuClose}>Home</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Snacks</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Subscriptions</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Contact</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    handleClick("/");
+                  }}
+                >
+                  Home
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    handleClick("/snacks");
+                  }}
+                >
+                  Snacks
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    handleClick("/subscriptions");
+                  }}
+                >
+                  Subscriptions
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    handleClick("/contact");
+                  }}
+                >
+                  Contact
+                </MenuItem>
               </Menu>
             </Box>
             <Paper className={classes.toolbar2SearchContainer}>
