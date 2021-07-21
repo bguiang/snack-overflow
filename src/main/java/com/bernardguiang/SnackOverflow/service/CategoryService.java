@@ -24,7 +24,7 @@ public class CategoryService {
 	{
 		Category category = categoryDTOToEntity(categoryDTO);
 		Category saved = categoryRepository.save(category);
-		CategoryDTO categoryDTOSaved = categoryEntityToDTO(saved);
+		CategoryDTO categoryDTOSaved = new CategoryDTO(saved);
 		
 		return categoryDTOSaved;
 	}
@@ -36,20 +36,11 @@ public class CategoryService {
 		List<CategoryDTO> categoryDTOs = new ArrayList<>();
 		for(Category category : categoriesIterator)
 		{
-			CategoryDTO categoryDTO = categoryEntityToDTO(category);
+			CategoryDTO categoryDTO = new CategoryDTO(category);
 			categoryDTOs.add(categoryDTO);
 		}
 		
 		return categoryDTOs;
-	}
-	
-	private CategoryDTO categoryEntityToDTO(Category category)
-	{
-		CategoryDTO categoryDTO = new CategoryDTO();
-		categoryDTO.setId(category.getId());
-		categoryDTO.setName(category.getName());
-		
-		return categoryDTO;
 	}
 	
 	private Category categoryDTOToEntity(CategoryDTO categoryDTO)

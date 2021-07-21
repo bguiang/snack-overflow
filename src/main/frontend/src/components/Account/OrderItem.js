@@ -1,16 +1,34 @@
 import React, { useState } from "react";
 import useStyles from "../../styles";
-import { Grid, Typography, Card, CardActionArea } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardActions,
+  CardMedia,
+  Button,
+  TextField,
+  IconButton,
+} from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-const Order = ({ order }) => {
+const OrderItem = ({ order }) => {
   const classes = useStyles();
   const history = useHistory();
 
+  const itemClick = (id) => {
+    console.log("Item Clicked: " + id);
+    history.push(`/account/orders/${id}`);
+  };
   return (
     <Grid item xs={12} key={order.id}>
       <Card className={classes.orderCardMobile}>
-        <CardActionArea className={classes.orderCardActionAreaMobile}>
+        <CardActionArea
+          onClick={() => itemClick(order.id)}
+          className={classes.orderCardActionAreaMobile}
+        >
           <Typography
             variant="subtitle1"
             className={classes.orderCardActionAreaItem}
@@ -74,4 +92,4 @@ const Order = ({ order }) => {
   );
 };
 
-export default Order;
+export default OrderItem;

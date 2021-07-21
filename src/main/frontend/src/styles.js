@@ -292,6 +292,54 @@ const useStyles = makeStyles((theme) => ({
   addressCard: {
     padding: 16,
   },
+
+  // Orders
+  orderListTitle: {
+    fontWeight: "bold",
+  },
+  orderListTitleMobile: {
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  orderCard: {
+    padding: 16,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+  },
+  orderCardMobile: {
+    padding: 16,
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  orderCardActionArea: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "row",
+  },
+  orderCardActionAreaMobile: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  orderCardActionAreaItem: {
+    flex: 1,
+  },
+  orderCardActionAreaItem2: {
+    flex: 2,
+  },
 }));
 
 export default useStyles;

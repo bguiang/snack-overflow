@@ -10,6 +10,9 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.bernardguiang.SnackOverflow.model.Category;
+import com.bernardguiang.SnackOverflow.model.Product;
+
 
 public class ProductDTO 
 {
@@ -31,6 +34,22 @@ public class ProductDTO
 	public ProductDTO()
 	{
 		
+	}
+	
+	public ProductDTO(Product product) {
+		
+		this.setId(product.getId());
+		this.setName(product.getName());
+		this.setDescription(product.getDescription());
+		this.setPrice(product.getPrice());
+		this.setImages(product.getImages());
+		
+		List<String> categoriesDTO = new ArrayList<>();
+		for(Category category : product.getCategories())
+		{
+			categoriesDTO.add(category.getName());
+		}
+		this.setCategories(categoriesDTO);
 	}
 
 	public Long getId() {

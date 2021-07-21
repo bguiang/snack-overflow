@@ -30,7 +30,7 @@ public class UserService {
 		List<UserDTO> userDTOs = new ArrayList<>();
 		for(User user : userIterator)
 		{
-			UserDTO userDTO = userEntityToDTO(user);
+			UserDTO userDTO = new UserDTO(user);
 			userDTOs.add(userDTO);
 		}
 		
@@ -46,24 +46,12 @@ public class UserService {
 	public UserDTO findUserDTOByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
 		user.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
-		UserDTO userDTO = userEntityToDTO(user.get());
+		UserDTO userDTO = new UserDTO(user.get());
 		return userDTO;
 	}
 	
 	public User findUserByUsername(String username) {
 		return userRepository.findByUsername(username)
 				.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
-	}
-	
-	private UserDTO userEntityToDTO(User user) {
-		UserDTO userDTO = new UserDTO();
-		
-		userDTO.setUsername(user.getUsername());
-		userDTO.setEmail(user.getEmail());
-		userDTO.setFullName(user.getFullName());
-		userDTO.setId(user.getId());
-		userDTO.setRole(user.getRole());
-		
-		return userDTO;
 	}
 }

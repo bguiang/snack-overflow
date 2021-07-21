@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.dto;
 
 import com.bernardguiang.SnackOverflow.model.Address;
+import com.bernardguiang.SnackOverflow.model.ShippingDetails;
 
 public class ShippingDetailsDTO {
 	private Long id;
@@ -10,7 +11,15 @@ public class ShippingDetailsDTO {
 	private Long orderId;
 	
 	public ShippingDetailsDTO() {
-		
+
+	}
+	
+	public ShippingDetailsDTO(ShippingDetails shippingDetails) {
+		this.setId(shippingDetails.getId());
+		this.setAddress(shippingDetails.getAddress());
+		this.setName(shippingDetails.getName());
+		this.setPhone(shippingDetails.getPhone());
+		this.setOrderId(shippingDetails.getOrder().getId());
 	}
 	public Long getId() {
 		return id;

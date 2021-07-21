@@ -1,13 +1,20 @@
 package com.bernardguiang.SnackOverflow.dto;
 
+import com.bernardguiang.SnackOverflow.model.Category;
+
 public class CategoryDTO {
 	private Long id;
 	private String name;
-//	private Set<ProductDTO> products = new HashSet<>();
 	
 	public CategoryDTO() 
 	{
 	
+	}
+	
+	public CategoryDTO(Category category) 
+	{
+		this.setId(category.getId());
+		this.setName(category.getName());
 	}
 	public Long getId() {
 		return id;
@@ -21,12 +28,5 @@ public class CategoryDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-//	public Set<ProductDTO> getProducts() {
-//		return products;
-//	}
-//	public void setProducts(Set<ProductDTO> products) {
-//		this.products = products;
-//	}
-	
 	
 }

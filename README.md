@@ -12,3 +12,5 @@ The Spring Boot backend also expects environment variables for:
 
 Stripe CLI
 - Orders status can only be updated by an admin or through the stripe webhook. Stripe cannot send payment intent event messages to the webhook when running locally but it can be done by listening to the events with the Stripe CLI and forwarding them to the local server https://stripe.com/docs/stripe-cli/webhooks
+- ex: stripe listen --forward-to localhost:8080/api/v1/stripe
+- This returns a stripe webhook secret which you can use to set the environment variable "stripe_webhook_secret"

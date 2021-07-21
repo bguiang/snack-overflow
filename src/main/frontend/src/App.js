@@ -21,6 +21,8 @@ import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
 import CheckoutSuccess from "./components/Checkout/CheckoutSuccess";
 import CartRoute from "./components/Checkout/CheckoutRoute";
+import Contact from "./components/Contact/Contact";
+import Subscriptions from "./components/Subscriptions/Subscriptions";
 
 function App() {
   // Theme colors
@@ -75,11 +77,11 @@ function App() {
                     <Route path="/snacks/:id">
                       <Snack />
                     </Route>
-                    <Route path="/about">
-                      <Snack />
+                    <Route path="/subscriptions">
+                      <Subscriptions />
                     </Route>
                     <Route path="/contact">
-                      <Snack />
+                      <Contact />
                     </Route>
                     <Route path="/login">
                       <LoginSignup />

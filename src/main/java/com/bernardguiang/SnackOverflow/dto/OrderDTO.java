@@ -1,12 +1,16 @@
 package com.bernardguiang.SnackOverflow.dto;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
+import com.bernardguiang.SnackOverflow.model.Order;
+import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
 import com.bernardguiang.SnackOverflow.model.ShippingDetails;
 
@@ -15,17 +19,38 @@ public class OrderDTO {
 	private long id;
 	@NotEmpty
 	private List<OrderItemDTO> items;
+	private BigDecimal total;
 	private Instant createdDate;
-	private String notes;
 	@NotNull
 	private BillingDetailsDTO billingDetails;
-	private ShippingDetailsDTO shippingDetails; // shipping can be null if same as billing
+	private ShippingDetailsDTO shippingDetails;
 	private boolean isShippingSameAsBilling;
-	private long userId; //TODO: validation for id?
+	private long userId;
 	private OrderStatus status;
 
 	public OrderDTO() {
 	}
+	
+	public OrderDTO(Order order) {
+		List<OrderItemDTO> itemDTOs = new ArrayList<>();
+		for(OrderItem item : order.getItems()) {
+			
+			OrderItemDTO itemDTO = new OrderItemDTO(item);
+		}
+		
+		this.setId(order.getId());
+		this.setItems(itemDTOs);
+		this.setTotal(order.getTotal());
+		this.setCreatedDate(order.getCreatedDate());
+		BillingDetailsDTO billing = new BillingDetailsDTO(order.getBillingDetails());
+		this.setBillingDetails(billing);
+		ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
+		this.setShippingDetails(shipping);
+		this.setShippingSameAsBilling(order.isShippingSameAsBilling());
+		this.setUserId(order.getUser().getId());
+		this.setStatus(order.getStatus());
+	}
+
 
 	public long getId() {
 		return id;
@@ -42,6 +67,14 @@ public class OrderDTO {
 	public void setItems(List<OrderItemDTO> items) {
 		this.items = items;
 	}
+	
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
 
 	public Instant getCreatedDate() {
 		return createdDate;
@@ -49,14 +82,6 @@ public class OrderDTO {
 
 	public void setCreatedDate(Instant createdDate) {
 		this.createdDate = createdDate;
-	}
-
-	public String getNotes() {
-		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
 	}
 
 	public BillingDetailsDTO getBillingDetails() {

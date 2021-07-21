@@ -25,6 +25,7 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
   const classes = useStyles();
   const stripe = useStripe();
   const elements = useElements();
+  const [paymentErrorMessage, setPaymentErrorMessage] = useState("");
   const [billingName, setBillingName] = useState("");
   const [billingEmail, setBillingEmail] = useState("");
   const [billingPhone, setBillingPhone] = useState("");
@@ -79,6 +80,7 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
     if (result.error) {
       // Show error to your customer (e.g., insufficient funds)
       console.log(result.error.message);
+      setPaymentErrorMessage(result.error.message);
     } else {
       // The payment has been processed!
       if (result.paymentIntent.status === "succeeded") {
@@ -101,6 +103,7 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
     // which would refresh the page.
     event.preventDefault();
 
+    setPaymentErrorMessage("");
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
@@ -436,6 +439,9 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
       </div>
       <Card>
         <CardSection />
+        {paymentErrorMessage ? (
+          <Typography color="error">{paymentErrorMessage}</Typography>
+        ) : null}
         <Button
           type="submit"
           fullWidth

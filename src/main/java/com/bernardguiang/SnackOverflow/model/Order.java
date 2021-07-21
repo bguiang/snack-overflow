@@ -1,5 +1,6 @@
 package com.bernardguiang.SnackOverflow.model;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class Order {
 	@OneToMany(mappedBy="order", cascade=CascadeType.ALL) 
 	private List<OrderItem> items;
 	
+	private BigDecimal total;
+	
 	private Instant createdDate;
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -78,6 +81,14 @@ public class Order {
 
 	public void setItems(List<OrderItem> items) {
 		this.items = items;
+	}
+	
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 
 	public Instant getCreatedDate() {

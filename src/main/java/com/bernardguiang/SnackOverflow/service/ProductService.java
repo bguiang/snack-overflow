@@ -30,14 +30,14 @@ public class ProductService
 	{
 		Product product = dtoToProduct(productDTO);
 		Product saved = productRepository.save(product);
-		ProductDTO productDTOSaved = productToDTO(saved);
+		ProductDTO productDTOSaved = new ProductDTO(saved);
 		
 		return productDTOSaved;
 	}
 	
 	public ProductDTO findById(long id){
 		Product product =  productRepository.findById(id).orElseThrow(() -> new IllegalStateException("Could not find product " + id));
-		return productToDTO(product);
+		return new ProductDTO(product);
 	}
 	
 	public List<ProductDTO> findAll(){
@@ -46,7 +46,7 @@ public class ProductService
 		List<ProductDTO> productDTOs = new ArrayList<>();
 		for(Product product : productsIterator)
 		{
-			ProductDTO productDTO = productToDTO(product);
+			ProductDTO productDTO = new ProductDTO(product);
 			productDTOs.add(productDTO);
 		}
 		
@@ -62,34 +62,15 @@ public class ProductService
 		{
 			for(Product product: category.get().getProducts())
 			{
-				productDTOs.add(productToDTO(product));
+				productDTOs.add(new ProductDTO(product));
 			}
 		}
 		
 		return productDTOs;
 	}
 	
-	// TODO: make this the constructor method of ProductDTO?
-	private ProductDTO productToDTO(Product product)
-	{
-		ProductDTO productDTO = new ProductDTO();
-		
-		productDTO.setId(product.getId());
-		productDTO.setName(product.getName());
-		productDTO.setDescription(product.getDescription());
-		productDTO.setPrice(product.getPrice());
-		productDTO.setImages(product.getImages());
-		
-		List<String> categoriesDTO = new ArrayList<>();
-		for(Category category : product.getCategories())
-		{
-			categoriesDTO.add(category.getName());
-		}
-		productDTO.setCategories(categoriesDTO);
-		
-		return productDTO;
-	}
-	
+	// do not expose DTO -> Entity Logic as it could accidentally lead to updating the entity when saving using data from the client
+	// Use repository to find by id
 	private Product dtoToProduct(ProductDTO productDTO)
 	{
 		Product product = new Product();

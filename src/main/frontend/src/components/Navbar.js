@@ -134,7 +134,10 @@ const Navbar = () => {
                   Snacks
                 </Typography>
               </Button>
-              <Button onClick={() => handleClick("/contact")} size="large">
+              <Button
+                onClick={() => handleClick("/subscriptions")}
+                size="large"
+              >
                 <Typography className={classes.toolbar2MenuItem} variant="h6">
                   Subscriptions
                 </Typography>

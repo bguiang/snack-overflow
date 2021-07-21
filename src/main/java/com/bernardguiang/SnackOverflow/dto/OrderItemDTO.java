@@ -5,9 +5,11 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.bernardguiang.SnackOverflow.model.OrderItem;
+
 public class OrderItemDTO {
 	private long id;
-	private long productId;
+	private ProductDTO product;
 	@NotNull
 	private BigDecimal price;
 	@Min(1)
@@ -16,44 +18,46 @@ public class OrderItemDTO {
 	public OrderItemDTO() {
 	}
 	
-	public OrderItemDTO(long id, long productId, @NotNull BigDecimal price, @Min(1) int quantity) {
-		super();
-		this.id = id;
-		this.productId = productId;
-		this.price = price;
-		this.quantity = quantity;
+	public OrderItemDTO(OrderItem orderItem) {
+		this.setId(orderItem.getId());
+		ProductDTO productDTO = new ProductDTO(orderItem.getProduct());
+		this.setProduct(productDTO);
+		this.setPrice(orderItem.getPrice());
+		this.setQuantity(orderItem.getQuantity());
 	}
 
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
-	public long getProductId() {
-		return productId;
+
+	public ProductDTO getProduct() {
+		return product;
 	}
-	public void setProductId(long productId) {
-		this.productId = productId;
+
+	public void setProduct(ProductDTO product) {
+		this.product = product;
 	}
+
 	public BigDecimal getPrice() {
 		return price;
 	}
+
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+
 	public int getQuantity() {
 		return quantity;
 	}
+
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
-	@Override
-	public String toString() {
-		return "OrderItemDTO [id=" + id + ", productId=" + productId + ", price=" + price + ", quantity=" + quantity
-				+ "]";
-	}
-	
+
 	
 }
