@@ -1,5 +1,6 @@
 package com.bernardguiang.SnackOverflow.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.bernardguiang.SnackOverflow.model.User;
@@ -10,6 +11,7 @@ public class UserDTO {
 	private Long id;
 	
 	@NotBlank
+	@Email(message = "Must use a valid email")
 	private String email;
 	
 	@NotBlank

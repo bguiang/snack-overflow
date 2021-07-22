@@ -1,17 +1,20 @@
 package com.bernardguiang.SnackOverflow.dto.request;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 public class RegisterRequest {
 	
-	@NotEmpty
-	private String email; //TODO: proper email and password validation
-	@NotEmpty
+	@NotBlank
+	@Email(message = "Must use a valid email")
+	private String email;
+	
+	@NotBlank(message = "FullName cannot be blank or null")
 	private String fullName;
-	@NotEmpty
-	private String username;
-	@NotEmpty
-	private String password;
+	@NotBlank(message = "Username cannot be blank or null")
+	private String username; //TODO: username validation
+	@NotBlank(message = "Must use a valid password")
+	private String password; //TODO: password validation
 	
 	public RegisterRequest() {
 	}

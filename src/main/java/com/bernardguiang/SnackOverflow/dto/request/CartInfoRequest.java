@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 
 public class CartInfoRequest {
-	@NotEmpty
+	@NotEmpty(message = "Cart Items cannot be empty")
 	List<CartInfoRequestItem> items;
 	
 	public CartInfoRequest() {}

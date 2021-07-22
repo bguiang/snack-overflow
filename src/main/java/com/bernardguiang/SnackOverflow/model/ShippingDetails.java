@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.bernardguiang.SnackOverflow.dto.Address;
+
 @Entity
 public class ShippingDetails {
 	@Id
@@ -14,7 +16,7 @@ public class ShippingDetails {
 	private Long id;
 	private String name;
 	private String phone;
-	
+
 	@Embedded
 	private Address address;
 	

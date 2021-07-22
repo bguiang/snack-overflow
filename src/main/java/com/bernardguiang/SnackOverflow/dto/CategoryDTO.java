@@ -1,9 +1,13 @@
 package com.bernardguiang.SnackOverflow.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 import com.bernardguiang.SnackOverflow.model.Category;
 
 public class CategoryDTO {
 	private Long id;
+	@NotBlank
 	private String name;
 	
 	public CategoryDTO() 

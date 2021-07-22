@@ -13,13 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.bernardguiang.SnackOverflow.dto.Address;
+
 @Entity
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Column(unique=true)
-	private String email; //TODO: pattern matching on email
+	private String email;
 	@Column(unique=true)
 	private String username;
 	private String password;

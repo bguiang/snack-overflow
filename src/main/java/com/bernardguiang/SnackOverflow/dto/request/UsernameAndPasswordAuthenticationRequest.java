@@ -1,9 +1,13 @@
 package com.bernardguiang.SnackOverflow.dto.request;
 
+import javax.validation.constraints.NotBlank;
+
 public class UsernameAndPasswordAuthenticationRequest {
 
+	@NotBlank
 	private String username;
-	private String password;
+	@NotBlank
+	private String password; //TODO: password validation
 	public String getUsername() {
 		return username;
 	}

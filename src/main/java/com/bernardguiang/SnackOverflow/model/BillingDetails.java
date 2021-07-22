@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.bernardguiang.SnackOverflow.dto.Address;
+
 @Entity
 public class BillingDetails {
 	@Id

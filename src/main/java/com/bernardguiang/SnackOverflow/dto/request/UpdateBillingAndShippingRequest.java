@@ -7,9 +7,9 @@ import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateBillingAndShippingRequest {
-	@NotNull
+	@NotNull(message="ID cannot be null")
 	private Long id;
-	@NotNull
+	@NotNull(message="Billing Details cannot be null")
 	private BillingDetailsDTO billingDetails;
 	private ShippingDetailsDTO shippingDetails; // shipping can be null if same as billing
 	@JsonProperty

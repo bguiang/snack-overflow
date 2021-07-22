@@ -13,26 +13,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class Product {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
-	@NotBlank
 	@Column(nullable = false, unique = true)
 	private String name;
-	
-	@NotBlank
 	@Column(columnDefinition = "TEXT")
 	private String description;
-	
-	@NotNull
 	private BigDecimal price;
-	
 	@ElementCollection
 	private List<String> images;
 	

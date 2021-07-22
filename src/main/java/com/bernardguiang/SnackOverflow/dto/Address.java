@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.model;
+package com.bernardguiang.SnackOverflow.dto;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;

@@ -25,7 +25,6 @@ public class OrderItem {
 	private Product product;
 	
 	private int quantity;
-	
 	private BigDecimal price; // Prices of products could fluctuate so record the price of the item when the order was made
 	
 	public OrderItem() {
