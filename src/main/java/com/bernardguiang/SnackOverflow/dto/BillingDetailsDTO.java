@@ -3,6 +3,8 @@ package com.bernardguiang.SnackOverflow.dto;
 import com.bernardguiang.SnackOverflow.model.Address;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 
+// Used as request by UpdateBillingAndShippingRequest
+// Used as response as part of OrderResponse
 public class BillingDetailsDTO {
 	private Long id;
 	private String name;

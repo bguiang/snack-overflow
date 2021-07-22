@@ -4,18 +4,16 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
-import com.bernardguiang.SnackOverflow.dto.CartInfoRequestItem;
-import com.bernardguiang.SnackOverflow.dto.CartItem;
-import com.bernardguiang.SnackOverflow.dto.UpdateBillingAndShippingRequest;
-import com.bernardguiang.SnackOverflow.dto.OrderDTO;
-import com.bernardguiang.SnackOverflow.dto.OrderItemDTO;
-import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
+import com.bernardguiang.SnackOverflow.dto.UserDTO;
+import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
+import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
@@ -35,6 +33,7 @@ public class OrderService {
 	private final ProductRepository	productRepository;
 	private final UserRepository userRepository;
 	
+	@Autowired
 	public OrderService(
 			OrderRepository orderRepository, 
 			ProductService productService, 
@@ -46,35 +45,24 @@ public class OrderService {
 		this.userRepository = userRepository;
 	}
 	
-//	public List<OrderDTO> findAllByUser(User user){
-//		Iterable<Order> ordersIterator = orderRepository.findAllByUser(user);
-//		List<OrderDTO> orderDTOs = new ArrayList<>();
-//		for(Order order : ordersIterator)
-//		{
-//			OrderDTO orderDTO = new OrderDTO(order);
-//			orderDTOs.add(orderDTO);
-//		}
-//		return orderDTOs;
-//	}
-	
-	public OrderDTO findByIdAndUser(Long id, User user) {
-		Order order = orderRepository.findByIdAndUser(id, user)
-			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id + " and user: " + user.getUsername()));
-		return new OrderDTO(order);
+	public OrderResponse findByIdAndUserId(Long id, Long userId) {
+		Order order = orderRepository.findByIdAndUserId(id, userId)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id + " and userId: " + userId));
+		return new OrderResponse(order);
 	}
 	
-	public List<OrderDTO> findAllByUserAndStatusNot(User user, OrderStatus status) {
-		Iterable<Order> ordersIterator = orderRepository.findAllByUserAndStatusNot(user, status);
-		List<OrderDTO> orderDTOs = new ArrayList<>();
+	public List<OrderResponse> findAllByUserAndStatusNot(UserDTO user, OrderStatus status) {
+		Iterable<Order> ordersIterator = orderRepository.findAllByUserIdAndStatusNot(user.getId(), status);
+		List<OrderResponse> orderDTOs = new ArrayList<>();
 		for(Order order : ordersIterator)
 		{
-			OrderDTO orderDTO = new OrderDTO(order);
+			OrderResponse orderDTO = new OrderResponse(order);
 			orderDTOs.add(orderDTO);
 		}
 		return orderDTOs;
 	}
 	
-	public Long createOrderWithCartItemsAndClientSecret(List<CartInfoRequestItem> cartItems, String clientSecret, User user) {
+	public Long createOrderWithCartItemsAndClientSecret(List<CartInfoRequestItem> cartItems, String clientSecret, Long userId) {
 		
 		Order order = new Order();
 		
@@ -92,7 +80,8 @@ public class OrderService {
 			item.setQuantity(requestItem.getQuantity());
 			items.add(item);
 		}
-		
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalStateException("Invalid user ID: " + userId));
 		order.setItems(items);
 		order.setTotal(total);
 		order.setUser(user);
@@ -105,7 +94,7 @@ public class OrderService {
 		return saved.getId();
 	}
 	
-	public OrderDTO updateBillingAndShipping(UpdateBillingAndShippingRequest update,  User user) {
+	public OrderResponse updateBillingAndShipping(UpdateBillingAndShippingRequest update, UserDTO user) {
 		
 		Order order = orderRepository.findById(update.getId())
 				.orElseThrow(() -> new IllegalStateException("Invalid order ID: " + update.getId()));	
@@ -122,18 +111,18 @@ public class OrderService {
 		order.setShippingSameAsBilling(update.isShippingSameAsBilling());
 		Order saved = orderRepository.save(order);
 		
-		return new OrderDTO(saved);
+		return new OrderResponse(saved);
 	}
 	
-	public OrderDTO save(OrderDTO orderDTO) {
-		
-		Order order = dtoToOrder(orderDTO);
-		Order saved = orderRepository.save(order);
-		
-		return new OrderDTO(saved);
-	}
+//	public OrderDTO save(OrderDTO orderDTO) {
+//		
+//		Order order = dtoToOrder(orderDTO);
+//		Order saved = orderRepository.save(order);
+//		
+//		return new OrderDTO(saved);
+//	}
 	
-	public OrderDTO updateStatusByClientSecret(String clientSecret, OrderStatus status) {
+	public OrderResponse updateStatusByClientSecret(String clientSecret, OrderStatus status) {
 		Order order = orderRepository.findByClientSecret(clientSecret)
 			.orElseThrow(() -> new IllegalStateException("Could not find Order with Client Secret: " + clientSecret));
 		
@@ -144,7 +133,7 @@ public class OrderService {
 		
 		System.out.println("ORDER STATUS UPDATED!!!");
 		
-		return new OrderDTO(saved);
+		return new OrderResponse(saved);
 	}
 	
 	private BigDecimal getCartTotal(List<CartInfoRequestItem> cartItems) {
@@ -160,41 +149,40 @@ public class OrderService {
 		return total;
 	}
 	
-	private Order dtoToOrder(OrderDTO orderDTO) {
-		
-		Order order = new Order();
-		User user = userRepository.findById(orderDTO.getUserId())
-				.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + orderDTO.getUserId()));
-		
-		List<OrderItem> items = new ArrayList<>();
-		for(OrderItemDTO dto : orderDTO.getItems()) {
-			ProductDTO productDTO = dto.getProduct();
-			//Product product = productService.dtoToProduct(productDTO); // Dont use product from frontend as it might update the product
-			Product product = productRepository.findById(productDTO.getId()) // Load product from repository
-				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + productDTO.getId()));
-			OrderItem item = new OrderItem();
-			item.setId(dto.getId());
-			item.setOrder(order); // set order
-			item.setProduct(product); // set product
-			item.setPrice(dto.getPrice());
-			item.setQuantity(dto.getQuantity());
-			
-			items.add(item);
-		}
-		
-		order.setId(orderDTO.getId());
-		order.setItems(items);
-		order.setTotal(orderDTO.getTotal());
-		order.setCreatedDate(orderDTO.getCreatedDate());
-		order.setBillingDetails(dtoToBillingDetails(orderDTO.getBillingDetails()));
-		order.setShippingDetails(dtoToShippingDetails(orderDTO.getShippingDetails()));
-		order.setShippingSameAsBilling(orderDTO.getIsShippingSameAsBilling());
-		order.setUser(user);
-		if(orderDTO.getStatus() != null)
-			order.setStatus(orderDTO.getStatus());
-		
-		return order;
-	}
+//		
+//		Order order = new Order();
+//		User user = userRepository.findById(orderDTO.getUserId())
+//				.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + orderDTO.getUserId()));
+//		
+//		List<OrderItem> items = new ArrayList<>();
+//		for(OrderItemDTO dto : orderDTO.getItems()) {
+//			ProductDTO productDTO = dto.getProduct();
+//			//Product product = productService.dtoToProduct(productDTO); // Dont use product from frontend as it might update the product
+//			Product product = productRepository.findById(productDTO.getId()) // Load product from repository
+//				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + productDTO.getId()));
+//			OrderItem item = new OrderItem();
+//			item.setId(dto.getId());
+//			item.setOrder(order); // set order
+//			item.setProduct(product); // set product
+//			item.setPrice(dto.getPrice());
+//			item.setQuantity(dto.getQuantity());
+//			
+//			items.add(item);
+//		}
+//		
+//		order.setId(orderDTO.getId());
+//		order.setItems(items);
+//		order.setTotal(orderDTO.getTotal());
+//		order.setCreatedDate(orderDTO.getCreatedDate());
+//		order.setBillingDetails(dtoToBillingDetails(orderDTO.getBillingDetails()));
+//		order.setShippingDetails(dtoToShippingDetails(orderDTO.getShippingDetails()));
+//		order.setShippingSameAsBilling(orderDTO.getIsShippingSameAsBilling());
+//		order.setUser(user);
+//		if(orderDTO.getStatus() != null)
+//			order.setStatus(orderDTO.getStatus());
+//		
+//		return order;
+//	}
 	
 	private BillingDetails dtoToBillingDetails(BillingDetailsDTO dto) {
 		

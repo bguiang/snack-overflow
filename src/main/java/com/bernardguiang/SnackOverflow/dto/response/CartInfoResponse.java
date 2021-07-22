@@ -1,15 +1,15 @@
-package com.bernardguiang.SnackOverflow.dto;
+package com.bernardguiang.SnackOverflow.dto.response;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Cart {
+public class CartInfoResponse {
 	BigDecimal total;
-	List<CartItem> items;
+	List<CartInfoResponseItem> items;
 	
-	public Cart() {
+	public CartInfoResponse() {
 	}
-	public Cart(BigDecimal total, List<CartItem> items) {
+	public CartInfoResponse(BigDecimal total, List<CartInfoResponseItem> items) {
 		this.total = total;
 		this.items = items;
 	}
@@ -19,10 +19,10 @@ public class Cart {
 	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
-	public List<CartItem> getItems() {
+	public List<CartInfoResponseItem> getItems() {
 		return items;
 	}
-	public void setItems(List<CartItem> items) {
+	public void setItems(List<CartInfoResponseItem> items) {
 		this.items = items;
 	}
 	@Override

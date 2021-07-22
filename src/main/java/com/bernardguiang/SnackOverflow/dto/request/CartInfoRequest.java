@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.dto;
+package com.bernardguiang.SnackOverflow.dto.request;
 
 import java.util.List;
 
@@ -9,9 +9,6 @@ public class CartInfoRequest {
 	List<CartInfoRequestItem> items;
 	
 	public CartInfoRequest() {}
-	public CartInfoRequest(@NotEmpty List<CartInfoRequestItem> items) {
-		this.items = items;
-	}
 
 	public List<CartInfoRequestItem> getItems() {
 		return items;

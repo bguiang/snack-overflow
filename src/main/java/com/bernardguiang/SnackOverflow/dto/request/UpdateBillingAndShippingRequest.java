@@ -1,10 +1,9 @@
-package com.bernardguiang.SnackOverflow.dto;
+package com.bernardguiang.SnackOverflow.dto.request;
 
-import java.util.List;
-
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
+import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UpdateBillingAndShippingRequest {
@@ -19,7 +18,6 @@ public class UpdateBillingAndShippingRequest {
 	public UpdateBillingAndShippingRequest() {
 
 	}
-	
 	
 	public Long getId() {
 		return id;

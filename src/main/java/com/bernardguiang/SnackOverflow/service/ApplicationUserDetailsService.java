@@ -22,7 +22,6 @@ public class ApplicationUserDetailsService implements UserDetailsService{
 		this.userRepository = userRepository;
 	}
 
-	// TODO: modify loadUserByUsername to allow authentication using either username or email
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<User> user = userRepository.findByUsername((username));

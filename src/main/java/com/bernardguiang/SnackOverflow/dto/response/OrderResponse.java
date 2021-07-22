@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.dto;
+package com.bernardguiang.SnackOverflow.dto.response;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -8,33 +8,32 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.bernardguiang.SnackOverflow.model.BillingDetails;
+import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
+import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
-import com.bernardguiang.SnackOverflow.model.ShippingDetails;
 
-public class OrderDTO {
+// Used as response in OrderController
+public class OrderResponse {
 
 	private long id;
-	@NotEmpty
-	private List<OrderItemDTO> items;
+	private List<OrderResponseItem> items;
 	private BigDecimal total;
 	private Instant createdDate;
-	@NotNull
 	private BillingDetailsDTO billingDetails;
 	private ShippingDetailsDTO shippingDetails;
 	private boolean isShippingSameAsBilling;
 	private long userId;
 	private OrderStatus status;
 
-	public OrderDTO() {
+	public OrderResponse() {
 	}
 	
-	public OrderDTO(Order order) {
-		List<OrderItemDTO> itemDTOs = new ArrayList<>();
+	public OrderResponse(Order order) {
+		List<OrderResponseItem> itemDTOs = new ArrayList<>();
 		for(OrderItem item : order.getItems()) {
-			OrderItemDTO itemDTO = new OrderItemDTO(item);
+			OrderResponseItem itemDTO = new OrderResponseItem(item);
 			itemDTOs.add(itemDTO);
 		}
 		
@@ -43,12 +42,12 @@ public class OrderDTO {
 		this.setTotal(order.getTotal());
 		this.setCreatedDate(order.getCreatedDate());
 		
-		// TODO: this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
+		// this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
 		if(order.getBillingDetails() != null) {
 			BillingDetailsDTO billing = new BillingDetailsDTO(order.getBillingDetails());
 			this.setBillingDetails(billing);
 		}
-		// TODO: this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
+		// this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
 		if(order.getShippingDetails() != null) {
 			ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
 			this.setShippingDetails(shipping);
@@ -67,11 +66,11 @@ public class OrderDTO {
 		this.id = id;
 	}
 
-	public List<OrderItemDTO> getItems() {
+	public List<OrderResponseItem> getItems() {
 		return items;
 	}
 
-	public void setItems(List<OrderItemDTO> items) {
+	public void setItems(List<OrderResponseItem> items) {
 		this.items = items;
 	}
 	

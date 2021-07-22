@@ -1,13 +1,15 @@
-package com.bernardguiang.SnackOverflow.dto;
+package com.bernardguiang.SnackOverflow.dto.response;
 
 import java.math.BigDecimal;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
 
-public class OrderItemDTO {
+// used as response as part of OrderResponse
+public class OrderResponseItem {
 	private Long id;
 	private ProductDTO product;
 	@NotNull
@@ -15,10 +17,10 @@ public class OrderItemDTO {
 	@Min(1)
 	private int quantity;
 	
-	public OrderItemDTO() {
+	public OrderResponseItem() {
 	}
 	
-	public OrderItemDTO(OrderItem orderItem) {
+	public OrderResponseItem(OrderItem orderItem) {
 		this.setId(orderItem.getId());
 		ProductDTO productDTO = new ProductDTO(orderItem.getProduct());
 		this.setProduct(productDTO);

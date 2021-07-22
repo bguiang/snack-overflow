@@ -2,18 +2,16 @@ package com.bernardguiang.SnackOverflow.dto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Product;
 
-
+// Used as request for creating new product in ProductController
+// Used as response for retrieving products in ProductController
 public class ProductDTO 
 {
 	private Long id;

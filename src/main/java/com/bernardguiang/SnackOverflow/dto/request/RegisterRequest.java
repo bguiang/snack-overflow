@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.dto;
+package com.bernardguiang.SnackOverflow.dto.request;
 
 import javax.validation.constraints.NotEmpty;
 

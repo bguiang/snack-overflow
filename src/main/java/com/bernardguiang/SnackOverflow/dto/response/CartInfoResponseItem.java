@@ -1,10 +1,11 @@
-package com.bernardguiang.SnackOverflow.dto;
+package com.bernardguiang.SnackOverflow.dto.response;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class CartItem {
+import com.bernardguiang.SnackOverflow.dto.ProductDTO;
+
+public class CartInfoResponseItem {
 	@Min(value = 1, message = "Item quantity cannot be zero")
 	int quantity;
 	@NotNull

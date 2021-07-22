@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
-import com.bernardguiang.SnackOverflow.service.CartService;
 import com.bernardguiang.SnackOverflow.service.OrderService;
-import com.bernardguiang.SnackOverflow.service.UserService;
 import com.google.gson.JsonSyntaxException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;

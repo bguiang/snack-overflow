@@ -28,27 +28,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.bernardguiang.SnackOverflow.dto.Cart;
 import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
-import com.bernardguiang.SnackOverflow.service.CartService;
 import com.bernardguiang.SnackOverflow.service.CategoryService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController 
 {
-	@Autowired
-	private ProductService productService;
+	private final ProductService productService;
+	private final CategoryService categoryService;
+	private final Environment env;
 	
 	@Autowired
-	private CategoryService categoryService;
-	
-	@Autowired
-	private Environment env;
+	public ProductController(ProductService productService, CategoryService categoryService, Environment env) {
+		this.productService = productService;
+		this.categoryService = categoryService;
+		this.env = env;
+	}
 	
 	@GetMapping
 	public List<ProductDTO> getProducts() 
@@ -99,7 +97,7 @@ public class ProductController
 	}
 	
 	@PostMapping("/categories")
-	public CategoryDTO addCategory (CategoryDTO categoryDTO)
+	public CategoryDTO addCategory (@Valid CategoryDTO categoryDTO)
 	{
 		return categoryService.save(categoryDTO);
 	}
@@ -112,16 +110,16 @@ public class ProductController
 		CategoryDTO category1 = categoryService.save(cdto1);
 		
 		CategoryDTO cdto2 = new CategoryDTO();
-		cdto1.setName("Korea");
-		CategoryDTO category2 = categoryService.save(cdto1);
+		cdto2.setName("Korea");
+		CategoryDTO category2 = categoryService.save(cdto2);
 		
 		CategoryDTO cdto3 = new CategoryDTO();
-		cdto1.setName("USA");
-		CategoryDTO category3 = categoryService.save(cdto1);
+		cdto3.setName("USA");
+		CategoryDTO category3 = categoryService.save(cdto3);
 		
 		CategoryDTO cdto4 = new CategoryDTO();
-		cdto1.setName("Australia");
-		CategoryDTO category4 = categoryService.save(cdto1);
+		cdto4.setName("Australia");
+		CategoryDTO category4 = categoryService.save(cdto4);
 		
 		List<String> categories = new ArrayList<>();
 		categories.add(category1.getName());

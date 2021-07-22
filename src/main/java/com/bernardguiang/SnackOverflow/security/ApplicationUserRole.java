@@ -1,6 +1,11 @@
 package com.bernardguiang.SnackOverflow.security;
 
-import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.*;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.CATEGORY_READ;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.CATEGORY_WRITE;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.ORDER_READ;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.ORDER_WRITE;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.PRODUCT_READ;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.PRODUCT_WRITE;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +19,7 @@ import com.google.common.collect.Sets;
 public enum ApplicationUserRole {
 	CUSTOMER(Sets.newHashSet(
 			PRODUCT_READ,
-			CATEGORY_READ, // TODO: useless? You don't need to be logged in to see this
+			CATEGORY_READ,
 			ORDER_WRITE
 	)),
 	ADMIN(Sets.newHashSet(

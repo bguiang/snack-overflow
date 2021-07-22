@@ -15,8 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
-import com.bernardguiang.SnackOverflow.dto.UsernameAndPasswordAuthenticationRequest;
+import com.bernardguiang.SnackOverflow.dto.request.UsernameAndPasswordAuthenticationRequest;
+import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
 import com.bernardguiang.SnackOverflow.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;

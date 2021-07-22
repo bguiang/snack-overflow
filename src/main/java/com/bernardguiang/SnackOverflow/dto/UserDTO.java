@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 
 import com.bernardguiang.SnackOverflow.model.User;
 
+// Not used as part of a request since its usually grabbed inside the endpoint using the Authority
+// Not yet used as a response
 public class UserDTO {
 	private Long id;
 	

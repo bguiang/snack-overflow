@@ -16,16 +16,7 @@ public class BillingDetails {
 	private String email;
 	private String phone;
 	@Embedded
-//	@AttributeOverrides({
-//		  @AttributeOverride( name = "addressLineOne", column = @Column(name = "billing_address_line_one")),
-//		  @AttributeOverride( name = "addressLineTwo", column = @Column(name = "billing_address_line_two")),
-//		  @AttributeOverride( name = "city", column = @Column(name = "billing_city")),
-//		  @AttributeOverride( name = "state", column = @Column(name = "billing_state")),
-//		  @AttributeOverride( name = "postalCode", column = @Column(name = "billing_postal_code")),
-//		  @AttributeOverride( name = "country", column = @Column(name = "billing_country"))
-//	})
 	private Address address;
-	
 	@OneToOne(mappedBy = "billingDetails")
 	private Order order;
 

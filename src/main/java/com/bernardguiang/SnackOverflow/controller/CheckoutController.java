@@ -15,30 +15,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bernardguiang.SnackOverflow.dto.Cart;
-import com.bernardguiang.SnackOverflow.dto.CartInfoRequestItem;
-import com.bernardguiang.SnackOverflow.dto.UpdateBillingAndShippingRequest;
-import com.bernardguiang.SnackOverflow.dto.OrderDTO;
-import com.bernardguiang.SnackOverflow.model.OrderStatus;
-import com.bernardguiang.SnackOverflow.model.User;
+import com.bernardguiang.SnackOverflow.dto.UserDTO;
+import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
+import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.service.CartService;
 import com.bernardguiang.SnackOverflow.service.OrderService;
 import com.bernardguiang.SnackOverflow.service.UserService;
-import com.google.gson.JsonSyntaxException;
 import com.stripe.Stripe;
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
-import com.stripe.model.PaymentMethod;
-import com.stripe.model.StripeObject;
-import com.stripe.net.ApiResource;
-import com.stripe.net.Webhook;
 import com.stripe.param.PaymentIntentCreateParams;
 
 @RestController
@@ -62,14 +51,14 @@ public class CheckoutController {
 
 	@PostMapping("/startCheckout")
 	@PreAuthorize("hasAuthority('order:write')")
-	public ResponseEntity<Map<String, Object>> startCheckout(@RequestBody List<CartInfoRequestItem> cartItems,
+	public ResponseEntity<Map<String, Object>> startCheckout(@RequestBody List<@Valid CartInfoRequestItem> cartItems,
 			Authentication authentication) throws StripeException {
 
 		String username = authentication.getName();
-		User user = userService.findUserByUsername(username);
+		UserDTO user = userService.findByUsername(username);
 
 		// Get Cart Product Info and Total
-		Cart cart = cartService.getCartInfo(cartItems);
+		CartInfoResponse cart = cartService.getCartInfo(cartItems);
 
 		// Create Payment Intent
 		String stripeAccessKey = env.getProperty("stripe_access_key");
@@ -88,7 +77,7 @@ public class CheckoutController {
 		PaymentIntent intent = PaymentIntent.create(params);
 		String clientSecret = intent.getClientSecret();
 
-		Long savedOrderId = orderService.createOrderWithCartItemsAndClientSecret(cartItems, clientSecret, user);
+		Long savedOrderId = orderService.createOrderWithCartItemsAndClientSecret(cartItems, clientSecret, user.getId());
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("client_secret", clientSecret);
@@ -103,7 +92,7 @@ public class CheckoutController {
 			@RequestBody @Valid UpdateBillingAndShippingRequest updateBillingAndShippingRequest,
 			Authentication authentication) throws StripeException {
 		String username = authentication.getName();
-		User user = userService.findUserByUsername(username);
+		UserDTO user = userService.findByUsername(username);
 
 		orderService.updateBillingAndShipping(updateBillingAndShippingRequest, user);
 

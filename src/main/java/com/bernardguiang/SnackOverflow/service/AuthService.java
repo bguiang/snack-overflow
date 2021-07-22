@@ -17,8 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.bernardguiang.SnackOverflow.dto.AuthenticationResponse;
-import com.bernardguiang.SnackOverflow.dto.RegisterRequest;
+import com.bernardguiang.SnackOverflow.dto.request.RegisterRequest;
+import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
 import com.bernardguiang.SnackOverflow.model.RefreshToken;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.RefreshTokenRepository;

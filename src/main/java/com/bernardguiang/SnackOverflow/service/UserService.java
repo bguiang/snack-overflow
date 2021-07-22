@@ -20,10 +20,6 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 	
-	public void save(User user) {
-		userRepository.save(user);
-	}
-	
 	public List<UserDTO> findAll(){
 		Iterable<User> userIterator = userRepository.findAll();
 		
@@ -37,21 +33,10 @@ public class UserService {
 		return userDTOs;
 	}
 	
-	public User findById(long id) {
-		Optional<User> user = userRepository.findById(id);
-		user.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + id));
-		return user.get();
-	}
-	
-	public UserDTO findUserDTOByUsername(String username) {
+	public UserDTO findByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
 		user.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
 		UserDTO userDTO = new UserDTO(user.get());
 		return userDTO;
-	}
-	
-	public User findUserByUsername(String username) {
-		return userRepository.findByUsername(username)
-				.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
 	}
 }
