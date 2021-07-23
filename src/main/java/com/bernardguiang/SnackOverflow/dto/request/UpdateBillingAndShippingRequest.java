@@ -9,9 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UpdateBillingAndShippingRequest {
 	@NotNull(message="ID cannot be null")
 	private Long id;
+	
 	@NotNull(message="Billing Details cannot be null")
 	private BillingDetailsDTO billingDetails;
+	
 	private ShippingDetailsDTO shippingDetails; // shipping can be null if same as billing
+	
 	@JsonProperty
 	private boolean isShippingSameAsBilling; // @JsonProperty is required because jackson doesn't like getters without the word "get"
 	

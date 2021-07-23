@@ -51,10 +51,10 @@ public class AuthController {
 		return new ResponseEntity<>("Logout Successful", HttpStatus.OK); 
 	}
 
-	//TODO: IMPORTANT - when generating refresh token cookies, you have to set secure to false or it won't work without https
-	//TODO: refresh tokens are currently mapped one-to-one with users which allows refreshing tokens only on a single device/browser. 
-	//TODO: It might be possible to instead use a one-to-many relationship and track the devices that was used for login/refresh as a token parameter/attribute
-	//TODO: also the current refresh tokens don't have an expiration date
+	// IMPORTANT - when generating refresh token cookies, you have to set secure to false or it won't work without https
+	// refresh tokens are currently mapped one-to-one with users which allows refreshing tokens only on a single device/browser. 
+	// It might be possible to instead use a one-to-many relationship and track the devices that was used for login/refresh as a token parameter/attribute
+	// also the current refresh tokens don't have an expiration date
 	@GetMapping("/refresh")
 	public AuthenticationResponse refreshTokens(
 			HttpServletResponse response, 

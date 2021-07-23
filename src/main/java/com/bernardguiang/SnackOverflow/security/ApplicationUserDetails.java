@@ -33,8 +33,6 @@ public class ApplicationUserDetails implements UserDetails{
 		
 		this.username = user.getUsername();
 		this.password = user.getPassword();
-		
-		// TODO: implement account activation?
 		this.isAccountNonExpired = true;
 		this.isAccountNonLocked = true;
 		this.isCredentialsNonExpired = true;

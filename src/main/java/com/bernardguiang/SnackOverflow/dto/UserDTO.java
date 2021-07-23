@@ -2,6 +2,9 @@ package com.bernardguiang.SnackOverflow.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.bernardguiang.SnackOverflow.model.User;
 
@@ -10,17 +13,19 @@ import com.bernardguiang.SnackOverflow.model.User;
 public class UserDTO {
 	private Long id;
 	
-	@NotBlank
+	@NotBlank(message = "Email cannot be null or blank")
 	@Email(message = "Must use a valid email")
 	private String email;
 	
-	@NotBlank
+	@NotNull(message = "Username cannot be blank or null")
+	@Size(min = 6, max = 15, message = "Username must be at least 6 characters and cannot be longer than 15 characters")
+	@Pattern(regexp = "^[a-zA-Z0-9]+$", message="Username must consist of letters an numbers only")
 	private String username;
 	
-	@NotBlank
+	@NotBlank(message = "FullName cannot be null or blank")
 	private String fullName;
 	
-	@NotBlank
+	@NotBlank(message = "Role cannot be null or blank")
 	private String role;
 	
 	public UserDTO() {

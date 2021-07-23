@@ -1,20 +1,20 @@
 package com.bernardguiang.SnackOverflow.dto;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 @Embeddable
 public class Address {
-	@NotEmpty
+	@NotBlank(message = "Address Line One cannot be null or blank")
 	private String addressLineOne;
 	private String addressLineTwo;
-	@NotEmpty
+	@NotBlank(message = "ACity cannot be null or blank")
 	private String city;
-	@NotEmpty
+	@NotBlank(message = "State cannot be null or blank")
 	private String state;
-	@NotEmpty
+	@NotBlank(message = "PostalCode cannot be null or blank")
 	private String postalCode;
-	@NotEmpty
+	@NotBlank(message = "Country cannot be null or blank")
 	private String country;
 	
 	public Address() {

@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +39,15 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		
 		setFilterProcessesUrl("/api/v1/auth/login"); // modify login url
 	}
+	
+	public Authentication getAuthentication(
+			@Valid UsernameAndPasswordAuthenticationRequest usernameAndPasswordAuthenticationRequest) {
+		Authentication authentication = new UsernamePasswordAuthenticationToken(
+		usernameAndPasswordAuthenticationRequest.getUsername(),
+		usernameAndPasswordAuthenticationRequest.getPassword());
+		
+		return authentication;
+	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -46,10 +56,11 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		try {
 			UsernameAndPasswordAuthenticationRequest usernameAndPasswordAuthenticationRequest = 
 					new ObjectMapper().readValue(request.getInputStream(), UsernameAndPasswordAuthenticationRequest.class);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(
-					usernameAndPasswordAuthenticationRequest.getUsername(),
-					usernameAndPasswordAuthenticationRequest.getPassword()
-			);
+//			Authentication authentication = new UsernamePasswordAuthenticationToken(
+//					usernameAndPasswordAuthenticationRequest.getUsername(),
+//					usernameAndPasswordAuthenticationRequest.getPassword()
+//			);
+			Authentication authentication = getAuthentication(usernameAndPasswordAuthenticationRequest);
 			
 			Authentication authenticated =  authenticationManager.authenticate(authentication);
 			

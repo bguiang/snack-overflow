@@ -1,14 +1,9 @@
 package com.bernardguiang.SnackOverflow.dto.response;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 
 public class CartInfoResponseItem {
-	@Min(value = 1, message = "Item quantity cannot be zero")
 	int quantity;
-	@NotNull
 	ProductDTO product;
 	
 	public int getQuantity() {

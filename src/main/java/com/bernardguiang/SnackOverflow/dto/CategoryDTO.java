@@ -1,13 +1,12 @@
 package com.bernardguiang.SnackOverflow.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import com.bernardguiang.SnackOverflow.model.Category;
 
 public class CategoryDTO {
 	private Long id;
-	@NotBlank
+	@NotBlank(message = "Name cannot be null or blank")
 	private String name;
 	
 	public CategoryDTO() 

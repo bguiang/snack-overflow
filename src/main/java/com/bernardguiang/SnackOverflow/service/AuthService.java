@@ -90,8 +90,6 @@ public class AuthService {
 		return token;
 	}
 	
-	//TODO: how to generate new token from token refresh that contains roles/authorities? 
-	// Currently no access to user info unless we do a manual lookup which defeats the purpose of jwt
 	public String generateJwtWithUser(User user) {
 		
 		// Query db for user to get user roles

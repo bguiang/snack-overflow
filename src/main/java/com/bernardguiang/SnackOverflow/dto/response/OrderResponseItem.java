@@ -2,9 +2,6 @@ package com.bernardguiang.SnackOverflow.dto.response;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
 
@@ -12,9 +9,7 @@ import com.bernardguiang.SnackOverflow.model.OrderItem;
 public class OrderResponseItem {
 	private Long id;
 	private ProductDTO product;
-	@NotNull
 	private BigDecimal price;
-	@Min(1)
 	private int quantity;
 	
 	public OrderResponseItem() {

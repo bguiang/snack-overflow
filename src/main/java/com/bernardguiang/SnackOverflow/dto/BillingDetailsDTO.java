@@ -2,7 +2,6 @@ package com.bernardguiang.SnackOverflow.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -12,15 +11,19 @@ import com.bernardguiang.SnackOverflow.model.BillingDetails;
 // Used as response as part of OrderResponse
 public class BillingDetailsDTO {
 	private Long id;
-	@NotBlank
+	@NotBlank(message = "Name cannot be null or blank")
 	private String name;
-	@NotBlank
+	
+	@NotBlank(message = "Email cannot be null or blank")
 	@Email(message = "Must use a valid email")
 	private String email;
+	
 	@Pattern(regexp="(^$|[0-9]{10})", message="Phone number must consist of ten digits")
 	private String phone;
-	@NotNull
+	
+	@NotNull(message = "Address cannot be null")
 	private Address address;
+	
 	private Long orderId;
 	
 	public BillingDetailsDTO() {

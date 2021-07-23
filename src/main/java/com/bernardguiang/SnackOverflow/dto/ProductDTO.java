@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.bernardguiang.SnackOverflow.model.Category;
@@ -16,16 +17,17 @@ public class ProductDTO
 {
 	private Long id;
 	
-	@NotBlank
+	@NotBlank(message = "Name cannot be null or blank")
 	private String name;
 	
-	@NotBlank
+	@NotBlank(message = "Description cannot be null or blank")
 	private String description;
 	
-	@NotNull
+	@NotNull(message = "Price cannot be null")
 	private BigDecimal price;
 	
-	private List<String> images;
+	@NotEmpty(message = "Images cannot be empty")
+	private List<@NotBlank(message = "Image url cannot be blank or null") String> images;
 	
 	private List<String> categories;
 	

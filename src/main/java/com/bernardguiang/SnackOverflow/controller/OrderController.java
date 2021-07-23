@@ -44,6 +44,6 @@ public class OrderController {
 		String username = authentication.getName();
 		UserDTO user = userService.findByUsername(username);
 		
-		return orderService.findByIdAndUserId(orderId, user.getId()); // TODO: will throw if not found. create custom exception
+		return orderService.findByIdAndUserId(orderId, user.getId());
 	}
 }
