@@ -18,7 +18,7 @@ public class RegisterRequest {
 	private String fullName;
 	
 	@NotNull(message = "Username cannot be null")
-	@Size(min = 6, max = 15, message = "Username must be at least 6 characters and cannot be longer than 15 characters")
+	@Size(min = 6, max = 20, message = "Username must be at least 6 characters and cannot be longer than 20 characters")
 	@Pattern(regexp = "^[a-zA-Z0-9]+$", message="Username must consist of letters an numbers only")
 	private String username;
 	

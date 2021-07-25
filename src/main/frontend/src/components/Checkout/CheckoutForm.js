@@ -300,21 +300,6 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
             </Select>
           </FormControl>
         </Card>
-        {/* Material UI checkbox is broken
-        <FormControlLabel
-          control={
-            <CheckBox
-              color="primary"
-              checked={isShippingSameAsBilling}
-              onClick={() => {
-                setIsShippingSameAsBilling(
-                  (isShippingSameAsBilling) => !isShippingSameAsBilling
-                );
-              }}
-            />
-          }
-          label="Ship to this address"
-        /> */}
         <Typography variant="subtitle1" className={classes.checkoutItemName}>
           <input
             name="isGoing"
