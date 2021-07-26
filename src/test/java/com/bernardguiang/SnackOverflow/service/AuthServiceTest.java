@@ -142,5 +142,37 @@ class AuthServiceTest {
 		);
 		
 	}
+	
+	@Test
+	void itShouldRefreshToken() {
+		// Given
+		
+		String refreshToken = "refresh-token";
+		
+		// When
+		Optional<User> userCheckOptional = Optional.ofNullable(null);
+		Optional<User> emailCheckOptional = Optional.ofNullable(null);
+		when(userRepository.findByUsername(Mockito.any())).thenReturn(userCheckOptional);
+		when(userRepository.findByEmail(Mockito.any())).thenReturn(emailCheckOptional);
+		
+		when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
+		
+		
+		when(userRepository.save(Matchers.argThat((User u) -> 
+				u.getEmail().equalsIgnoreCase(email)
+				&& u.getUsername().equalsIgnoreCase(username)
+				&& u.getPassword().equalsIgnoreCase(encodedPassword)
+				&& u.getFullName().equalsIgnoreCase(fullName)
+				&& u.getRole().equalsIgnoreCase(role)
+				))).thenReturn(userSaved);
+		
+		// Then
+		UserDTO response = underTest.customerSignup(registerRequest);
+		assertEquals(savedId, response.getId());
+		assertEquals(email, response.getEmail());
+		assertEquals(fullName, response.getFullName());
+		assertEquals(username, response.getUsername());
+		assertEquals(ApplicationUserRole.CUSTOMER.name(), response.getRole());
+	}
 
 }
