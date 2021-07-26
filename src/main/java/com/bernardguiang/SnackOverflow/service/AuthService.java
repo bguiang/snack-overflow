@@ -12,8 +12,6 @@ import java.util.UUID;
 import javax.servlet.http.Cookie;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,7 +74,16 @@ public class AuthService {
 				.orElseThrow(() -> new IllegalStateException("Invalid refresh token: " + refreshTokenString));
 		
 		// Generate new Access token
-		String accessToken = generateJwtWithUser(refreshToken.getUser());
+		// - Query db for user to get user roles
+		User user = refreshToken.getUser();
+		Set<GrantedAuthority> authorities = null;
+		List<ApplicationUserRole> roles = Arrays.asList(ApplicationUserRole.values());
+		for(ApplicationUserRole role : roles) {
+			if(role.name().equalsIgnoreCase(user.getRole())) {
+				authorities = role.getGrantedAuthorities();
+			}
+		}
+		String accessToken = generateJwt(user.getUsername(), authorities);
 		
 		AuthenticationResponse authenticationResponse = new AuthenticationResponse();
 		authenticationResponse.setAuthenticationToken(accessToken);
@@ -96,21 +103,6 @@ public class AuthService {
 				.compact();
 		
 		return token;
-	}
-	
-	public String generateJwtWithUser(User user) {
-		
-		// Query db for user to get user roles
-		Set<GrantedAuthority> authorities = null;
-		
-		List<ApplicationUserRole> roles = Arrays.asList(ApplicationUserRole.values());
-		for(ApplicationUserRole role : roles) {
-			if(role.name().equalsIgnoreCase(user.getRole())) {
-				authorities = role.getGrantedAuthorities();
-			}
-		}
-
-		return generateJwt(user.getUsername(), authorities);
 	}
 	
 	public Cookie generateEmptyRefreshTokenCookie() {
