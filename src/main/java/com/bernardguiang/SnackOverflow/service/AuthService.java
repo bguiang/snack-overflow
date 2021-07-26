@@ -24,6 +24,7 @@ import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.RefreshTokenRepository;
 import com.bernardguiang.SnackOverflow.repository.UserRepository;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
+import com.bernardguiang.SnackOverflow.security.JwtConfig;
 
 import io.jsonwebtoken.Jwts;
 
@@ -34,17 +35,19 @@ public class AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final JwtService jwtService;
+	private final JwtConfig jwtConfig;
 	
 	@Autowired
 	public AuthService(
 			UserRepository userRepository, 
 			PasswordEncoder passwordEncoder, 
 			RefreshTokenRepository refreshTokenRepository, 
-			JwtService jwtService) {
+			JwtService jwtService, JwtConfig jwtConfig) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.refreshTokenRepository = refreshTokenRepository;
 		this.jwtService = jwtService;
+		this.jwtConfig = jwtConfig;
 	}
 
 	// Customer Signup
@@ -82,7 +85,12 @@ public class AuthService {
 				authorities = role.getGrantedAuthorities();
 			}
 		}
-		String accessToken = jwtService.generateJwt(user.getUsername(), authorities);
+		String accessToken = jwtService.generateJwt(
+				user.getUsername(), 
+				authorities,
+				new Date(),
+				Date.from(Instant.now().plusMillis(jwtConfig.getTokenExpirationMilliSeconds()))
+		);
 		
 		AuthenticationResponse authenticationResponse = new AuthenticationResponse();
 		authenticationResponse.setAuthenticationToken(accessToken);

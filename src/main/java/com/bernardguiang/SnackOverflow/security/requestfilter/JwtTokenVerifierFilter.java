@@ -20,7 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.bernardguiang.SnackOverflow.security.JwtConfig;
+import com.bernardguiang.SnackOverflow.service.JwtService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -29,10 +29,10 @@ import io.jsonwebtoken.Jwts;
 
 public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 	
-	private final JwtConfig jwtConfig;
+	private final JwtService jwtService;
 	
-	public JwtTokenVerifierFilter(JwtConfig jwtConfig) {
-		this.jwtConfig = jwtConfig;
+	public JwtTokenVerifierFilter(JwtService jwtService) {
+		this.jwtService = jwtService;
 	}
 	
 	public static String getBody(HttpServletRequest request) throws IOException {
@@ -67,7 +67,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 	    body = stringBuilder.toString();
 	    return body;
 	}
-	
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -93,40 +93,11 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 		// JWS is just a signed JWT
 		String token = authorizationHeader.replace("Bearer ",  "");
 		try {
-			Jws<Claims> claimsJws = Jwts.parser()
-				.setSigningKey(jwtConfig.getSecretKeyForSigning()) // make sure this is exactly the same as in the JwtUsernameAndPasswordAuthenticationFilter
-				.parseClaimsJws(token);
+			Claims tokenPayload = jwtService.getTokenPayload(token);
 			
-			// Our token payload format
-			//		{
-			//			  "sub": "bernard",
-			//			  "authorities": [
-			//			    {
-			//			      "authority": "product:write"
-			//			    },
-			//			    {
-			//			      "authority": "category:read"
-			//			    },
-			//			    {
-			//			      "authority": "ROLE_ADMIN"
-			//			    },
-			//			    {
-			//			      "authority": "category:write"
-			//			    },
-			//			    {
-			//			      "authority": "product:read"
-			//			    }
-			//			  ],
-			//			  "iat": 1624931480,
-			//			  "exp": 1626073200
-			//		}
-			
-			// Get Body
-			Claims body = claimsJws.getBody();
-			// get Username
-			String username = body.getSubject();
+			String username = tokenPayload.getSubject();
 			// Get Authorities from the body
-			List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
+			List<Map<String, String>> authorities = (List<Map<String, String>>) tokenPayload.get("authorities");
 			// Convert Authorities to SimpleGrantedAuthorities
 			Set<SimpleGrantedAuthority> simpleGrantedAuthorities = 
 					authorities.stream()

@@ -42,6 +42,7 @@ class AuthServiceTest {
 	private PasswordEncoder passwordEncoder;
 	private RefreshTokenRepository refreshTokenRepository;
 	private JwtService jwtService;
+	private JwtConfig jwtConfig;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -49,8 +50,9 @@ class AuthServiceTest {
 		passwordEncoder = Mockito.mock(PasswordEncoder.class);
 		refreshTokenRepository = Mockito.mock(RefreshTokenRepository.class);
 		jwtService = Mockito.mock(JwtService.class);
+		jwtConfig = Mockito.mock(JwtConfig.class);
 
-		underTest = new AuthService(userRepository, passwordEncoder, refreshTokenRepository, jwtService);
+		underTest = new AuthService(userRepository, passwordEncoder, refreshTokenRepository, jwtService, jwtConfig);
 	}
 
 	@Test
@@ -153,11 +155,15 @@ class AuthServiceTest {
 		Optional<RefreshToken> refreshTokenOptional = Optional.ofNullable(refreshToken);
 		when(refreshTokenRepository.findByToken(refreshTokenString)).thenReturn(refreshTokenOptional);
 		String accessTokenResult = "access token";
-		when(jwtService.generateJwt(Mockito.eq(user.getUsername()),
+		when(jwtService.generateJwt(
+				Mockito.eq(user.getUsername()),
 				Mockito.argThat((Collection<? extends GrantedAuthority> authorities) -> (authorities
 						.containsAll(ApplicationUserRole.CUSTOMER.getGrantedAuthorities())
-						&& ApplicationUserRole.CUSTOMER.getGrantedAuthorities().containsAll(authorities)))))
-								.thenReturn(accessTokenResult);
+						&& ApplicationUserRole.CUSTOMER.getGrantedAuthorities().containsAll(authorities))), 
+				Mockito.any(), 
+				Mockito.any())
+			)
+			.thenReturn(accessTokenResult);
 
 		AuthenticationResponse response = underTest.refreshToken(refreshTokenString);
 

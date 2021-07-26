@@ -1,62 +1,113 @@
 package com.bernardguiang.SnackOverflow.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
-import com.bernardguiang.SnackOverflow.model.RefreshToken;
-import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
+import com.bernardguiang.SnackOverflow.security.JwtConfig;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.Keys;
 
 class JwtServiceTest {
 
+	private JwtService underTest;
+	
+	private JwtConfig jwtConfig;
+	
 	@BeforeEach
 	void setUp() throws Exception {
+		jwtConfig = Mockito.mock(JwtConfig.class);
+		underTest = new JwtService(jwtConfig);
 	}
 
-//	@Test
-//	void itShouldRefreshToken() {
-//		// Given
-//		String refreshTokenString = "refresh-token";
-//		RefreshToken refreshToken = new RefreshToken();
-//		refreshToken.setToken(refreshTokenString);
-//		User user = new User();
-//		user.setRole(ApplicationUserRole.CUSTOMER.name());
-//		user.setUsername("username");
-//		refreshToken.setUser(user);
-//		
-//		// When
-//		Optional<RefreshToken> refreshTokenOptional = Optional.ofNullable(refreshToken);
-//		when(refreshTokenRepository.findByToken(refreshTokenString)).thenReturn(refreshTokenOptional);
-//		when(jwtConfig.getTokenExpirationMilliSeconds()).thenReturn(1000L);
-//		String secret = "shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
-//		SecretKey sk = Keys.hmacShaKeyFor(secret.getBytes());
-//		when(jwtConfig.getSecretKeyForSigning()).thenReturn(sk);
-//		
-//		Mockito.verify(underTest).generateJwt(usernameCaptor.capture(), authoritiesCaptor.capture());
-//		String usernameUsed =  usernameCaptor.getValue();
-//		Collection<? extends GrantedAuthority> authoritiesUsed = authoritiesCaptor.capture();
-//		AuthenticationResponse response = underTest.refreshToken(refreshTokenString);
-//		
-//		// Then
-//		boolean collectionsAreEqual = authoritiesUsed.containsAll(B) && B.containsAll(authoritiesUsed);
-//		//TODO:set up argumentcaptor and assess the properties used in the token builder
-//		assertEquals(user.getUsername(), response.getUsername());
-//	}
+	// This test might fail when changes are made to ApplicationUserRoles as the token string has a fixed payload
+	@Test
+	void itShouldGenerateJwt() {
+		// Given
+		String username = "felix123";
+		Date iat = new Date(1627285608000L);
+		Date exp = new Date(1627286508000L);
+		Collection<? extends GrantedAuthority> authorities = ApplicationUserRole.CUSTOMER.getGrantedAuthorities();
+		
+		String tokenExpected = 
+				"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJmZWxpeDEyMyIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST"
+				+ "0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcn"
+				+ "k6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLCJpYXQiOjE2MjcyODU2MDgsImV4cCI6MTYy"
+				+ "NzI4NjUwOH0.zwOkhm_U7xaauxiY_cSY2mDWJDkf9XdKuG7DPmFYVhcBRhX-vnCI7k4Q2MG8Oy5C";
+		
+		// When
+		String secretKeyString = "ssshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
+		SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
+		when(jwtConfig.getSecretKeyForSigning()).thenReturn(secretKey);
+		
+		String token = underTest.generateJwt(username, authorities, iat, exp);
+		
+		// Then
+		assertEquals(tokenExpected, token);
+	}
+	
+	// This test might fail when changes are made to ApplicationUserRoles as the token string has a fixed payload
+	@Test
+	void itShouldGetTokenPayload() {
+		// Given
+		String token = 
+			"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJmZWxpeDEyMyIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST"
+			+ "0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcn"
+			+ "k6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLCJpYXQiOjE2MjcyODU2MDgsImV4cCI6MTYy"
+			+ "NzI4NjUwOH0.zwOkhm_U7xaauxiY_cSY2mDWJDkf9XdKuG7DPmFYVhcBRhX-vnCI7k4Q2MG8Oy5C";
+		
+		String subExpected = "felix123";
+		Long iatExpected = 1627285608000L;
+		Long expExpected = 1627286508000L;
+		
+		// When
+		String secretKeyString = "ssshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
+		SecretKey key = Keys.hmacShaKeyFor(secretKeyString.getBytes());
+		when(jwtConfig.getSecretKeyForSigning()).thenReturn(key);
+		
+		Claims tokenPayload;
+		try{
+			tokenPayload = underTest.getTokenPayload(token);
+	   }catch(ExpiredJwtException e){
+		   tokenPayload = e.getClaims();
+	    }
+		
+		String username = tokenPayload.getSubject();
+		Long iat = tokenPayload.getIssuedAt().getTime();
+		Long exp = tokenPayload.getExpiration().getTime();
+		// Get Authorities from the body
+		List<Map<String, String>> authorities = (List<Map<String, String>>) tokenPayload.get("authorities");
+		// Convert Authorities to SimpleGrantedAuthorities
+		Set<SimpleGrantedAuthority> simpleGrantedAuthorities = 
+				authorities.stream()
+				.map(authMap -> new SimpleGrantedAuthority(authMap.get("authority")))
+				.collect(Collectors.toSet());
+		
+		// Then
+		assertEquals(subExpected, username);
+		assertEquals(iatExpected, iat);
+		assertEquals(expExpected, exp);
+		assertTrue(simpleGrantedAuthorities.containsAll(ApplicationUserRole.CUSTOMER.getGrantedAuthorities()));
+		assertTrue(ApplicationUserRole.CUSTOMER.getGrantedAuthorities().containsAll(simpleGrantedAuthorities));
+	}
 
 }

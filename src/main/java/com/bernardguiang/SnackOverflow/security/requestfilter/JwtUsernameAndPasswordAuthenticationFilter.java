@@ -2,6 +2,8 @@ package com.bernardguiang.SnackOverflow.security.requestfilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.bernardguiang.SnackOverflow.dto.request.UsernameAndPasswordAuthenticationRequest;
 import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
+import com.bernardguiang.SnackOverflow.security.JwtConfig;
 import com.bernardguiang.SnackOverflow.service.AuthService;
 import com.bernardguiang.SnackOverflow.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,13 +35,16 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
 	private final AuthService authService;
+	private final JwtConfig jwtConfig;
 	
 	public JwtUsernameAndPasswordAuthenticationFilter(
 			AuthenticationManager authenticationManager, 
-			JwtService jwtService, AuthService authService) {
+			JwtService jwtService, AuthService authService,
+			JwtConfig jwtConfig) {
 		this.authenticationManager = authenticationManager;
 		this.jwtService = jwtService;
 		this.authService = authService;
+		this.jwtConfig = jwtConfig;
 		
 		setFilterProcessesUrl("/api/v1/auth/login"); // modify login url
 	}
@@ -59,10 +65,6 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		try {
 			UsernameAndPasswordAuthenticationRequest usernameAndPasswordAuthenticationRequest = 
 					new ObjectMapper().readValue(request.getInputStream(), UsernameAndPasswordAuthenticationRequest.class);
-//			Authentication authentication = new UsernamePasswordAuthenticationToken(
-//					usernameAndPasswordAuthenticationRequest.getUsername(),
-//					usernameAndPasswordAuthenticationRequest.getPassword()
-//			);
 			Authentication authentication = getAuthentication(usernameAndPasswordAuthenticationRequest);
 			
 			Authentication authenticated =  authenticationManager.authenticate(authentication);
@@ -81,33 +83,10 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		
-		// Create token payload
-		//		{
-		//			  "sub": "bernard",
-		//			  "authorities": [
-		//			    {
-		//			      "authority": "product:write"
-		//			    },
-		//			    {
-		//			      "authority": "category:read"
-		//			    },
-		//			    {
-		//			      "authority": "ROLE_ADMIN"
-		//			    },
-		//			    {
-		//			      "authority": "category:write"
-		//			    },
-		//			    {
-		//			      "authority": "product:read"
-		//			    }
-		//			  ],
-		//			  "iat": 1624931480,
-		//			  "exp": 1626073200
-		//		}
-		
-		
 		// Create and Sign JWT
-		String token = jwtService.generateJwt(authResult.getName(), authResult.getAuthorities());
+		Date iat = new Date();
+		Date exp = Date.from(Instant.now().plusMillis(jwtConfig.getTokenExpirationMilliSeconds()));
+		String token = jwtService.generateJwt(authResult.getName(), authResult.getAuthorities(), iat, exp);
 		
 		// Create Refresh Token and store inside HttpOnly Cookie
 		Cookie refreshCookie = authService.generateRefreshTokenCookie(authResult.getName());

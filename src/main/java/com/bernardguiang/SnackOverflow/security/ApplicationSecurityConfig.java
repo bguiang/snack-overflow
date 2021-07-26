@@ -26,20 +26,19 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final PasswordEncoder passwordEncoder;
 	private final ApplicationUserDetailsService applicationUserService;
-	private final JwtConfig jwtConfig;
 	private final JwtService jwtService;
 	private final AuthService authService;
+	private final JwtConfig jwtConfig;
 	
 	@Autowired
 	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, 
-			ApplicationUserDetailsService applicationUserService, 
-			JwtConfig jwtConfig, JwtService jwtService,
-			AuthService authService) {
+			ApplicationUserDetailsService applicationUserService, JwtService jwtService,
+			AuthService authService, JwtConfig jwtConfig) {
 		this.passwordEncoder = passwordEncoder;
 		this.applicationUserService = applicationUserService;
-		this.jwtConfig = jwtConfig;
 		this.jwtService = jwtService;
 		this.authService = authService;
+		this.jwtConfig = jwtConfig;
 	}
 	
 	// Authentication vs Authorization
@@ -105,8 +104,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			.csrf().disable() // csrf attacks mainly happen when there are sessions and when using cookies for authentication
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWTs are stateless
 			.and() // then add JWT Authentication by UsernamePasswordAuthenticationFilter created
-			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtService, authService))
-			.addFilterAfter(new JwtTokenVerifierFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class) // username/password check first before trying to verify token
+			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtService, authService, jwtConfig))
+			.addFilterAfter(new JwtTokenVerifierFilter(jwtService), JwtUsernameAndPasswordAuthenticationFilter.class) // username/password check first before trying to verify token
 			
 			.headers().frameOptions().sameOrigin().and() // To enable H2 DB. Comment out if not using H2
 			.authorizeRequests()// we want to authorize requests
