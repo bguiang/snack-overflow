@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.RegisterRequest;
 import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
 import com.bernardguiang.SnackOverflow.model.RefreshToken;
@@ -49,23 +51,29 @@ public class AuthService {
 	}
 
 	// Customer Signup
-	public void customerSignup(RegisterRequest registerRequest) {
+	public UserDTO customerSignup(RegisterRequest registerRequest) {
+		Optional<User> usernameCheck = userRepository.findByUsername(registerRequest.getUsername());
+		Optional<User> emailCheck = userRepository.findByEmail(registerRequest.getEmail());
+		if(usernameCheck.isPresent())
+			throw new IllegalStateException("An account with this username already exists");
+		if(emailCheck.isPresent())
+			throw new IllegalStateException("An account with this email already exists");
 		User user = new User();
 		user.setUsername(registerRequest.getUsername());
 		user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 		user.setRole(ApplicationUserRole.CUSTOMER.name());
 		user.setFullName(registerRequest.getFullName());
+		user.setEmail(registerRequest.getEmail());
 		User saved = userRepository.save(user);
-		System.out.println(saved);
+		return new UserDTO(saved);
 	}
 	
 	// Refresh Token
 	public AuthenticationResponse refreshToken(String refreshTokenString) {
 		
-		// Validate refresh token on db. Will throw runtime exception if invalid
-		RefreshToken refreshToken = validateAndRetrieveRefreshToken(refreshTokenString);
-		
-		System.out.println("Validated Token: " + refreshToken.toString());
+		// Validate refresh token on db
+		RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenString)
+				.orElseThrow(() -> new IllegalStateException("Invalid refresh token: " + refreshTokenString));
 		
 		// Generate new Access token
 		String accessToken = generateJwtWithUser(refreshToken.getUser());
@@ -141,11 +149,6 @@ public class AuthService {
 		return refreshCookie;
 	}
 	
-	private RefreshToken validateAndRetrieveRefreshToken(String token) {
-		return refreshTokenRepository.findByToken(token)
-			.orElseThrow(() -> new IllegalStateException("Invalid refresh token: " + token));	
-	}
-	
 	private RefreshToken generateRefreshToken(User user) {
 		RefreshToken refreshToken = new RefreshToken();
 		refreshToken.setCreatedDate(Instant.now());
@@ -163,18 +166,5 @@ public class AuthService {
 		refreshCookie.setPath("/api/v1/auth");
 		
 		return refreshCookie;
-	}
-	
-	@EventListener(classes = { ContextRefreshedEvent.class})
-	public void setDefaultUsers() {
-		
-		User user = new User();
-		user.setUsername("bernard");
-		user.setEmail("bernardguiang@gmail.com");
-		user.setPassword(passwordEncoder.encode("password"));
-		user.setRole(ApplicationUserRole.ADMIN.name());
-		user.setFullName("Bernard Guiang");
-		User saved = userRepository.save(user);
-		System.out.println(saved);
 	}
 }

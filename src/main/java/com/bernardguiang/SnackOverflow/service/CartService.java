@@ -11,15 +11,17 @@ import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponseItem;
+import com.bernardguiang.SnackOverflow.model.Product;
+import com.bernardguiang.SnackOverflow.repository.ProductRepository;
 
 @Service
 public class CartService {
 
-	private final ProductService productService;
+	private final ProductRepository productRepository;
 	
 	@Autowired
-	public CartService(ProductService productService) {
-		this.productService = productService;
+	public CartService(ProductRepository productRepository) {
+		this.productRepository = productRepository;
 	}
 	
 	public CartInfoResponse getCartInfo(List<CartInfoRequestItem> cartInfoRequestItems) {
@@ -27,7 +29,9 @@ public class CartService {
 		List<CartInfoResponseItem> cartItems = new ArrayList<>();
 
 		for(CartInfoRequestItem item : cartInfoRequestItems) {
-			ProductDTO productInfo = productService.findById(item.getProductId());
+			Product product =  productRepository.findById(item.getProductId())
+					.orElseThrow(() -> new IllegalStateException("Could not find product " + item.getProductId()));
+			ProductDTO productInfo = new ProductDTO(product);
 			CartInfoResponseItem cartItem = new CartInfoResponseItem();
 			cartItem.setQuantity(item.getQuantity());
 			cartItem.setProduct(productInfo);

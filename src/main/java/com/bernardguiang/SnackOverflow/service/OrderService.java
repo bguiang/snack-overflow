@@ -29,19 +29,16 @@ import com.bernardguiang.SnackOverflow.repository.UserRepository;
 public class OrderService {
 	
 	private final OrderRepository orderRepository;
-	private final ProductService productService;
 	private final ProductRepository	productRepository;
 	private final UserRepository userRepository;
 	
 	@Autowired
 	public OrderService(
 			OrderRepository orderRepository, 
-			ProductService productService, 
 			ProductRepository productRepository,
 			UserRepository userRepository) {
 		this.orderRepository = orderRepository;
 		this.productRepository = productRepository;
-		this.productService = productService;
 		this.userRepository = userRepository;
 	}
 	
@@ -70,7 +67,6 @@ public class OrderService {
 		
 		List<OrderItem> items = new ArrayList<>();
 		for(CartInfoRequestItem requestItem : cartItems) {
-			productService.findById(requestItem.getProductId());
 			Product product = productRepository.findById(requestItem.getProductId())
 				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + requestItem.getProductId()));
 			OrderItem item = new OrderItem();
