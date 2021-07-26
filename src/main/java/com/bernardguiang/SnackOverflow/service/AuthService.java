@@ -24,7 +24,6 @@ import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.RefreshTokenRepository;
 import com.bernardguiang.SnackOverflow.repository.UserRepository;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
-import com.bernardguiang.SnackOverflow.security.JwtConfig;
 
 import io.jsonwebtoken.Jwts;
 
@@ -34,18 +33,18 @@ public class AuthService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final RefreshTokenRepository refreshTokenRepository;
-	private final JwtConfig jwtConfig;
+	private final JwtService jwtService;
 	
 	@Autowired
 	public AuthService(
 			UserRepository userRepository, 
 			PasswordEncoder passwordEncoder, 
 			RefreshTokenRepository refreshTokenRepository, 
-			JwtConfig jwtConfig) {
+			JwtService jwtService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.refreshTokenRepository = refreshTokenRepository;
-		this.jwtConfig = jwtConfig;
+		this.jwtService = jwtService;
 	}
 
 	// Customer Signup
@@ -83,7 +82,7 @@ public class AuthService {
 				authorities = role.getGrantedAuthorities();
 			}
 		}
-		String accessToken = generateJwt(user.getUsername(), authorities);
+		String accessToken = jwtService.generateJwt(user.getUsername(), authorities);
 		
 		AuthenticationResponse authenticationResponse = new AuthenticationResponse();
 		authenticationResponse.setAuthenticationToken(accessToken);
@@ -92,19 +91,6 @@ public class AuthService {
 		// Return Access Token and username in response object
 		return authenticationResponse;
 	}
-	
-	public String generateJwt(String username, Collection<? extends GrantedAuthority> authorities) {
-		String token = Jwts.builder()
-				.setSubject(username) //subject
-				.claim("authorities", authorities)// body
-				.setIssuedAt(new Date()) // iat
-				.setExpiration(Date.from(Instant.now().plusMillis(jwtConfig.getTokenExpirationMilliSeconds())))	// exp
-				.signWith(jwtConfig.getSecretKeyForSigning()) // make sure this is exact same as in the JwtTokenVerifierFilter
-				.compact();
-		
-		return token;
-	}
-	
 	public Cookie generateEmptyRefreshTokenCookie() {
 		Cookie emptyRefreshCookie = new Cookie("refresh-token", null);
 		emptyRefreshCookie.setSecure(false);
@@ -120,7 +106,7 @@ public class AuthService {
 		
 		String tokenString = "";
 		
-		// User has no token - create
+		// User has no token - create 
 		if(user.getRefreshToken() == null) {
 			RefreshToken refreshToken = generateRefreshToken(user);
 			tokenString = refreshToken.getToken();

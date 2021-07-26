@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.bernardguiang.SnackOverflow.dto.request.UsernameAndPasswordAuthenticationRequest;
 import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
 import com.bernardguiang.SnackOverflow.service.AuthService;
+import com.bernardguiang.SnackOverflow.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -29,12 +30,14 @@ import com.google.gson.Gson;
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
 	private final AuthenticationManager authenticationManager;
+	private final JwtService jwtService;
 	private final AuthService authService;
 	
 	public JwtUsernameAndPasswordAuthenticationFilter(
 			AuthenticationManager authenticationManager, 
-			AuthService authService) {
+			JwtService jwtService, AuthService authService) {
 		this.authenticationManager = authenticationManager;
+		this.jwtService = jwtService;
 		this.authService = authService;
 		
 		setFilterProcessesUrl("/api/v1/auth/login"); // modify login url
@@ -104,7 +107,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		
 		
 		// Create and Sign JWT
-		String token = authService.generateJwt(authResult.getName(), authResult.getAuthorities());
+		String token = jwtService.generateJwt(authResult.getName(), authResult.getAuthorities());
 		
 		// Create Refresh Token and store inside HttpOnly Cookie
 		Cookie refreshCookie = authService.generateRefreshTokenCookie(authResult.getName());

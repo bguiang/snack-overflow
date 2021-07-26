@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.security;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,13 +24,23 @@ public class ApplicationUserDetails implements UserDetails{
 		this.user = user;
 		// Get granted authorities from user role
 		String userRole = user.getRole();
-		if(userRole.equalsIgnoreCase("CUSTOMER")) {
-			this.grantedAuthorities = new ArrayList<>(ApplicationUserRole.CUSTOMER.getGrantedAuthorities());
-		} else if(userRole.equalsIgnoreCase("ADMIN")) {
-			this.grantedAuthorities = new ArrayList<>(ApplicationUserRole.ADMIN.getGrantedAuthorities());
-		} else {
-			this.grantedAuthorities = null;
+		
+		List<ApplicationUserRole> roles = Arrays.asList(ApplicationUserRole.values());
+		List<? extends GrantedAuthority> grantedAuthorities = null;
+		for(ApplicationUserRole role : roles) {
+			if(role.name().equalsIgnoreCase(user.getRole())) {
+				grantedAuthorities = new ArrayList<>(role.getGrantedAuthorities());
+			}
 		}
+		this.grantedAuthorities = grantedAuthorities;
+		
+//		if(userRole.equalsIgnoreCase("CUSTOMER")) {
+//			this.grantedAuthorities = new ArrayList<>(ApplicationUserRole.CUSTOMER.getGrantedAuthorities());
+//		} else if(userRole.equalsIgnoreCase("ADMIN")) {
+//			this.grantedAuthorities = new ArrayList<>(ApplicationUserRole.ADMIN.getGrantedAuthorities());
+//		} else {
+//			this.grantedAuthorities = null;
+//		}
 		
 		this.username = user.getUsername();
 		this.password = user.getPassword();

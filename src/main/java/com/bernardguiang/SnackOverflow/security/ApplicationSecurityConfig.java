@@ -17,6 +17,7 @@ import com.bernardguiang.SnackOverflow.security.requestfilter.JwtTokenVerifierFi
 import com.bernardguiang.SnackOverflow.security.requestfilter.JwtUsernameAndPasswordAuthenticationFilter;
 import com.bernardguiang.SnackOverflow.service.ApplicationUserDetailsService;
 import com.bernardguiang.SnackOverflow.service.AuthService;
+import com.bernardguiang.SnackOverflow.service.JwtService;
 
 @Configuration
 @EnableWebSecurity
@@ -26,16 +27,18 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	private final PasswordEncoder passwordEncoder;
 	private final ApplicationUserDetailsService applicationUserService;
 	private final JwtConfig jwtConfig;
+	private final JwtService jwtService;
 	private final AuthService authService;
 	
 	@Autowired
 	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, 
 			ApplicationUserDetailsService applicationUserService, 
-			JwtConfig jwtConfig, 
+			JwtConfig jwtConfig, JwtService jwtService,
 			AuthService authService) {
 		this.passwordEncoder = passwordEncoder;
 		this.applicationUserService = applicationUserService;
 		this.jwtConfig = jwtConfig;
+		this.jwtService = jwtService;
 		this.authService = authService;
 	}
 	
@@ -102,7 +105,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			.csrf().disable() // csrf attacks mainly happen when there are sessions and when using cookies for authentication
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWTs are stateless
 			.and() // then add JWT Authentication by UsernamePasswordAuthenticationFilter created
-			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), authService))
+			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtService, authService))
 			.addFilterAfter(new JwtTokenVerifierFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class) // username/password check first before trying to verify token
 			
 			.headers().frameOptions().sameOrigin().and() // To enable H2 DB. Comment out if not using H2
