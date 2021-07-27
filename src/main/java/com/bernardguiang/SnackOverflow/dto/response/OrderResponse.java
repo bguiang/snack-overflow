@@ -45,7 +45,10 @@ public class OrderResponse {
 			this.setBillingDetails(billing);
 		}
 		// this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
-		if(order.getShippingDetails() != null) {
+		if(order.isShippingSameAsBilling()) {
+			this.setShippingDetails(null);
+		}
+		else {
 			ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
 			this.setShippingDetails(shipping);
 		}
