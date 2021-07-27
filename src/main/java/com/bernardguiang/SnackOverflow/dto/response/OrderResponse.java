@@ -5,9 +5,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
 import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
 import com.bernardguiang.SnackOverflow.model.Order;

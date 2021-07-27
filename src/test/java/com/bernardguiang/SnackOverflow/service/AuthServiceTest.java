@@ -19,12 +19,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.RegisterRequest;
 import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
+import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.RefreshToken;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.RefreshTokenRepository;
@@ -135,7 +138,6 @@ class AuthServiceTest {
 		// Then
 		assertThrows(IllegalStateException.class, () -> underTest.customerSignup(registerRequest),
 				"An account with this username already exists");
-
 	}
 
 	@Test
@@ -231,7 +233,6 @@ class AuthServiceTest {
 		// Given
 		ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 		String username = "myUsername";
-		String refreshTokenString = "myRefreshToken";
 
 		// When
 		User user = new User();

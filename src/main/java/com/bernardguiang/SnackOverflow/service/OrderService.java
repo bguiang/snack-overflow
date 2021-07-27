@@ -129,7 +129,7 @@ public class OrderService {
 		Order order = orderRepository.findByClientSecret(clientSecret)
 			.orElseThrow(() -> new IllegalStateException("Could not find Order with Client Secret: " + clientSecret));
 		
-		order.setStatus(OrderStatus.PROCESSING);
+		order.setStatus(status);
 		
 		Order saved = orderRepository.save(order);
 		

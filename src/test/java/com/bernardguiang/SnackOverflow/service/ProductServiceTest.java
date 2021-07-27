@@ -18,9 +18,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.Category;
+import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 import com.bernardguiang.SnackOverflow.repository.ProductRepository;
@@ -57,48 +60,40 @@ class ProductServiceTest {
 		input.setPrice(price);
 		
 		Long savedId = 5L;
-		Product saved = new Product();
-		Set<String> cat = new HashSet<>();
-		cat.addAll(categories);
-		saved.setCategories(new HashSet<>());
-		saved.setDescription(description);
-		saved.setId(savedId);
-		saved.setImages(images);
-		saved.setName(name);
-		saved.setOrderedItems(new ArrayList<>());
-		saved.setPrice(price);
 		
 		Category japan = new Category();
 		japan.setId(1L);
 		japan.setName("Japan");
-		//japan.setProducts(products);
 		Category korea = new Category();
-		japan.setId(1L);
-		japan.setName("Korea");
-		//japan.setProducts(products);
-		Set<Category> categorySet = new HashSet<>(Arrays.asList(japan, korea));
+		korea.setId(2L);
+		korea.setName("Korea");
 		Optional<Category> japanOptional = Optional.of(japan);
 		Optional<Category> koreaOptional = Optional.of(korea);
 		
 		// When
 		when(categoryRepository.findByName("Japan")).thenReturn(japanOptional);
 		when(categoryRepository.findByName("Korea")).thenReturn(koreaOptional);
-		when(productRepository.save(Mockito.any())).thenReturn(saved);
+		when(productRepository.save(Mockito.any())).thenAnswer(
+				new Answer() {
+					@Override
+					public Object answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						Product savedProduct = (Product) args[0];
+						savedProduct.setId(savedId);
+						return savedProduct;
+					}
+		});
 		
 		ProductDTO savedDTO = underTest.save(input);
-		ArgumentCaptor<Product> productArgumentCaptor = ArgumentCaptor.forClass(Product.class);
-		verify(productRepository).save(productArgumentCaptor.capture());
-		Product beforeSave = productArgumentCaptor.getValue();
 		
 		// Then
 		assertEquals(savedId, savedDTO.getId());
-		assertEquals(2, beforeSave.getCategories().size());
-		assertTrue(beforeSave.getCategories().containsAll(categorySet));
-		assertTrue(categorySet.containsAll(beforeSave.getCategories()));
-		assertEquals(images, beforeSave.getImages());
-		assertEquals(description, beforeSave.getDescription());
-		assertEquals(name, beforeSave.getName());
-		assertEquals(price, beforeSave.getPrice());
+		assertEquals(2, savedDTO.getCategories().size());
+		assertEquals(categories, savedDTO.getCategories());
+		assertEquals(images, savedDTO.getImages());
+		assertEquals(description, savedDTO.getDescription());
+		assertEquals(name, savedDTO.getName());
+		assertEquals(price, savedDTO.getPrice());
 	}
 	
 	@Test

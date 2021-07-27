@@ -69,7 +69,6 @@ class CategoryServiceTest {
 		categories.add(c2);
 		categories.add(c3);
 		
-		
 		// When
 		when(categoryRepository.findAll()).thenReturn(categories);
 		List<CategoryDTO> categoryDTOs = underTest.findAll();

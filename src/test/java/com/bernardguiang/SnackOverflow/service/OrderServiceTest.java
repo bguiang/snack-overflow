@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.bernardguiang.SnackOverflow.dto.Address;
 import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
@@ -260,14 +262,11 @@ class OrderServiceTest {
 		user.setId(userId);
 		Optional<User> userOptional = Optional.of(user);
 
-		Order orderToSave = new Order();
-		orderToSave.setUser(user);
-
 		Long orderId = 8L;
-		Order orderSaved = new Order();
-		orderSaved.setId(orderId);
-		orderSaved.setUser(user);
-		orderSaved.setStatus(OrderStatus.CREATED);
+		
+		Order order = new Order();
+		order.setUser(user);
+		order.setStatus(OrderStatus.CREATED);
 
 		List<CartInfoRequestItem> cartItems = new ArrayList<>();
 		CartInfoRequestItem item = new CartInfoRequestItem();
@@ -283,7 +282,16 @@ class OrderServiceTest {
 				Mockito.argThat((Order o) -> (o.getStatus() == OrderStatus.CREATED && o.getUser().getId() == userId
 						&& o.getTotal().equals(new BigDecimal(10)) && o.getClientSecret() == clientSecret
 						&& o.getItems().get(0).getProduct().getPrice().equals(new BigDecimal(2))
-						&& o.getItems().get(0).getProduct().getId() == productId)))).thenReturn(orderSaved);
+						&& o.getItems().get(0).getProduct().getId() == productId)))).thenAnswer(
+								new Answer() {
+									@Override
+									public Object answer(InvocationOnMock invocation) throws Throwable {
+										Object[] args = invocation.getArguments();
+										Order savedOrder = (Order) args[0];
+										savedOrder.setId(orderId);
+										return savedOrder;
+									}
+						});
 
 		// Then
 		Long savedOrderId = underTest.createOrderWithCartItemsAndClientSecret(cartItems, clientSecret, userId);
@@ -351,9 +359,7 @@ class OrderServiceTest {
 	
 	@Test
 	void itShouldUpdateBillingAndShipping() {
-		// Given
-		ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
-		
+		// Given		
 		Long orderId = 5L;
 		UpdateBillingAndShippingRequest update = new UpdateBillingAndShippingRequest();
 		update.setId(orderId);
@@ -400,101 +406,104 @@ class OrderServiceTest {
 		UserDTO userDTO = new UserDTO();
 		userDTO.setId(userId);
 
-		Order findOrder = new Order();
-		findOrder.setId(orderId);
-		Optional<Order> orderOptional = Optional.of(findOrder);
-
-		Order orderSaved = new Order();
-		List<OrderItem> items = new ArrayList<>();
-		orderSaved.setItems(items);
-		orderSaved.setId(orderId);
 		User user = new User();
 		user.setId(userId);
-		orderSaved.setUser(user);
+		List<OrderItem> items = new ArrayList<>();
+		
+		Order order = new Order();
+		order.setItems(items);
+		order.setId(orderId);
+		order.setUser(user);
+		Optional<Order> orderOptional = Optional.of(order);
 
 		// When
 		when(orderRepository.findByIdAndUserId(orderId, userId)).thenReturn(orderOptional);
-		when(orderRepository.save(Mockito.any())).thenReturn(orderSaved);
+		when(orderRepository.save(order)).thenAnswer(
+				new Answer() {
+					@Override
+					public Object answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						Order savedOrder = (Order) args[0];
+						savedOrder.setId(orderId);
+						return savedOrder;
+					}
+		});
 
 		// Then
 		OrderResponse orderResponse = underTest.updateBillingAndShipping(update, userDTO);
-		verify(orderRepository).save(orderArgumentCaptor.capture());
-		Order orderCaptured = orderArgumentCaptor.getValue();
 
 		assertEquals(orderId, orderResponse.getId());
 		assertEquals(userId, orderResponse.getUserId());
-		assertTrue(orderCaptured.getCreatedDate() != null);
+		assertTrue(orderResponse.getCreatedDate() != null);
 		
 		// Billing And Shipping Details
-		assertEquals(isShippingSameAsBilling, orderCaptured.isShippingSameAsBilling());
+		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
 
 		// ... compare billing
-		assertEquals(1L, orderCaptured.getBillingDetails().getId());
-		assertEquals(name, orderCaptured.getBillingDetails().getName());
-		assertEquals(email, orderCaptured.getBillingDetails().getEmail());
-		assertEquals(orderId, orderCaptured.getBillingDetails().getOrder().getId());
-		assertEquals(phone, orderCaptured.getBillingDetails().getPhone());
-		assertEquals(addressLineOne, orderCaptured.getBillingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderCaptured.getBillingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderCaptured.getBillingDetails().getAddress().getCity());
-		assertEquals(state, orderCaptured.getBillingDetails().getAddress().getState());
-		assertEquals(postalCode, orderCaptured.getBillingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderCaptured.getBillingDetails().getAddress().getCountry());
+		assertEquals(1L, orderResponse.getBillingDetails().getId());
+		assertEquals(name, orderResponse.getBillingDetails().getName());
+		assertEquals(email, orderResponse.getBillingDetails().getEmail());
+		assertEquals(orderId, orderResponse.getBillingDetails().getOrderId());
+		assertEquals(phone, orderResponse.getBillingDetails().getPhone());
+		assertEquals(addressLineOne, orderResponse.getBillingDetails().getAddress().getAddressLineOne());
+		assertEquals(addressLineTwo, orderResponse.getBillingDetails().getAddress().getAddressLineTwo());
+		assertEquals(city, orderResponse.getBillingDetails().getAddress().getCity());
+		assertEquals(state, orderResponse.getBillingDetails().getAddress().getState());
+		assertEquals(postalCode, orderResponse.getBillingDetails().getAddress().getPostalCode());
+		assertEquals(country, orderResponse.getBillingDetails().getAddress().getCountry());
 
 		// ... compare shipping
-		assertEquals(1L, orderCaptured.getShippingDetails().getId());
-		assertEquals(name, orderCaptured.getShippingDetails().getName());
-		assertEquals(orderId, orderCaptured.getShippingDetails().getOrder().getId());
-		assertEquals(phone, orderCaptured.getShippingDetails().getPhone());
-		assertEquals(addressLineOne, orderCaptured.getShippingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderCaptured.getShippingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderCaptured.getShippingDetails().getAddress().getCity());
-		assertEquals(state, orderCaptured.getShippingDetails().getAddress().getState());
-		assertEquals(postalCode, orderCaptured.getShippingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderCaptured.getShippingDetails().getAddress().getCountry());
+		assertEquals(1L, orderResponse.getShippingDetails().getId());
+		assertEquals(name, orderResponse.getShippingDetails().getName());
+		assertEquals(orderId, orderResponse.getShippingDetails().getOrderId());
+		assertEquals(phone, orderResponse.getShippingDetails().getPhone());
+		assertEquals(addressLineOne, orderResponse.getShippingDetails().getAddress().getAddressLineOne());
+		assertEquals(addressLineTwo, orderResponse.getShippingDetails().getAddress().getAddressLineTwo());
+		assertEquals(city, orderResponse.getShippingDetails().getAddress().getCity());
+		assertEquals(state, orderResponse.getShippingDetails().getAddress().getState());
+		assertEquals(postalCode, orderResponse.getShippingDetails().getAddress().getPostalCode());
+		assertEquals(country, orderResponse.getShippingDetails().getAddress().getCountry());
 	}
 	
 	@Test
 	void shippingShouldBeNullWhenUpdatingBillingAndShippingWithBillingSameAsShipping() {
 		// Given
-		ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
-		
 		Long orderId = 5L;
 		UpdateBillingAndShippingRequest update = new UpdateBillingAndShippingRequest();
 		update.setId(orderId);
 
-		String name = "First Last";
-		String email = "my@email.com";
-		String phone = "1234567890";
-		String addressLineOne = "address line 1";
-		String addressLineTwo = "address line 2";
-		String city = "city";
-		String state = "state";
-		String postalCode = "postal";
-		String country = "country";
+//		String name = "First Last";
+//		String email = "my@email.com";
+//		String phone = "1234567890";
+//		String addressLineOne = "address line 1";
+//		String addressLineTwo = "address line 2";
+//		String city = "city";
+//		String state = "state";
+//		String postalCode = "postal";
+//		String country = "country";
 
-		Address address = new Address();
-		address.setAddressLineOne(addressLineOne);
-		address.setAddressLineTwo(addressLineTwo);
-		address.setCity(city);
-		address.setState(state);
-		address.setPostalCode(postalCode);
-		address.setCountry(country);
+//		Address address = new Address();
+//		address.setAddressLineOne(addressLineOne);
+//		address.setAddressLineTwo(addressLineTwo);
+//		address.setCity(city);
+//		address.setState(state);
+//		address.setPostalCode(postalCode);
+//		address.setCountry(country);
 
 		BillingDetailsDTO billingDetails = new BillingDetailsDTO();
-		billingDetails.setId(1L);
-		billingDetails.setName(name);
-		billingDetails.setEmail(email);
-		billingDetails.setPhone(phone);
-		billingDetails.setAddress(address);
-		billingDetails.setOrderId(orderId);
+//		billingDetails.setId(1L);
+//		billingDetails.setName(name);
+//		billingDetails.setEmail(email);
+//		billingDetails.setPhone(phone);
+//		billingDetails.setAddress(address);
+//		billingDetails.setOrderId(orderId);
 
 		ShippingDetailsDTO shippingDetails = new ShippingDetailsDTO();
-		shippingDetails.setId(1L);
-		shippingDetails.setName(name);
-		shippingDetails.setPhone(phone);
-		shippingDetails.setAddress(address);
-		shippingDetails.setOrderId(orderId);
+//		shippingDetails.setId(1L);
+//		shippingDetails.setName(name);
+//		shippingDetails.setPhone(phone);
+//		shippingDetails.setAddress(address);
+//		shippingDetails.setOrderId(orderId);
 
 		update.setBillingDetails(billingDetails);
 		boolean isShippingSameAsBilling = true;
@@ -505,49 +514,39 @@ class OrderServiceTest {
 		UserDTO userDTO = new UserDTO();
 		userDTO.setId(userId);
 
-		Order findOrder = new Order();
-		findOrder.setId(orderId);
-		Optional<Order> orderOptional = Optional.of(findOrder);
-
-		Order orderSaved = new Order();
-		List<OrderItem> items = new ArrayList<>();
-		orderSaved.setItems(items);
-		orderSaved.setId(orderId);
 		User user = new User();
 		user.setId(userId);
-		orderSaved.setUser(user);
+		List<OrderItem> items = new ArrayList<>();
+		
+		Order order = new Order();
+		order.setItems(items);
+		order.setId(orderId);
+		order.setUser(user);
+		Optional<Order> orderOptional = Optional.of(order);
 
 		// When
 		when(orderRepository.findByIdAndUserId(orderId, userId)).thenReturn(orderOptional);
-		when(orderRepository.save(Mockito.any())).thenReturn(orderSaved);
+		when(orderRepository.save(order)).thenAnswer(
+				new Answer() {
+					@Override
+					public Object answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						Order savedOrder = (Order) args[0];
+						savedOrder.setId(orderId);
+						return savedOrder;
+					}
+		});
 
 		// Then
 		OrderResponse orderResponse = underTest.updateBillingAndShipping(update, userDTO);
-		verify(orderRepository).save(orderArgumentCaptor.capture());
-		Order orderCaptured = orderArgumentCaptor.getValue();
 
 		assertEquals(orderId, orderResponse.getId());
 		assertEquals(userId, orderResponse.getUserId());
-		assertTrue(orderCaptured.getCreatedDate() != null);
+		assertTrue(orderResponse.getCreatedDate() != null);
 		
-		// Billing And Shipping Details
-		assertEquals(isShippingSameAsBilling, orderCaptured.isShippingSameAsBilling());
-
-		// ... compare billing
-		assertEquals(1L, orderCaptured.getBillingDetails().getId());
-		assertEquals(name, orderCaptured.getBillingDetails().getName());
-		assertEquals(email, orderCaptured.getBillingDetails().getEmail());
-		assertEquals(orderId, orderCaptured.getBillingDetails().getOrder().getId());
-		assertEquals(phone, orderCaptured.getBillingDetails().getPhone());
-		assertEquals(addressLineOne, orderCaptured.getBillingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderCaptured.getBillingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderCaptured.getBillingDetails().getAddress().getCity());
-		assertEquals(state, orderCaptured.getBillingDetails().getAddress().getState());
-		assertEquals(postalCode, orderCaptured.getBillingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderCaptured.getBillingDetails().getAddress().getCountry());
-
-		// ... compare shipping
-		assertEquals(null, orderCaptured.getShippingDetails());
+		// Shipping Info
+		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
+		assertEquals(null, orderResponse.getShippingDetails());
 	}
 	
 	@Test
@@ -574,7 +573,6 @@ class OrderServiceTest {
 	@Test
 	void itShouldUpdateStatusByClientSecret() {
 		// Given
-		ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
 		String clientSecret = "stripe client secret";
 		OrderStatus initialStatus = OrderStatus.CREATED;
 		OrderStatus statusUpdate = OrderStatus.PROCESSING;
@@ -584,29 +582,34 @@ class OrderServiceTest {
 		UserDTO userDTO = new UserDTO();
 		userDTO.setId(userId);
 
-		Order orderFound = new Order();
-		orderFound.setId(orderId);
-		orderFound.setStatus(initialStatus);
-		Optional<Order> orderOptional = Optional.of(orderFound);
-
-		Order orderSaved = new Order();
-		List<OrderItem> items = new ArrayList<>();
-		orderSaved.setItems(items);
-		orderSaved.setId(orderId);
 		User user = new User();
 		user.setId(userId);
-		orderSaved.setUser(user);
+		List<OrderItem> items = new ArrayList<>();
+		
+		Order order = new Order();
+		order.setStatus(initialStatus);
+		order.setItems(items);
+		order.setUser(user);
+		
+		Optional<Order> orderOptional = Optional.of(order);
 		
 		// When
 		when(orderRepository.findByClientSecret(clientSecret)).thenReturn(orderOptional);
-		when(orderRepository.save(Mockito.any())).thenReturn(orderSaved);
+		when(orderRepository.save(order)).thenAnswer(
+				new Answer() {
+					@Override
+					public Object answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						Order savedOrder = (Order) args[0];
+						savedOrder.setId(orderId);
+						return savedOrder;
+					}
+		});
 
 		// Then
-		underTest.updateStatusByClientSecret(clientSecret, statusUpdate);
-		verify(orderRepository).save(orderArgumentCaptor.capture());
-		Order orderCaptured = orderArgumentCaptor.getValue();
-
-		assertEquals(statusUpdate, orderCaptured.getStatus()); // verify that status is updated before saving
+		OrderResponse orderResponse = underTest.updateStatusByClientSecret(clientSecret, statusUpdate);
+		assertEquals(orderId, orderResponse.getId());
+		assertEquals(statusUpdate, orderResponse.getStatus());
 	}
 	
 	@Test
