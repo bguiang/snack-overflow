@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +34,10 @@ class JwtServiceTest {
 	
 	private JwtConfig jwtConfig;
 	
+	private final String secretKeyString = "ssshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
+	private final Long tokenExpiration = 900000L;
+	private final SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		jwtConfig = Mockito.mock(JwtConfig.class);
@@ -44,8 +49,7 @@ class JwtServiceTest {
 	void itShouldGenerateJwt() {
 		// Given
 		String username = "felix123";
-		Date iat = new Date(1627285608000L);
-		Date exp = new Date(1627286508000L);
+		Instant iat = Instant.ofEpochMilli(1627285608000L);
 		Collection<? extends GrantedAuthority> authorities = ApplicationUserRole.CUSTOMER.getGrantedAuthorities();
 		
 		String tokenExpected = 
@@ -55,11 +59,10 @@ class JwtServiceTest {
 				+ "NzI4NjUwOH0.zwOkhm_U7xaauxiY_cSY2mDWJDkf9XdKuG7DPmFYVhcBRhX-vnCI7k4Q2MG8Oy5C";
 		
 		// When
-		String secretKeyString = "ssshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
-		SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
+		when(jwtConfig.getTokenExpirationMilliSeconds()).thenReturn(tokenExpiration);
 		when(jwtConfig.getSecretKeyForSigning()).thenReturn(secretKey);
 		
-		String token = underTest.generateJwt(username, authorities, iat, exp);
+		String token = underTest.generateJwt(username, authorities, iat);
 		
 		// Then
 		assertEquals(tokenExpected, token);
@@ -80,14 +83,12 @@ class JwtServiceTest {
 		Long expExpected = 1627286508000L;
 		
 		// When
-		String secretKeyString = "ssshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
-		SecretKey key = Keys.hmacShaKeyFor(secretKeyString.getBytes());
-		when(jwtConfig.getSecretKeyForSigning()).thenReturn(key);
+		when(jwtConfig.getSecretKeyForSigning()).thenReturn(secretKey);
 		
 		Claims tokenPayload;
 		try{
 			tokenPayload = underTest.getTokenPayload(token);
-	   }catch(ExpiredJwtException e){
+		}catch(ExpiredJwtException e){
 		   tokenPayload = e.getClaims();
 	    }
 		
@@ -106,8 +107,24 @@ class JwtServiceTest {
 		assertEquals(subExpected, username);
 		assertEquals(iatExpected, iat);
 		assertEquals(expExpected, exp);
-		assertTrue(simpleGrantedAuthorities.containsAll(ApplicationUserRole.CUSTOMER.getGrantedAuthorities()));
-		assertTrue(ApplicationUserRole.CUSTOMER.getGrantedAuthorities().containsAll(simpleGrantedAuthorities));
+		Set<GrantedAuthority> customerAuthorities = ApplicationUserRole.CUSTOMER.getGrantedAuthorities();
+		assertTrue(simpleGrantedAuthorities.containsAll(customerAuthorities));
+		assertTrue(customerAuthorities.containsAll(simpleGrantedAuthorities));
 	}
-
+	
+	@Test
+	void itShouldThrowAnExceptionWhenTokenIsExpired() {
+		// Given
+		String token = 
+			"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJmZWxpeDEyMyIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST"
+			+ "0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcn"
+			+ "k6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLCJpYXQiOjE2MjcyODU2MDgsImV4cCI6MTYy"
+			+ "NzI4NjUwOH0.zwOkhm_U7xaauxiY_cSY2mDWJDkf9XdKuG7DPmFYVhcBRhX-vnCI7k4Q2MG8Oy5C";
+		
+		// When
+		when(jwtConfig.getSecretKeyForSigning()).thenReturn(secretKey);
+		
+		// Then
+		assertThrows(ExpiredJwtException.class, () -> underTest.getTokenPayload(token));
+	}
 }

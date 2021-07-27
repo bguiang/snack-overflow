@@ -35,19 +35,17 @@ public class AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final JwtService jwtService;
-	private final JwtConfig jwtConfig;
 	
 	@Autowired
 	public AuthService(
 			UserRepository userRepository, 
 			PasswordEncoder passwordEncoder, 
 			RefreshTokenRepository refreshTokenRepository, 
-			JwtService jwtService, JwtConfig jwtConfig) {
+			JwtService jwtService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.refreshTokenRepository = refreshTokenRepository;
 		this.jwtService = jwtService;
-		this.jwtConfig = jwtConfig;
 	}
 
 	// Customer Signup
@@ -88,8 +86,7 @@ public class AuthService {
 		String accessToken = jwtService.generateJwt(
 				user.getUsername(), 
 				authorities,
-				new Date(),
-				Date.from(Instant.now().plusMillis(jwtConfig.getTokenExpirationMilliSeconds()))
+				Instant.now()
 		);
 		
 		AuthenticationResponse authenticationResponse = new AuthenticationResponse();

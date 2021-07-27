@@ -3,7 +3,6 @@ package com.bernardguiang.SnackOverflow.security.requestfilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
-import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.bernardguiang.SnackOverflow.dto.request.UsernameAndPasswordAuthenticationRequest;
 import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;
-import com.bernardguiang.SnackOverflow.security.JwtConfig;
 import com.bernardguiang.SnackOverflow.service.AuthService;
 import com.bernardguiang.SnackOverflow.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,16 +33,13 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
 	private final AuthService authService;
-	private final JwtConfig jwtConfig;
 	
 	public JwtUsernameAndPasswordAuthenticationFilter(
 			AuthenticationManager authenticationManager, 
-			JwtService jwtService, AuthService authService,
-			JwtConfig jwtConfig) {
+			JwtService jwtService, AuthService authService) {
 		this.authenticationManager = authenticationManager;
 		this.jwtService = jwtService;
 		this.authService = authService;
-		this.jwtConfig = jwtConfig;
 		
 		setFilterProcessesUrl("/api/v1/auth/login"); // modify login url
 	}
@@ -84,9 +79,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 			Authentication authResult) throws IOException, ServletException {
 		
 		// Create and Sign JWT
-		Date iat = new Date();
-		Date exp = Date.from(Instant.now().plusMillis(jwtConfig.getTokenExpirationMilliSeconds()));
-		String token = jwtService.generateJwt(authResult.getName(), authResult.getAuthorities(), iat, exp);
+		Instant iat = Instant.now();
+		String token = jwtService.generateJwt(authResult.getName(), authResult.getAuthorities(), iat);
 		
 		// Create Refresh Token and store inside HttpOnly Cookie
 		Cookie refreshCookie = authService.generateRefreshTokenCookie(authResult.getName());

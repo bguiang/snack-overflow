@@ -23,7 +23,29 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
-
+/*Our token payload format
+{
+	"sub": "bernard",
+	"authorities": [
+		{
+			"authority": "product:write"
+		},
+		{
+			"authority": "category:read"
+		},
+		{
+			"authority": "ROLE_ADMIN"
+		},
+		{
+			"authority": "category:write"
+		},
+		{
+			"authority": "product:read"
+		}
+	],
+	"iat": 1624931480,
+	"exp": 1626073200
+}*/
 
 @Service
 public class JwtService {
@@ -34,42 +56,20 @@ public class JwtService {
 	public JwtService(JwtConfig jwtConfig) {
 		this.jwtConfig = jwtConfig;
 	}
-	
-//	 Our token payload format
-//	{
-//		"sub": "bernard",
-//		"authorities": [
-//			{
-//				"authority": "product:write"
-//			},
-//			{
-//				"authority": "category:read"
-//			},
-//			{
-//				"authority": "ROLE_ADMIN"
-//			},
-//			{
-//				"authority": "category:write"
-//			},
-//			{
-//				"authority": "product:read"
-//			}
-//		],
-//		"iat": 1624931480,
-//		"exp": 1626073200
-//	}
 
 	public String generateJwt(
 			String username, 
 			Collection<? extends GrantedAuthority> authorities,
-			Date iat, //new Date()
-			Date exp // Date.from(Instant.now().plusMillis(jwtConfig.getTokenExpirationMilliSeconds()))
+			Instant iat
 	) {
+		Date iatDate = Date.from(iat);
+		Date expDate = Date.from(iat.plusMillis(jwtConfig.getTokenExpirationMilliSeconds()));
+		
 		String token = Jwts.builder()
 				.setSubject(username) //subject
 				.claim("authorities", authorities)// body
-				.setIssuedAt(iat) // iat
-				.setExpiration(exp)	// exp
+				.setIssuedAt(iatDate) // iat
+				.setExpiration(expDate)	// exp
 				.signWith(jwtConfig.getSecretKeyForSigning())
 				.compact();
 		
@@ -78,11 +78,9 @@ public class JwtService {
 	
 	public Claims getTokenPayload(String token) throws JwtException {
 		Jws<Claims> claimsJws = Jwts.parser()
-				.setSigningKey(jwtConfig.getSecretKeyForSigning()) // make sure this is exactly the same as in the JwtUsernameAndPasswordAuthenticationFilter
+				.setSigningKey(jwtConfig.getSecretKeyForSigning())
 				.parseClaimsJws(token);
 			
-		// Get Body
-		Claims body = claimsJws.getBody();
-		return body;
+		return claimsJws.getBody();
 	}
 }

@@ -42,7 +42,6 @@ class AuthServiceTest {
 	private PasswordEncoder passwordEncoder;
 	private RefreshTokenRepository refreshTokenRepository;
 	private JwtService jwtService;
-	private JwtConfig jwtConfig;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -50,9 +49,8 @@ class AuthServiceTest {
 		passwordEncoder = Mockito.mock(PasswordEncoder.class);
 		refreshTokenRepository = Mockito.mock(RefreshTokenRepository.class);
 		jwtService = Mockito.mock(JwtService.class);
-		jwtConfig = Mockito.mock(JwtConfig.class);
 
-		underTest = new AuthService(userRepository, passwordEncoder, refreshTokenRepository, jwtService, jwtConfig);
+		underTest = new AuthService(userRepository, passwordEncoder, refreshTokenRepository, jwtService);
 	}
 
 	@Test
@@ -160,7 +158,6 @@ class AuthServiceTest {
 				Mockito.argThat((Collection<? extends GrantedAuthority> authorities) -> (authorities
 						.containsAll(ApplicationUserRole.CUSTOMER.getGrantedAuthorities())
 						&& ApplicationUserRole.CUSTOMER.getGrantedAuthorities().containsAll(authorities))), 
-				Mockito.any(), 
 				Mockito.any())
 			)
 			.thenReturn(accessTokenResult);

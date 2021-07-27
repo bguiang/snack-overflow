@@ -8,8 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
-import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
@@ -63,8 +61,7 @@ public class OrderService {
 		
 		Order order = new Order();
 		
-		BigDecimal total = getCartTotal(cartItems);
-		
+		BigDecimal total = new BigDecimal("0");	
 		List<OrderItem> items = new ArrayList<>();
 		for(CartInfoRequestItem requestItem : cartItems) {
 			Product product = productRepository.findById(requestItem.getProductId())
@@ -75,15 +72,16 @@ public class OrderService {
 			item.setPrice(product.getPrice());
 			item.setQuantity(requestItem.getQuantity());
 			items.add(item);
+			
+			total = total.add(product.getPrice().multiply(new BigDecimal(requestItem.getQuantity())));
 		}
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalStateException("Invalid user ID: " + userId));
+			.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + userId));
 		order.setItems(items);
 		order.setTotal(total);
 		order.setUser(user);
 		order.setClientSecret(clientSecret);
 		order.setStatus(OrderStatus.CREATED);
-		
 		
 		Order saved = orderRepository.save(order);
 		
@@ -92,31 +90,40 @@ public class OrderService {
 	
 	public OrderResponse updateBillingAndShipping(UpdateBillingAndShippingRequest update, UserDTO user) {
 		
-		Order order = orderRepository.findById(update.getId())
-				.orElseThrow(() -> new IllegalStateException("Invalid order ID: " + update.getId()));	
+		Order order = orderRepository.findByIdAndUserId(update.getId(), user.getId())
+				.orElseThrow(() -> new IllegalStateException("Order " + update.getId() + " does not exist for user " + user.getId()));	
 		
 		order.setCreatedDate(Instant.now());
-		
-		BillingDetails billing = dtoToBillingDetails(update.getBillingDetails());
+		 
+		BillingDetails billing = new BillingDetails();
+		if(update.getBillingDetails().getId() != null)
+			billing.setId(update.getBillingDetails().getId());
+		billing.setAddress(update.getBillingDetails().getAddress());
+		billing.setEmail(update.getBillingDetails().getEmail());
+		billing.setPhone(update.getBillingDetails().getPhone());
+		billing.setName(update.getBillingDetails().getName());
 		billing.setOrder(order);
 		order.setBillingDetails(billing);
-		ShippingDetails shipping = dtoToShippingDetails(update.getShippingDetails());
-		if(shipping != null)
-			shipping.setOrder(order);
-		order.setShippingDetails(shipping);
+		
 		order.setShippingSameAsBilling(update.isShippingSameAsBilling());
-		Order saved = orderRepository.save(order);
+		
+		if(update.isShippingSameAsBilling()) {
+			order.setShippingDetails(null);
+		} else {
+			ShippingDetails shipping = new ShippingDetails();
+			if(update.getShippingDetails().getId() != null)
+				shipping.setId(update.getShippingDetails().getId());
+			shipping.setAddress(update.getShippingDetails().getAddress());
+			shipping.setPhone(update.getShippingDetails().getPhone());
+			shipping.setName(update.getShippingDetails().getName());
+			shipping.setOrder(order);
+			order.setShippingDetails(shipping);
+		}
+		
+		Order saved = orderRepository.save(order);	
 		
 		return new OrderResponse(saved);
 	}
-	
-//	public OrderDTO save(OrderDTO orderDTO) {
-//		
-//		Order order = dtoToOrder(orderDTO);
-//		Order saved = orderRepository.save(order);
-//		
-//		return new OrderDTO(saved);
-//	}
 	
 	public OrderResponse updateStatusByClientSecret(String clientSecret, OrderStatus status) {
 		Order order = orderRepository.findByClientSecret(clientSecret)
@@ -126,95 +133,6 @@ public class OrderService {
 		
 		Order saved = orderRepository.save(order);
 		
-		
-		System.out.println("ORDER STATUS UPDATED!!!");
-		
 		return new OrderResponse(saved);
 	}
-	
-	private BigDecimal getCartTotal(List<CartInfoRequestItem> cartItems) {
-		BigDecimal total = new BigDecimal("0");
-		for(CartInfoRequestItem item : cartItems) {
-			
-			Product product = productRepository.findById(item.getProductId())
-					.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + item.getProductId()));
-			
-			total = total.add(product.getPrice().multiply(new BigDecimal(item.getQuantity())));
-		}
-		
-		return total;
-	}
-	
-//		
-//		Order order = new Order();
-//		User user = userRepository.findById(orderDTO.getUserId())
-//				.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + orderDTO.getUserId()));
-//		
-//		List<OrderItem> items = new ArrayList<>();
-//		for(OrderItemDTO dto : orderDTO.getItems()) {
-//			ProductDTO productDTO = dto.getProduct();
-//			//Product product = productService.dtoToProduct(productDTO); // Dont use product from frontend as it might update the product
-//			Product product = productRepository.findById(productDTO.getId()) // Load product from repository
-//				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + productDTO.getId()));
-//			OrderItem item = new OrderItem();
-//			item.setId(dto.getId());
-//			item.setOrder(order); // set order
-//			item.setProduct(product); // set product
-//			item.setPrice(dto.getPrice());
-//			item.setQuantity(dto.getQuantity());
-//			
-//			items.add(item);
-//		}
-//		
-//		order.setId(orderDTO.getId());
-//		order.setItems(items);
-//		order.setTotal(orderDTO.getTotal());
-//		order.setCreatedDate(orderDTO.getCreatedDate());
-//		order.setBillingDetails(dtoToBillingDetails(orderDTO.getBillingDetails()));
-//		order.setShippingDetails(dtoToShippingDetails(orderDTO.getShippingDetails()));
-//		order.setShippingSameAsBilling(orderDTO.getIsShippingSameAsBilling());
-//		order.setUser(user);
-//		if(orderDTO.getStatus() != null)
-//			order.setStatus(orderDTO.getStatus());
-//		
-//		return order;
-//	}
-	
-	private BillingDetails dtoToBillingDetails(BillingDetailsDTO dto) {
-		
-		
-		BillingDetails entity = new BillingDetails();
-		if(dto.getId() != null)
-			entity.setId(dto.getId());
-		entity.setAddress(dto.getAddress());
-		entity.setEmail(dto.getEmail());
-		entity.setPhone(dto.getPhone());
-		entity.setName(dto.getName());
-		if(dto.getOrderId() != null) {
-			Order order = orderRepository.findById(dto.getOrderId()).orElse(null);
-			entity.setOrder(order);
-			}
-		
-		return entity;
-	}
-	
-	private ShippingDetails dtoToShippingDetails(ShippingDetailsDTO dto) {
-		
-		if(dto == null)
-			return null;
-		
-		ShippingDetails entity = new ShippingDetails();
-		if(dto.getId() != null)
-			entity.setId(dto.getId());
-		entity.setAddress(dto.getAddress());
-		entity.setPhone(dto.getPhone());
-		entity.setName(dto.getName());
-		if(dto.getOrderId() != null) {
-			Order order = orderRepository.findById(dto.getOrderId()).orElse(null);
-			entity.setOrder(order);
-		}
-		return entity;
-	}
-
-
 }
