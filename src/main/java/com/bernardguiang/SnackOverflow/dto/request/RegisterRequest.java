@@ -28,13 +28,6 @@ public class RegisterRequest {
 	public RegisterRequest() {
 	}
 	
-	public RegisterRequest(String email, String fullName, String username, String password) {
-		this.email = email;
-		this.fullName = fullName;
-		this.username = username;
-		this.password = password;
-	}
-
 	public String getEmail() {
 		return email;
 	}

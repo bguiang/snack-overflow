@@ -89,7 +89,9 @@ class ProductServiceTest {
 		// Then
 		assertEquals(savedId, savedDTO.getId());
 		assertEquals(2, savedDTO.getCategories().size());
-		assertEquals(categories, savedDTO.getCategories());
+		assertTrue(categories.containsAll(savedDTO.getCategories()));
+		assertTrue(savedDTO.getCategories().containsAll(categories));
+		
 		assertEquals(images, savedDTO.getImages());
 		assertEquals(description, savedDTO.getDescription());
 		assertEquals(name, savedDTO.getName());

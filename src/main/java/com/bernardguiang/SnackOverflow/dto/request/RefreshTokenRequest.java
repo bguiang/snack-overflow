@@ -18,11 +18,6 @@ public class RefreshTokenRequest {
 
 	}
 	
-	public RefreshTokenRequest(@NotBlank String refreshToken, String username) {
-		this.refreshToken = refreshToken;
-		this.username = username;
-	}
-	
 	public String getRefreshToken() {
 		return refreshToken;
 	}

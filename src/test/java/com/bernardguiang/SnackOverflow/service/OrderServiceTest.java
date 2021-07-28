@@ -221,6 +221,11 @@ class OrderServiceTest {
 		items1.add(orderItem1);
 		order1.setItems(items1);
 		order1.setUser(user);
+		order1.setId(1L);
+		BillingDetails billingDetails1 = new BillingDetails();
+		billingDetails1.setOrder(order1);
+		order1.setBillingDetails(billingDetails1);
+		order1.setShippingSameAsBilling(true);
 
 		Order order2 = new Order();
 		List<OrderItem> items2 = new ArrayList<>();
@@ -232,6 +237,11 @@ class OrderServiceTest {
 		items2.add(orderItem2);
 		order2.setItems(items2);
 		order2.setUser(user);
+		order2.setId(3L);
+		BillingDetails billingDetails2 = new BillingDetails();
+		billingDetails2.setOrder(order2);
+		order2.setBillingDetails(billingDetails2);
+		order2.setShippingSameAsBilling(true);
 
 		orders.add(order1);
 		orders.add(order2);
@@ -586,10 +596,16 @@ class OrderServiceTest {
 		user.setId(userId);
 		List<OrderItem> items = new ArrayList<>();
 		
+		
 		Order order = new Order();
 		order.setStatus(initialStatus);
 		order.setItems(items);
 		order.setUser(user);
+		BillingDetails billingDetails = new BillingDetails();
+		billingDetails.setOrder(order);
+		order.setShippingSameAsBilling(true);
+		order.setId(orderId);
+		order.setBillingDetails(billingDetails);
 		
 		Optional<Order> orderOptional = Optional.of(order);
 		

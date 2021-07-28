@@ -1,24 +1,16 @@
 package com.bernardguiang.SnackOverflow.dto.response;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import com.bernardguiang.SnackOverflow.dto.Address;
-import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
-import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
-import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
@@ -281,5 +273,85 @@ class OrderResponseTest {
 		assertEquals(item2.getQuantity(), responseItem2.getQuantity());
 		assertEquals(item2.getProduct().getId(), responseItem2.getProduct().getId());
 	}
+	
+	@Test
+	void itShouldConstructOrderResponseFromOrderWithNoBillingAndShippingDetails() {
+		// Given
+		Long orderId = 7L;
+		BigDecimal total = new BigDecimal(10);
+		Instant createDate = Instant.now();
+		boolean isShippingSameAsBilling = false;
+		Long userId = 2L;
+		User user = new User();
+		user.setId(userId);
+		String clientSecret = "client secret";
+		OrderStatus status = OrderStatus.COMPLETED;
 
+		BillingDetails billingDetails = null;
+		ShippingDetails shippingDetails = null;
+		
+		Order order = new Order();
+		order.setId(orderId);
+		order.setTotal(total);
+		order.setCreatedDate(createDate);
+		order.setBillingDetails(billingDetails);
+		order.setShippingDetails(shippingDetails);
+		order.setShippingSameAsBilling(isShippingSameAsBilling);
+		order.setUser(user);
+		order.setClientSecret(clientSecret);
+		order.setStatus(status);
+		
+		List<OrderItem> items = new ArrayList<>();
+		OrderItem item1 = new OrderItem();
+		item1.setId(1L);
+		item1.setOrder(order);
+		item1.setPrice(new BigDecimal(2));
+		Product product1 = new Product();
+		product1.setId(1L);
+		item1.setProduct(product1);
+		item1.setQuantity(5);
+		OrderItem item2 = new OrderItem();
+		item2.setId(2L);
+		item2.setOrder(order);
+		item2.setPrice(new BigDecimal(5));
+		Product product2 = new Product();
+		product2.setId(2L);
+		item2.setProduct(product2);
+		item2.setQuantity(2);
+		items.add(item1);
+		items.add(item2);
+		order.setItems(items);
+		
+		// When
+		OrderResponse orderResponse = new OrderResponse(order);
+		
+		// Then
+		
+		assertEquals(orderId, orderResponse.getId());
+		assertEquals(userId, orderResponse.getUserId());
+		assertEquals(total, orderResponse.getTotal());
+		assertEquals(status, orderResponse.getStatus());
+		assertEquals(userId, orderResponse.getUserId());
+		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
+		assertEquals(createDate, orderResponse.getCreatedDate());
+
+		// ... compare billing
+		assertEquals(null, orderResponse.getBillingDetails());
+
+		// ... compare shipping
+		assertEquals(null, orderResponse.getShippingDetails());
+
+		// .. compare order items
+		OrderResponseItem responseItem1 = orderResponse.getItems().get(0);
+		OrderResponseItem responseItem2 = orderResponse.getItems().get(1);
+		assertEquals(item1.getId(), responseItem1.getId());
+		assertEquals(item1.getPrice(), responseItem1.getPrice());
+		assertEquals(item1.getQuantity(), responseItem1.getQuantity());
+		assertEquals(item1.getProduct().getId(), responseItem1.getProduct().getId());
+
+		assertEquals(item2.getId(), responseItem2.getId());
+		assertEquals(item2.getPrice(), responseItem2.getPrice());
+		assertEquals(item2.getQuantity(), responseItem2.getQuantity());
+		assertEquals(item2.getProduct().getId(), responseItem2.getProduct().getId());
+	}
 }

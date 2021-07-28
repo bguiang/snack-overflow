@@ -24,8 +24,16 @@ public class BillingDetails {
 
 	public BillingDetails() {
 	}
-	
-	
+
+	public BillingDetails(Long id, String name, String email, String phone, Address address, Order order) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.address = address;
+		this.order = order;
+	}
+
 	public Long getId() {
 		return id;
 	}

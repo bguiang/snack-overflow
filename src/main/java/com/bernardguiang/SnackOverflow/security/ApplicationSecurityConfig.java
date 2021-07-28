@@ -114,6 +114,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/api/v1/auth/**") //signup, refresh, signout
 				.permitAll()
 			.antMatchers("/h2-console/**").permitAll() // h2 db
+			.antMatchers("/api/v1/users/**").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/v1/stripe").permitAll() // Stripe Webhook
 			.antMatchers(HttpMethod.POST, "/api/v1/cart/info").permitAll() // load cart info
 			.anyRequest()	// any request (secures all routes)

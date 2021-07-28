@@ -40,6 +40,20 @@ public class User {
 	
 	public User() {}
 	
+	public User(Long id, String email, String username, String password, String fullName, String role,
+			List<Order> orders, Address address, RefreshToken refreshToken) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.fullName = fullName;
+		this.role = role;
+		this.orders = orders;
+		this.address = address;
+		this.refreshToken = refreshToken;
+	}
+
 	public Long getId() {
 		return id;
 	}

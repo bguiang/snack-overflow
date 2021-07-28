@@ -40,6 +40,17 @@ public class Product {
 		
 	}
 	
+	public Product(Long id, String name, String description, BigDecimal price, List<String> images,
+			Set<Category> categories, List<OrderItem> orderedItems) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.images = images;
+		this.categories = categories;
+		this.orderedItems = orderedItems;
+	}
+	
 	public Product(String name) {
 		this.name = name;
 	}

@@ -8,7 +8,7 @@ public class Address {
 	@NotBlank(message = "Address Line One cannot be null or blank")
 	private String addressLineOne;
 	private String addressLineTwo;
-	@NotBlank(message = "ACity cannot be null or blank")
+	@NotBlank(message = "City cannot be null or blank")
 	private String city;
 	@NotBlank(message = "State cannot be null or blank")
 	private String state;
@@ -19,6 +19,21 @@ public class Address {
 	
 	public Address() {
 	}
+	
+	public Address(String addressLineOne,
+			String addressLineTwo, 
+			String city,
+			String state,
+			String postalCode,
+			String country) {
+		this.addressLineOne = addressLineOne;
+		this.addressLineTwo = addressLineTwo;
+		this.city = city;
+		this.state = state;
+		this.postalCode = postalCode;
+		this.country = country;
+	}
+	
 	public String getAddressLineOne() {
 		return addressLineOne;
 	}
