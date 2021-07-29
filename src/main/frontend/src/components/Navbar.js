@@ -39,6 +39,7 @@ const Navbar = () => {
   const history = useHistory();
   const { currentUser } = useAuth();
   const { getItemCount } = useCart();
+  const [search, setSearch] = useState("");
 
   const accountButtonText = currentUser ? currentUser.username : "Account";
 
@@ -54,6 +55,13 @@ const Navbar = () => {
 
   const handleClick = (url) => {
     history.push(url);
+  };
+
+  const handleSearchSubmit = () => {
+    history.push({
+      pathname: "/snacks",
+      search: `?search=${search}`,
+    });
   };
 
   return (
@@ -200,13 +208,18 @@ const Navbar = () => {
             <Paper className={classes.toolbar2SearchContainer}>
               <InputBase
                 className={classes.search}
+                autocomplete="off"
                 placeholder="Search Snacks"
                 inputProps={{ "aria-label": "search snacks" }}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                }}
               />
               <IconButton
                 type="submit"
                 className={classes.iconButton}
                 aria-label="search"
+                onClick={() => handleSearchSubmit()}
               >
                 <SearchIcon />
               </IconButton>

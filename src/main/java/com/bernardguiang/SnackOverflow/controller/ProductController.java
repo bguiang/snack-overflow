@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
+import com.bernardguiang.SnackOverflow.model.ProductPage;
 import com.bernardguiang.SnackOverflow.service.CategoryService;
+import com.bernardguiang.SnackOverflow.service.ProductIndexingService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
 
 @RestController
@@ -39,18 +42,34 @@ public class ProductController
 {
 	private final ProductService productService;
 	private final CategoryService categoryService;
+	private final ProductIndexingService productIndexingService;
 	
 	@Autowired
-	public ProductController(ProductService productService, CategoryService categoryService) {
+	public ProductController(ProductService productService, CategoryService categoryService, ProductIndexingService productIndexingService) {
 		this.productService = productService;
 		this.categoryService = categoryService;
+		this.productIndexingService = productIndexingService;
 	}
 	
+	// Unit test will now fail
+//	@GetMapping
+//	public List<ProductDTO> getProducts() 
+//	{
+//		return productService.findAll();
+//	}
+	
 	@GetMapping
-	public List<ProductDTO> getProducts() 
+	public Page<ProductDTO> getProductsPaginated(ProductPage page) 
 	{
-		return productService.findAll();
+		return productService.searchProductsPaginated(page);
 	}
+	
+	@GetMapping("/search")
+	public List<ProductDTO> getProducts(String search) 
+	{
+		return productIndexingService.searchProducts(search);
+	}
+	
 	@GetMapping("/{productId}")
 	public ProductDTO getProductById(@PathVariable long productId) 
 	{

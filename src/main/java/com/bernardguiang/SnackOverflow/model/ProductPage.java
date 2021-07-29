@@ -4,10 +4,18 @@ import org.springframework.data.domain.Sort;
 
 public class ProductPage {
 
+	private String search = "";
 	private int pageNumber = 0;
 	private int pageSize = 9;
 	private Sort.Direction sortDirection = Sort.Direction.ASC;
 	private String sortBy = "createdDate";
+	
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
 	public int getPageNumber() {
 		return pageNumber;
 	}

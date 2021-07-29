@@ -35,7 +35,7 @@ const SnackCard = ({ snack }) => {
       item
       className={classes.snackCardContainer}
       xs={12}
-      sm={5}
+      sm={6}
       md={4}
       key={snack.id}
     >

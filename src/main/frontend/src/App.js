@@ -78,6 +78,9 @@ function App() {
                     <Route path="/snacks/:id">
                       <Snack />
                     </Route>
+                    <Route path="/snacks">
+                      <Snacks />
+                    </Route>
                     <Route path="/subscriptions">
                       <Subscriptions />
                     </Route>
