@@ -3,6 +3,7 @@ package com.bernardguiang.SnackOverflow.dto;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -36,15 +37,16 @@ class ProductDTOTest {
 		Set<Category> productCategories = new HashSet<>(
 				Arrays.asList(new Category(categoryId, categoryName, categoryProducts)));
 		List<OrderItem> orderedItems = null;
+		Instant productCreatedDate = Instant.now();
 
-		Product product = new Product(productId, productName, productDescription, productPrice, productImages,
+		Product product = new Product(productName, productDescription, productPrice, productCreatedDate, productImages,
 				productCategories, orderedItems);
 
 		// When
 		ProductDTO dto = new ProductDTO(product);
 
 		// Then
-		assertEquals(productId, dto.getId());
+		//assertEquals(productCreatedDate, dto.getCreatedDate()); //TODO: add asserts for createdDate on ProductDTO
 		assertEquals(productName, dto.getName());
 		assertEquals(productPrice, dto.getPrice());
 		assertEquals(productDescription, dto.getDescription());

@@ -3,6 +3,7 @@ package com.bernardguiang.SnackOverflow.dto.response;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +46,9 @@ class OrderResponseItemTest {
 		List<String> productCategoryStrings = Arrays.asList(categoryName);
 		Set<Category> productCategories = new HashSet<>(Arrays.asList(new Category(categoryId, categoryName, categoryProducts)));
 		List<OrderItem> orderedItems = null;
+		Instant productCreatedDate = Instant.now();
 		
-		Product product = new Product(productId, productName, productDescription, productPrice, productImages,
+		Product product = new Product(productName, productDescription, productPrice, productCreatedDate, productImages,
 				productCategories, orderedItems);
 		
 		OrderItem orderItem = new OrderItem(orderItemId, order, product, orderItemQuantity, orderItemPrice);
@@ -55,7 +57,6 @@ class OrderResponseItemTest {
 		OrderResponseItem orderResponseItem = new OrderResponseItem(orderItem);
 		
 		// Then
-		assertEquals(orderItemId, orderResponseItem.getId());
 		assertEquals(orderItemPrice, orderResponseItem.getPrice());
 		assertEquals(orderItemQuantity, orderResponseItem.getQuantity());
 		// ... Product

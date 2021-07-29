@@ -28,6 +28,13 @@ public class RefreshToken {
 		this.createdDate = createdDate;
 		this.user = user;
 	}
+	
+	public RefreshToken(String token, Instant createdDate, User user) {
+		this.token = token;
+		this.createdDate = createdDate;
+		this.user = user;
+	}
+	
 	public long getId() {
 		return id;
 	}

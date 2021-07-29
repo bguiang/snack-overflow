@@ -6,11 +6,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Product;
+import com.bernardguiang.SnackOverflow.model.ProductPage;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 import com.bernardguiang.SnackOverflow.repository.ProductRepository;
 
@@ -83,5 +85,9 @@ public class ProductService
 		}
 		
 		return productDTOs;
+	}
+	
+	public Page<Product> getProductsPaginated(ProductPage page) {
+		return null;
 	}
 }

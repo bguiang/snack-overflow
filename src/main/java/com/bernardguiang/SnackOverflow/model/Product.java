@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Product {
 	@Column(columnDefinition = "TEXT")
 	private String description;
 	private BigDecimal price;
+	private Instant createdDate;
 	@ElementCollection
 	private List<String> images;
 	
@@ -40,12 +42,13 @@ public class Product {
 		
 	}
 	
-	public Product(Long id, String name, String description, BigDecimal price, List<String> images,
+	public Product(String name, String description, BigDecimal price, Instant createdDate, List<String> images,
 			Set<Category> categories, List<OrderItem> orderedItems) {
-		this.id = id;
+		super();
 		this.name = name;
 		this.description = description;
 		this.price = price;
+		this.createdDate = createdDate;
 		this.images = images;
 		this.categories = categories;
 		this.orderedItems = orderedItems;
@@ -91,6 +94,14 @@ public class Product {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	
+	public Instant getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Instant createdDate) {
+		this.createdDate = createdDate;
+	}
 
 	public List<String> getImages() {
 		return images;
@@ -121,6 +132,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price
-				+ ", images=" + images + "]";
+				+ ", createdDate=" + createdDate + ", images=" + images + ", categories=" + categories
+				+ ", orderedItems=" + orderedItems + "]";
 	}
 }

@@ -66,6 +66,21 @@ public class Order {
 
 	public Order() {
 	}
+	
+	public Order(List<OrderItem> items, BigDecimal total, Instant createdDate, BillingDetails billingDetails,
+			ShippingDetails shippingDetails, boolean isShippingSameAsBilling, User user, OrderStatus status,
+			String clientSecret) {
+		super();
+		this.items = items;
+		this.total = total;
+		this.createdDate = createdDate;
+		this.billingDetails = billingDetails;
+		this.shippingDetails = shippingDetails;
+		this.isShippingSameAsBilling = isShippingSameAsBilling;
+		this.user = user;
+		this.status = status;
+		this.clientSecret = clientSecret;
+	}
 
 	public long getId() {
 		return id;
