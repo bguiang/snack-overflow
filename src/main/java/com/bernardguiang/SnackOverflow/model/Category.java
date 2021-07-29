@@ -1,16 +1,14 @@
 package com.bernardguiang.SnackOverflow.model;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Category {
@@ -19,6 +17,7 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(unique = true)
 	private String name;
 	
 	@ManyToMany(mappedBy="categories") // Product Owns Category?
@@ -26,6 +25,11 @@ public class Category {
 	
 	public Category() {
 		
+	}
+	public Category(Long id, String name, Set<Product> products) {
+		this.id = id;
+		this.name = name;
+		this.products = products;
 	}
 
 	public Long getId() {

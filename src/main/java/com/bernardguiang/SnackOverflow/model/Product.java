@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -12,25 +13,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Product {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
-	@NotBlank
 	@Column(nullable = false, unique = true)
 	private String name;
-	
-	@NotBlank
+	@Column(columnDefinition = "TEXT")
 	private String description;
-	
-	@NotNull
 	private BigDecimal price;
-	
+	private Instant createdDate;
 	@ElementCollection
 	private List<String> images;
 	
@@ -40,8 +35,23 @@ public class Product {
 	@ManyToMany 
 	private Set<Category> categories = new HashSet<>();
 	
+	@OneToMany(mappedBy="product")
+	private List<OrderItem> orderedItems;
+	
 	public Product() {
 		
+	}
+	
+	public Product(String name, String description, BigDecimal price, Instant createdDate, List<String> images,
+			Set<Category> categories, List<OrderItem> orderedItems) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.createdDate = createdDate;
+		this.images = images;
+		this.categories = categories;
+		this.orderedItems = orderedItems;
 	}
 	
 	public Product(String name) {
@@ -84,6 +94,14 @@ public class Product {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	
+	public Instant getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Instant createdDate) {
+		this.createdDate = createdDate;
+	}
 
 	public List<String> getImages() {
 		return images;
@@ -100,10 +118,21 @@ public class Product {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
+	
+	
+
+	public List<OrderItem> getOrderedItems() {
+		return orderedItems;
+	}
+
+	public void setOrderedItems(List<OrderItem> orderedItems) {
+		this.orderedItems = orderedItems;
+	}
 
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price
-				+ ", images=" + images + "]";
+				+ ", createdDate=" + createdDate + ", images=" + images + ", categories=" + categories
+				+ ", orderedItems=" + orderedItems + "]";
 	}
 }

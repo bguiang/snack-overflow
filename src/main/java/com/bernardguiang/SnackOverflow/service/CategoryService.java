@@ -7,21 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.CategoryDTO;
-import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.Category;
-import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 
 @Service
 public class CategoryService {
+	
+	private final CategoryRepository categoryRepository;
+	
 	@Autowired
-	CategoryRepository categoryRepository;
+	public CategoryService(CategoryRepository categoryRepository) {
+		this.categoryRepository = categoryRepository;
+	}
 	
 	public CategoryDTO save(CategoryDTO categoryDTO) 
 	{
 		Category category = categoryDTOToEntity(categoryDTO);
 		Category saved = categoryRepository.save(category);
-		CategoryDTO categoryDTOSaved = categoryEntityToDTO(saved);
+		CategoryDTO categoryDTOSaved = new CategoryDTO(saved);
 		
 		return categoryDTOSaved;
 	}
@@ -33,20 +36,11 @@ public class CategoryService {
 		List<CategoryDTO> categoryDTOs = new ArrayList<>();
 		for(Category category : categoriesIterator)
 		{
-			CategoryDTO categoryDTO = categoryEntityToDTO(category);
+			CategoryDTO categoryDTO = new CategoryDTO(category);
 			categoryDTOs.add(categoryDTO);
 		}
 		
 		return categoryDTOs;
-	}
-	
-	private CategoryDTO categoryEntityToDTO(Category category)
-	{
-		CategoryDTO categoryDTO = new CategoryDTO();
-		categoryDTO.setId(category.getId());
-		categoryDTO.setName(category.getName());
-		
-		return categoryDTO;
 	}
 	
 	private Category categoryDTOToEntity(CategoryDTO categoryDTO)

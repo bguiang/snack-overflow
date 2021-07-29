@@ -1,23 +1,23 @@
 package com.bernardguiang.SnackOverflow.dto;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.NotBlank;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.bernardguiang.SnackOverflow.model.Product;
+import com.bernardguiang.SnackOverflow.model.Category;
 
 public class CategoryDTO {
 	private Long id;
+	@NotBlank(message = "Name cannot be null or blank")
 	private String name;
-//	private Set<ProductDTO> products = new HashSet<>();
 	
 	public CategoryDTO() 
 	{
 	
+	}
+	
+	public CategoryDTO(Category category) 
+	{
+		this.setId(category.getId());
+		this.setName(category.getName());
 	}
 	public Long getId() {
 		return id;
@@ -31,12 +31,5 @@ public class CategoryDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-//	public Set<ProductDTO> getProducts() {
-//		return products;
-//	}
-//	public void setProducts(Set<ProductDTO> products) {
-//		this.products = products;
-//	}
-	
 	
 }

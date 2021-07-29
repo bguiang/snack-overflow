@@ -2,35 +2,53 @@ package com.bernardguiang.SnackOverflow.dto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.bernardguiang.SnackOverflow.model.Category;
+import com.bernardguiang.SnackOverflow.model.Product;
 
+// Used as request for creating new product in ProductController
+// Used as response for retrieving products in ProductController
 public class ProductDTO 
 {
 	private Long id;
 	
-	@NotBlank
+	@NotBlank(message = "Name cannot be null or blank")
 	private String name;
 	
-	@NotBlank
+	@NotBlank(message = "Description cannot be null or blank")
 	private String description;
 	
-	@NotNull
+	@NotNull(message = "Price cannot be null")
 	private BigDecimal price;
 	
-	private List<String> images;
+	@NotEmpty(message = "Images cannot be empty")
+	private List<@NotBlank(message = "Image url cannot be blank or null") String> images;
 	
 	private List<String> categories;
 	
 	public ProductDTO()
 	{
 		
+	}
+	
+	public ProductDTO(Product product) {
+		this.setId(product.getId());
+		this.setName(product.getName());
+		this.setDescription(product.getDescription());
+		this.setPrice(product.getPrice());
+		this.setImages(product.getImages());
+		
+		List<String> categoriesDTO = new ArrayList<>();
+		for(Category category : product.getCategories())
+		{
+			categoriesDTO.add(category.getName());
+		}
+		this.setCategories(categoriesDTO);
 	}
 
 	public Long getId() {

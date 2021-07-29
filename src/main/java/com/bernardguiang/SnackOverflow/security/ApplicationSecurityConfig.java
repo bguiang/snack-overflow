@@ -1,8 +1,5 @@
 package com.bernardguiang.SnackOverflow.security;
 
-import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.*;
-import static com.bernardguiang.SnackOverflow.security.ApplicationUserRole.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,37 +11,32 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import com.bernardguiang.SnackOverflow.auth.ApplicationUserDetailsService;
-import com.bernardguiang.SnackOverflow.jwt.JwtConfig;
-import com.bernardguiang.SnackOverflow.jwt.JwtProvider;
-import com.bernardguiang.SnackOverflow.jwt.JwtTokenVerifierFilter;
-import com.bernardguiang.SnackOverflow.jwt.JwtUsernameAndPasswordAuthenticationFilter;
+import com.bernardguiang.SnackOverflow.security.requestfilter.JwtTokenVerifierFilter;
+import com.bernardguiang.SnackOverflow.security.requestfilter.JwtUsernameAndPasswordAuthenticationFilter;
+import com.bernardguiang.SnackOverflow.service.ApplicationUserDetailsService;
+import com.bernardguiang.SnackOverflow.service.AuthService;
+import com.bernardguiang.SnackOverflow.service.JwtService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	
 	private final PasswordEncoder passwordEncoder;
 	private final ApplicationUserDetailsService applicationUserService;
-	private final JwtProvider jwtProvider;
-	private final JwtConfig jwtConfig;
+	private final JwtService jwtService;
+	private final AuthService authService;
 	
 	@Autowired
-	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserDetailsService applicationUserService, JwtProvider jwtProvider, JwtConfig jwtConfig) {
+	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, 
+			ApplicationUserDetailsService applicationUserService, JwtService jwtService,
+			AuthService authService) {
 		this.passwordEncoder = passwordEncoder;
 		this.applicationUserService = applicationUserService;
-		this.jwtProvider = jwtProvider;
-		this.jwtConfig = jwtConfig;
+		this.jwtService = jwtService;
+		this.authService = authService;
 	}
 	
 	// Authentication vs Authorization
@@ -74,7 +66,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	//			3. Client sends token for each request
 	//			4. Server validates token (JwtTokenVerifierFilter extends OncePerRequestFilter)
 	//			5. Server sends response to client
-	// TODO: maybe add token refresh, store tokens and invalidate when user re-authenticates
+	// 		- Refresh Tokens: store tokens and invalidate when user re-authenticates
 	
 	// Authorization
 	// - once the user is authenticated, now we need to know if they have access to what they want to access
@@ -100,35 +92,36 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-		
 			// X-XSRF-TOKEN cookie (not readable by JS) will be returned and you need to pass it in with your requests
 			// Attachment should be automatic with Axios
 			//.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) 
 			//.and()
 		
 			// Disable CSRF protection provided by default by spring security
+			//.cors().and() // do we need this?
 			.csrf().disable() // csrf attacks mainly happen when there are sessions and when using cookies for authentication
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWTs are stateless
 			.and() // then add JWT Authentication by UsernamePasswordAuthenticationFilter created
-			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtProvider))
-			.addFilterAfter(new JwtTokenVerifierFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class) // username/password check first before trying to verify token
-			.authorizeRequests() // we want to authorize requests
+			.addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtService, authService))
+			.addFilterAfter(new JwtTokenVerifierFilter(jwtService), JwtUsernameAndPasswordAuthenticationFilter.class) // username/password check first before trying to verify token
+			
+			.headers().frameOptions().sameOrigin().and() // To enable H2 DB. Comment out if not using H2
+			.authorizeRequests()// we want to authorize requests
 			.antMatchers("/", "index", "/css/*", "/js/**")
 				.permitAll()	// permit matched patterns above
 			.antMatchers(HttpMethod.GET, "/api/v1/products/**")
 				.permitAll()
 			.antMatchers("/api/v1/auth/**") //signup, refresh, signout
 				.permitAll()
-			.antMatchers("/api/v1/users/**") // TODO: remove this later
-				.permitAll()
+			.antMatchers("/h2-console/**").permitAll() // h2 db
+			.antMatchers("/api/v1/users/**").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/v1/stripe").permitAll() // Stripe Webhook
+			.antMatchers(HttpMethod.POST, "/api/v1/cart/info").permitAll() // load cart info
 			.anyRequest()	// any request (secures all routes)
 			.authenticated(); // must be authenticated
-			//.and()
-			//.httpBasic();	// Basic Authentication or HTTP Basic
-			//.formLogin(); // Form authentication
-			// replaced these Authentication with and Authentication Filter for JWT Authentication (JwtUsernamePasswordAuthenticationFilter) before .authorizeRequests()
+		
+			http.cors();
 	}	
-	
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

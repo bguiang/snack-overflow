@@ -6,91 +6,31 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Product;
+import com.bernardguiang.SnackOverflow.model.ProductPage;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 import com.bernardguiang.SnackOverflow.repository.ProductRepository;
 
 @Service
 public class ProductService 
 {
+	private final ProductRepository productRepository;
+	private final CategoryRepository categoryRepository;
+	
 	@Autowired
-	private ProductRepository productRepository;
-	 
-	@Autowired
-	private CategoryRepository categoryRepository;
+	public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
+	}
 	 
 	public ProductDTO save(ProductDTO productDTO)
-	{
-		System.out.println("Converting DTO: " + productDTO.toString());
-		Product product = productDTOToEntity(productDTO);
-		System.out.println("Saving: " + product.toString());
-		
-		Product saved = productRepository.save(product);
-		ProductDTO productDTOSaved = productEntityToDTO(saved);
-		
-		
-		System.out.println("Saved: " + saved.toString());
-		
-		return productDTOSaved;
-	}
-	
-	public List<ProductDTO> findAll(){
-		Iterable<Product> productsIterator =  productRepository.findAll();
-		
-		List<ProductDTO> productDTOs = new ArrayList<>();
-		for(Product product : productsIterator)
-		{
-			ProductDTO productDTO = productEntityToDTO(product);
-			productDTOs.add(productDTO);
-		}
-		
-		return productDTOs;
-	}
-	
-	// Is this doable with just CrudRepository syntax?
-	public List<ProductDTO> findAllByCategoryName(String categoryName)
-	{
-		List<ProductDTO> productDTOs = new ArrayList<>();
-		
-		Optional<Category> category = categoryRepository.findByName(categoryName);
-		if(category.isPresent())
-		{
-			for(Product product: category.get().getProducts())
-			{
-				productDTOs.add(productEntityToDTO(product));
-			}
-		}
-		
-		return productDTOs;
-	}
-	
-	// TODO: make this the constructor method of ProductDTO?
-	private ProductDTO productEntityToDTO(Product product)
-	{
-		ProductDTO productDTO = new ProductDTO();
-		
-		productDTO.setId(product.getId());
-		productDTO.setName(product.getName());
-		productDTO.setDescription(product.getDescription());
-		productDTO.setPrice(product.getPrice());
-		productDTO.setImages(product.getImages());
-		
-		List<String> categoriesDTO = new ArrayList<>();
-		for(Category category : product.getCategories())
-		{
-			categoriesDTO.add(category.getName());
-		}
-		productDTO.setCategories(categoriesDTO);
-		
-		return productDTO;
-	}
-	
-	private Product productDTOToEntity(ProductDTO productDTO)
-	{
+	{	
+		// Convert Product to ProductDTO
 		Product product = new Product();
 		product.setId(productDTO.getId());
 		product.setName(productDTO.getName());
@@ -102,13 +42,52 @@ public class ProductService
 		Set<Category> categories = new HashSet<>();
 		for(String categoryName: productDTO.getCategories())
 		{
-			Optional<Category> category = categoryRepository.findByName(categoryName);
-			if(category.isPresent())
-			{
-				categories.add(category.get());
-			}
+			Category category = categoryRepository.findByName(categoryName)
+				.orElseThrow(() -> new IllegalStateException("Could not find category " + categoryName));
+			categories.add(category);
+		}
+		product.setCategories(categories);
+		
+		Product saved = productRepository.save(product);
+		ProductDTO productDTOSaved = new ProductDTO(saved);
+		
+		return productDTOSaved;
+	}
+	
+	public ProductDTO findById(long id){
+		Product product =  productRepository.findById(id)
+			.orElseThrow(() -> new IllegalStateException("Could not find product " + id));
+		return new ProductDTO(product);
+	}
+	
+	public List<ProductDTO> findAll(){
+		Iterable<Product> productsIterator =  productRepository.findAll();
+		
+		List<ProductDTO> productDTOs = new ArrayList<>();
+		for(Product product : productsIterator)
+		{
+			ProductDTO productDTO = new ProductDTO(product);
+			productDTOs.add(productDTO);
 		}
 		
-		return product;
+		return productDTOs;
+	}
+	
+	public List<ProductDTO> findAllByCategoryName(String categoryName)
+	{
+		List<ProductDTO> productDTOs = new ArrayList<>();
+		
+		Category category = categoryRepository.findByName(categoryName)
+			.orElseThrow(() -> new IllegalStateException("Could not find category " + categoryName));
+		for(Product product: category.getProducts())
+		{
+			productDTOs.add(new ProductDTO(product));
+		}
+		
+		return productDTOs;
+	}
+	
+	public Page<Product> getProductsPaginated(ProductPage page) {
+		return null;
 	}
 }

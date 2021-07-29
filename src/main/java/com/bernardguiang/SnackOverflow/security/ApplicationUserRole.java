@@ -1,6 +1,11 @@
 package com.bernardguiang.SnackOverflow.security;
 
-import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.*;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.CATEGORY_READ;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.CATEGORY_WRITE;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.ORDER_READ;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.ORDER_WRITE;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.PRODUCT_READ;
+import static com.bernardguiang.SnackOverflow.security.ApplicationUserPermission.PRODUCT_WRITE;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,12 +17,18 @@ import com.google.common.collect.Sets;
 
 
 public enum ApplicationUserRole {
-	CUSTOMER(Sets.newHashSet()),
+	CUSTOMER(Sets.newHashSet(
+			PRODUCT_READ,
+			CATEGORY_READ,
+			ORDER_WRITE
+	)),
 	ADMIN(Sets.newHashSet(
 			PRODUCT_READ,
 			PRODUCT_WRITE,
 			CATEGORY_READ,
-			CATEGORY_WRITE
+			CATEGORY_WRITE,
+			ORDER_READ,
+			ORDER_WRITE
 	));
 	
 	private final Set<ApplicationUserPermission> permissions;
