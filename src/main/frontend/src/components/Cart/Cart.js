@@ -38,7 +38,7 @@ const Cart = () => {
       }
     };
 
-    if (cart.length > 0) loadCartInfo();
+    if (cart.length >= 0) loadCartInfo();
   }, [cart]);
 
   const checkoutClick = () => {

@@ -2,8 +2,6 @@ package com.bernardguiang.SnackOverflow.service;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,9 +22,6 @@ import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.RefreshTokenRepository;
 import com.bernardguiang.SnackOverflow.repository.UserRepository;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
-import com.bernardguiang.SnackOverflow.security.JwtConfig;
-
-import io.jsonwebtoken.Jwts;
 
 @Service
 public class AuthService {

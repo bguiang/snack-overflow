@@ -58,10 +58,8 @@ public class AuthController {
 	@GetMapping("/refresh")
 	public AuthenticationResponse refreshTokens(
 			HttpServletResponse response, 
-			@CookieValue(name = "refresh-token", defaultValue = "") String refreshToken
-			) {	
-		System.out.println("TOKEN REFRESH: " + refreshToken);
-		
+			@CookieValue(name = "refresh-token", defaultValue = "") String refreshToken) 
+	{	
 		// Validate Token, generate new Access Token
 		AuthenticationResponse authenticationResponse =  authService.refreshToken(refreshToken);
 		

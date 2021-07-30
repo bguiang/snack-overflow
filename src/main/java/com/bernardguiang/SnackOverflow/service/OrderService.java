@@ -124,15 +124,4 @@ public class OrderService {
 		
 		return new OrderResponse(saved);
 	}
-	
-	public OrderResponse updateStatusByClientSecret(String clientSecret, OrderStatus status) {
-		Order order = orderRepository.findByClientSecret(clientSecret)
-			.orElseThrow(() -> new IllegalStateException("Could not find Order with Client Secret: " + clientSecret));
-		
-		order.setStatus(status);
-		
-		Order saved = orderRepository.save(order);
-		
-		return new OrderResponse(saved);
-	}
 }
