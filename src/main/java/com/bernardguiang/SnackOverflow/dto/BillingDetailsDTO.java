@@ -1,5 +1,6 @@
 package com.bernardguiang.SnackOverflow.dto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,10 +19,12 @@ public class BillingDetailsDTO {
 	@Email(message = "Must use a valid email")
 	private String email;
 	
+	@NotBlank(message = "Phone cannot be null or blank")
 	@Pattern(regexp="(^$|[0-9]{10})", message="Phone number must consist of ten digits")
 	private String phone;
 	
 	@NotNull(message = "Address cannot be null")
+	@Valid
 	private Address address;
 	
 	private Long orderId;

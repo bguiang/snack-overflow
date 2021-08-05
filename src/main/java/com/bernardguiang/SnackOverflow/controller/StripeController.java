@@ -25,9 +25,8 @@ public class StripeController {
 
 	@PostMapping
 	public ResponseEntity<String> stripeWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String signatureHeader)
-			throws StripeException {
+			throws Exception {
 		try {
-			System.out.println("WEBHOOK EVENT");
 			stripeService.handleStripeWebhookEvent(payload, signatureHeader);
 			return new ResponseEntity<>("Received", HttpStatus.OK);
 		} catch(Exception e) {

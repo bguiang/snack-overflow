@@ -1,5 +1,6 @@
 package com.bernardguiang.SnackOverflow.dto.request;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
@@ -11,8 +12,10 @@ public class UpdateBillingAndShippingRequest {
 	private Long id;
 	
 	@NotNull(message="Billing Details cannot be null")
+	@Valid
 	private BillingDetailsDTO billingDetails;
 	
+	@Valid
 	private ShippingDetailsDTO shippingDetails; // shipping can be null if same as billing
 	
 	@JsonProperty

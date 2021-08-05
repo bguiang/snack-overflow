@@ -159,7 +159,10 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
         confirmPayment();
       }
     } catch (error) {
-      console.log(error);
+      //console.log(error);
+      if (error.status === 400) {
+        console.log(error.response);
+      }
     }
   };
 

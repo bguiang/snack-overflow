@@ -24,6 +24,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
+ 
         PasswordValidator validator = new PasswordValidator(Arrays.asList(
             // must be 6-20 characters
             new LengthRule(6, 20),
@@ -44,17 +45,29 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
             new WhitespaceRule()
 
         ));
+        
+        // Null rule doesn't exist for some reason
+        if(password == null) {
+    		String nullMessage = "Password is null";
+    		context.buildConstraintViolationWithTemplate(nullMessage)
+            	.addConstraintViolation();
+    		return false;
+    	}
+        
         RuleResult result = validator.validate(new PasswordData(password));
+        
         if (result.isValid()) {
             return true;
+        } 
+        else {
+        	 List<String> messages = validator.getMessages(result);
+             
+             for(String message : messages) {
+             	context.buildConstraintViolationWithTemplate(message)
+                 .addConstraintViolation();
+             }
+             
+             return false;
         }
-        List<String> messages = validator.getMessages(result);
-
-        String messageTemplate = messages.stream()
-            .collect(Collectors.joining(","));
-        context.buildConstraintViolationWithTemplate(messageTemplate)
-            .addConstraintViolation()
-            .disableDefaultConstraintViolation();
-        return false;
     }
 }

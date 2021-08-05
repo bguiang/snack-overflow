@@ -3,6 +3,7 @@ package com.bernardguiang.SnackOverflow.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -28,15 +29,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	private final ApplicationUserDetailsService applicationUserService;
 	private final JwtService jwtService;
 	private final AuthService authService;
+	private final Environment env;
 	
 	@Autowired
 	public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, 
 			ApplicationUserDetailsService applicationUserService, JwtService jwtService,
-			AuthService authService) {
+			AuthService authService, Environment env) {
 		this.passwordEncoder = passwordEncoder;
 		this.applicationUserService = applicationUserService;
 		this.jwtService = jwtService;
 		this.authService = authService;
+		this.env = env;
 	}
 	
 	// Authentication vs Authorization
@@ -138,6 +141,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Bean
 	public JwtConfig configureJwt() {
-		return new JwtConfig();
+		return new JwtConfig(env);
 	}
 }

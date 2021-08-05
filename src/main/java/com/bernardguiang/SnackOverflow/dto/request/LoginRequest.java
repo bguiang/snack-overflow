@@ -6,21 +6,21 @@ import javax.validation.constraints.Size;
 
 import com.bernardguiang.SnackOverflow.utils.ValidPassword;
 
-public class UsernameAndPasswordAuthenticationRequest {
+public class LoginRequest {
 
-	@NotNull(message = "Username cannot be blank or null")
-	@Size(min = 6, max = 15, message = "Username must be at least 6 characters and cannot be longer than 15 characters")
+	@NotNull(message = "Username cannot be null")
+	@Size(min = 6, max = 20, message = "Username must be at least 6 characters and cannot be longer than 20 characters")
 	@Pattern(regexp = "^[a-zA-Z0-9]+$", message="Username must consist of letters an numbers only")
 	private String username;
-	
-	@ValidPassword
+
+	@ValidPassword //@ValidPassword returns a default "Invalid Password" violation with the password constraint violations
 	private String password;
 	
 	public String getUsername() {
 		return username;
 	}
 	
-	public UsernameAndPasswordAuthenticationRequest() {
+	public LoginRequest() {
 	}
 
 	public void setUsername(String username) {

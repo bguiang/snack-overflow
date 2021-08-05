@@ -1,22 +1,17 @@
 package com.bernardguiang.SnackOverflow.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.catalina.connector.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import com.bernardguiang.SnackOverflow.dto.request.RegisterRequest;
 import com.bernardguiang.SnackOverflow.dto.response.AuthenticationResponse;

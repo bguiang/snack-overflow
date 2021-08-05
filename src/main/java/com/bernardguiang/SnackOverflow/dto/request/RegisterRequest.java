@@ -22,7 +22,7 @@ public class RegisterRequest {
 	@Pattern(regexp = "^[a-zA-Z0-9]+$", message="Username must consist of letters an numbers only")
 	private String username;
 	
-	@ValidPassword
+	@ValidPassword //@ValidPassword returns a default "Invalid Password" violation with the password constraint violations
 	private String password;
 	
 	public RegisterRequest() {

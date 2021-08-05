@@ -3,22 +3,27 @@ package com.bernardguiang.SnackOverflow.security;
 import javax.crypto.SecretKey;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import io.jsonwebtoken.security.Keys;
 
 @Configuration
 @ConfigurationProperties(prefix = "application.jwt")
-public class JwtConfig {
+public class JwtConfig{// implements EnvironmentAware{
 
 	// load constants from application.properties file
 	private String secretKey;
 	private String tokenPrefix;
 	private long tokenExpirationMilliSeconds;
 	
-	public JwtConfig() {
-
+	private final Environment env;
+	
+	public JwtConfig(Environment env){
+		this.env = env;
+		this.secretKey = env.getProperty("jwt_secret_key");
 	}
 	
 	@Bean
@@ -26,12 +31,6 @@ public class JwtConfig {
 		return Keys.hmacShaKeyFor(secretKey.getBytes());
 	}
 	
-	public String getSecretKey() {
-		return secretKey;
-	}
-	public void setSecretKey(String secretKey) {
-		this.secretKey = secretKey;
-	}
 	public String getTokenPrefix() {
 		return tokenPrefix;
 	}
@@ -46,6 +45,4 @@ public class JwtConfig {
 	public void setTokenExpirationMilliSeconds(long tokenExpirationMilliSeconds) {
 		this.tokenExpirationMilliSeconds = tokenExpirationMilliSeconds;
 	}
-	
-	
 }
