@@ -29,7 +29,11 @@ const Cart = () => {
   useEffect(() => {
     const loadCartInfo = async () => {
       try {
-        const response = await SnackOverflow.post("/cart/info", cart);
+        const cartInfoRequest = { items: cart };
+        const response = await SnackOverflow.post(
+          "/cart/info",
+          cartInfoRequest
+        );
         if (200 === response.status) {
           setCartInfo(response.data);
         }

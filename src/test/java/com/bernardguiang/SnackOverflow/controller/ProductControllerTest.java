@@ -18,14 +18,15 @@ class ProductControllerTest {
 	private ProductController underTest;
 	
 	private ProductService productService;
-	private CategoryService categoryService;
+//	private CategoryService categoryService;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		productService = Mockito.mock(ProductService.class);
-		categoryService = Mockito.mock(CategoryService.class);
+//		categoryService = Mockito.mock(CategoryService.class);
 		
-		underTest = new ProductController(productService, categoryService);
+		//underTest = new ProductController(productService, categoryService);
+		underTest = new ProductController(productService);
 	}
 
 	@Test

@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.service.CartService;
 
 @RestController
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/cart")
 public class CartController {
 
@@ -27,8 +27,8 @@ public class CartController {
 	}
 
 	@PostMapping("/info")
-	public CartInfoResponse getCartInfo(@RequestBody List<@Valid CartInfoRequestItem> cartItems) {
-		CartInfoResponse cart = cartService.getCartInfo(cartItems);
+	public CartInfoResponse getCartInfo(@RequestBody @Valid CartRequest cartInfoRequest) {
+		CartInfoResponse cart = cartService.getCartInfo(cartInfoRequest);
 		
 		return cart;
 	}

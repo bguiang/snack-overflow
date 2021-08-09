@@ -5,11 +5,11 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
-public class CartInfoRequest {
+public class CartRequest {
 	@NotEmpty(message = "Cart Items cannot be null or empty")
 	List<@Valid CartInfoRequestItem> items;
 	
-	public CartInfoRequest() {}
+	public CartRequest() {}
 
 	public List<CartInfoRequestItem> getItems() {
 		return items;

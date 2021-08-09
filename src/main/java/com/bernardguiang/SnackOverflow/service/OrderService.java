@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
+import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
@@ -57,13 +58,19 @@ public class OrderService {
 		return orderDTOs;
 	}
 	
-	public Long createOrderWithCartItemsAndClientSecret(List<CartInfoRequestItem> cartItems, String clientSecret, Long userId) {
+	public OrderResponse findByIdAndUserIdAndStatusNot(Long id, Long userId, OrderStatus status) {
+		Order order = orderRepository.findByIdAndUserIdAndStatusNot(id, userId, status)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id + " and userId: " + userId));
+		return new OrderResponse(order);
+	}
+	
+	public Long createOrderWithCartItemsAndClientSecret(CartRequest cartRequest, String clientSecret, Long userId) {
 		
 		Order order = new Order();
 		
 		BigDecimal total = new BigDecimal("0");	
 		List<OrderItem> items = new ArrayList<>();
-		for(CartInfoRequestItem requestItem : cartItems) {
+		for(CartInfoRequestItem requestItem : cartRequest.getItems()) {
 			Product product = productRepository.findById(requestItem.getProductId())
 				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + requestItem.getProductId()));
 			OrderItem item = new OrderItem();
@@ -88,16 +95,25 @@ public class OrderService {
 		return saved.getId();
 	}
 	
+	// TODO: this doesn't "update" billing and shipping. It always saves a new one. 
+	// TODO: Don't let the user dictate which billing or shipping id to update either
 	public OrderResponse updateBillingAndShipping(UpdateBillingAndShippingRequest update, UserDTO user) {
 		
 		Order order = orderRepository.findByIdAndUserId(update.getId(), user.getId())
 				.orElseThrow(() -> new IllegalStateException("Order " + update.getId() + " does not exist for user " + user.getId()));	
 		
 		order.setCreatedDate(Instant.now());
-		 
-		BillingDetails billing = new BillingDetails();
-		if(update.getBillingDetails().getId() != null)
-			billing.setId(update.getBillingDetails().getId());
+		
+		// Update Billing
+		BillingDetails billing = null;
+		if(order.getBillingDetails() == null) {
+			billing = new BillingDetails();
+		} else {
+			billing = order.getBillingDetails();
+		}
+		
+//		if(update.getBillingDetails().getId() != null)
+//			billing.setId(update.getBillingDetails().getId());
 		billing.setAddress(update.getBillingDetails().getAddress());
 		billing.setEmail(update.getBillingDetails().getEmail());
 		billing.setPhone(update.getBillingDetails().getPhone());
@@ -105,14 +121,20 @@ public class OrderService {
 		billing.setOrder(order);
 		order.setBillingDetails(billing);
 		
+		// Update Shipping
 		order.setShippingSameAsBilling(update.isShippingSameAsBilling());
 		
 		if(update.isShippingSameAsBilling()) {
 			order.setShippingDetails(null);
 		} else {
-			ShippingDetails shipping = new ShippingDetails();
-			if(update.getShippingDetails().getId() != null)
-				shipping.setId(update.getShippingDetails().getId());
+			ShippingDetails shipping = null;
+			if(order.getShippingDetails() == null) {
+				shipping = new ShippingDetails();
+			} else {
+				shipping = order.getShippingDetails();
+			}
+//			if(update.getShippingDetails().getId() != null)
+//				shipping.setId(update.getShippingDetails().getId());
 			shipping.setAddress(update.getShippingDetails().getAddress());
 			shipping.setPhone(update.getShippingDetails().getPhone());
 			shipping.setName(update.getShippingDetails().getName());

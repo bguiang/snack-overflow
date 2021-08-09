@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponseItem;
 import com.bernardguiang.SnackOverflow.service.CartService;
@@ -40,9 +41,12 @@ class CartControllerTest {
 		List<CartInfoResponseItem> items = null;
 		CartInfoResponse cart = new CartInfoResponse(new BigDecimal(2), items);
 		
+		CartRequest request = new CartRequest();
+		request.setItems(cartItems);
+		
 		// When
 		when(cartService.getCartInfo(Mockito.any())).thenReturn(cart);
-		CartInfoResponse response =  underTest.getCartInfo(cartItems);
+		CartInfoResponse response =  underTest.getCartInfo(request);
 		
 		// Then
 		assertEquals(cart, response);

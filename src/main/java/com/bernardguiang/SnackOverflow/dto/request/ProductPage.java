@@ -1,4 +1,4 @@
-package com.bernardguiang.SnackOverflow.model;
+package com.bernardguiang.SnackOverflow.dto.request;
 
 import org.springframework.data.domain.Sort;
 

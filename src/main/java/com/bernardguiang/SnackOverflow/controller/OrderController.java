@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
@@ -51,16 +51,16 @@ public class OrderController {
 	
 	@PostMapping("/start")
 	@PreAuthorize("hasAuthority('order:write')")
-	public ResponseEntity<Map<String, Object>> startOrder(@RequestBody List<@Valid CartInfoRequestItem> cartItems,
+	public ResponseEntity<Map<String, Object>> startOrder(@RequestBody @Valid CartRequest cartRequest,
 			Authentication authentication) throws StripeException {
-
+		
 		// Get Current User's Email
 		String username = authentication.getName();
 		UserDTO user = userService.findByUsername(username);
 		String userEmail = user.getEmail();
 
 		// Get Cart Product Info and Total
-		CartInfoResponse cart = cartService.getCartInfo(cartItems);
+		CartInfoResponse cart = cartService.getCartInfo(cartRequest);
 
 		// Create Payment Intent and Client Secret
 		Long amount = cart.getTotal().longValue() * 100;
@@ -68,7 +68,7 @@ public class OrderController {
 		String clientSecret = intent.getClientSecret();
 
 		// Create Order
-		Long savedOrderId = orderService.createOrderWithCartItemsAndClientSecret(cartItems, clientSecret, user.getId());
+		Long savedOrderId = orderService.createOrderWithCartItemsAndClientSecret(cartRequest, clientSecret, user.getId());
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("client_secret", clientSecret);
@@ -105,6 +105,6 @@ public class OrderController {
 		String username = authentication.getName();
 		UserDTO user = userService.findByUsername(username);
 		
-		return orderService.findByIdAndUserId(orderId, user.getId());
+		return orderService.findByIdAndUserIdAndStatusNot(orderId, user.getId(), OrderStatus.CREATED);
 	}
 }

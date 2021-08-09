@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
-import com.bernardguiang.SnackOverflow.model.ProductPage;
+import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
 import com.bernardguiang.SnackOverflow.service.CategoryService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
 
@@ -17,14 +17,12 @@ import com.bernardguiang.SnackOverflow.service.ProductService;
 public class ProductController 
 {
 	private final ProductService productService;
-	private final CategoryService categoryService;
+	//private final CategoryService categoryService;
 	//private final ProductIndexingService productIndexingService; // Full Text Search
 	
 	@Autowired
-	public ProductController(ProductService productService, CategoryService categoryService) {//, ProductIndexingService productIndexingService) {
+	public ProductController(ProductService productService) {
 		this.productService = productService;
-		this.categoryService = categoryService;
-		//this.productIndexingService = productIndexingService;
 	}
 	
 	@GetMapping

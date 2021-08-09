@@ -28,9 +28,14 @@ const Checkout = () => {
   const startCheckoutAndCreatePaymentIntent = async () => {
     try {
       console.log("Cart");
-      const response = await SnackOverflow.post("/orders/start", cart, {
-        headers: { Authorization: token },
-      });
+      const cartInfoRequest = { items: cart };
+      const response = await SnackOverflow.post(
+        "/orders/start",
+        cartInfoRequest,
+        {
+          headers: { Authorization: token },
+        }
+      );
       if (201 === response.status) {
         console.log("client_secret: " + response.data.client_secret);
         console.log("orderId: " + response.data.orderId);

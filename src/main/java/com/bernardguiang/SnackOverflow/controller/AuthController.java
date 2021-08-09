@@ -52,8 +52,8 @@ public class AuthController {
 		// Delete Refresh Token
 		// remove current token from client
 		// Generate new and update refresh token and store in an http only cookie
-		Cookie refreshCookie = authService.generateEmptyRefreshTokenCookie();
-		response.addCookie(refreshCookie);
+		Cookie emptyRefreshCookie = authService.generateEmptyRefreshTokenCookie();
+		response.addCookie(emptyRefreshCookie);
 		return new ResponseEntity<>("Logout Successful", HttpStatus.OK); 
 	}
 

@@ -23,9 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.bernardguiang.SnackOverflow.service.JwtService;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 
 public class JwtTokenVerifierFilter extends OncePerRequestFilter{
 	

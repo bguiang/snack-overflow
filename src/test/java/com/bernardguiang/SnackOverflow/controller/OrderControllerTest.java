@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
@@ -74,6 +75,9 @@ class OrderControllerTest {
 		cartItem.setProductId(productId);
 		cartItem.setQuantity(quantity);
 		cartItems.add(cartItem);
+		CartRequest request = new CartRequest();
+		request.setItems(cartItems);
+		
 		CartInfoResponse cartInfoResponse = new CartInfoResponse();
 		BigDecimal cartTotal = new BigDecimal(10);
 		cartInfoResponse.setTotal(cartTotal);
@@ -87,12 +91,12 @@ class OrderControllerTest {
 		// When
 		when(authentication.getName()).thenReturn(authUsername);
 		when(userService.findByUsername(authUsername)).thenReturn(user);
-		when(cartService.getCartInfo(cartItems)).thenReturn(cartInfoResponse);
+		when(cartService.getCartInfo(request)).thenReturn(cartInfoResponse);
 		when(intent.getClientSecret()).thenReturn(clientSecret);
 		when(stripeService.createPaymentIntent(amount, userEmail)).thenReturn(intent);
-		when(orderService.createOrderWithCartItemsAndClientSecret(cartItems, clientSecret, user.getId())).thenReturn(savedOrderId);
+		when(orderService.createOrderWithCartItemsAndClientSecret(request, clientSecret, user.getId())).thenReturn(savedOrderId);
 		
-		ResponseEntity<Map<String, Object>> response = underTest.startOrder(cartItems, authentication);
+		ResponseEntity<Map<String, Object>> response = underTest.startOrder(request, authentication);
 		
 		// Then
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());

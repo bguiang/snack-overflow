@@ -15,19 +15,19 @@ import com.bernardguiang.SnackOverflow.service.UserService;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-	private final UserService userService;
-	
-	@Autowired
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
-	
-	@GetMapping
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public List<UserDTO> getUsers() {
-		List<UserDTO> users = userService.findAll();
-	    
-		return users;
-	}
-	
+//	private final UserService userService;
+//	
+//	@Autowired
+//	public UserController(UserService userService) {
+//		this.userService = userService;
+//	}
+//	
+//	@GetMapping
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	public List<UserDTO> getUsers() {
+//		List<UserDTO> users = userService.findAll();
+//	    
+//		return users;
+//	}
+//	
 }

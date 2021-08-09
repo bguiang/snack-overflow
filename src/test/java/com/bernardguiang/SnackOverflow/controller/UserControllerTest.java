@@ -13,17 +13,17 @@ import com.bernardguiang.SnackOverflow.service.UserService;
 
 class UserControllerTest {
 
-	private UserController underTest;
-	
-	private UserService userService;
-
-	@BeforeEach
-	void setUp() throws Exception {
-		
-		userService = Mockito.mock(UserService.class);
-		underTest = new UserController(userService);
-	}
-	
+//	private UserController underTest;
+//	
+//	private UserService userService;
+//
+//	@BeforeEach
+//	void setUp() throws Exception {
+//		
+//		userService = Mockito.mock(UserService.class);
+//		underTest = new UserController(userService);
+//	}
+//	
 //	@Test 
 //	void itshouldReturnUsers() {
 //		

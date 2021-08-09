@@ -16,8 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
 import com.bernardguiang.SnackOverflow.model.Product;
-import com.bernardguiang.SnackOverflow.model.ProductPage;
 
 @DataJpaTest(properties = { "spring.jpa.properties.javax.persistence.validation.mode=none" })
 class ProductRepositoryTest {
