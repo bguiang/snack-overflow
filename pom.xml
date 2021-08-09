@@ -16,6 +16,9 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
+		
+		<!-- Recommended Override for Spring Boot by Hibernate Search 6.0 https://docs.jboss.org/hibernate/search/6.0/reference/en-US/html_single/#_configuration_properties -->
+		<hibernate.version>5.4.32.Final</hibernate.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -94,6 +97,28 @@
 	      	<artifactId>passay</artifactId>
 	      	<version>1.6.1</version>
 	 	</dependency>
+	 	
+	 	<!-- Enable Hibernate ORM and Lucene Backend for Hibernate Search-->
+	 	<dependency>
+		   <groupId>org.hibernate.search</groupId>
+		   <artifactId>hibernate-search-mapper-orm</artifactId>
+		   <version>6.0.6.Final</version>
+		</dependency>
+		<dependency>
+		   <groupId>org.hibernate.search</groupId>
+		   <artifactId>hibernate-search-backend-lucene</artifactId>
+		   <version>6.0.6.Final</version>
+		</dependency>
+		
+		<!-- Update Mockito Core to allow Mocking of Static Methods-->
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-inline</artifactId>
+		    <version>3.8.0</version>
+		    <scope>test</scope>
+		</dependency>
+		
+	 	
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

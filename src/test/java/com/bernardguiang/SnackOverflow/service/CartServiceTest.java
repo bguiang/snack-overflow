@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
+import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponseItem;
 import com.bernardguiang.SnackOverflow.model.Category;
@@ -31,12 +32,11 @@ class CartServiceTest {
 	
 	private CartService underTest;
 	
-	@Mock
 	private ProductRepository productRepository;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
+		productRepository = Mockito.mock(ProductRepository.class);
 		underTest = new CartService(productRepository);
 	}
 	
@@ -57,11 +57,13 @@ class CartServiceTest {
 		images.add("imageURL");
 		String productName = "Product name";
 		
-		List<CartInfoRequestItem> input = new ArrayList<>();
+		List<CartInfoRequestItem> cartInfoRequestItems = new ArrayList<>();
 		CartInfoRequestItem item = new CartInfoRequestItem();
 		item.setProductId(productId);
 		item.setQuantity(quantity);
-		input.add(item);
+		cartInfoRequestItems.add(item);
+		CartRequest request = new CartRequest();
+		request.setItems(cartInfoRequestItems);
 		
 		Product p = new Product();
 		p.setId(productId);
@@ -74,7 +76,7 @@ class CartServiceTest {
 		// When
 		Optional<Product> productOptional = Optional.of(p);
 		when(productRepository.findById(productId)).thenReturn(productOptional);
-		CartInfoResponse response = underTest.getCartInfo(input);
+		CartInfoResponse response = underTest.getCartInfo(request);
 		
 		// Then
 		// ... total
@@ -103,11 +105,13 @@ class CartServiceTest {
 		Long productId = 2L;
 		int quantity = 5;
 		
-		List<CartInfoRequestItem> input = new ArrayList<>();
+		List<CartInfoRequestItem> cartInfoRequestItems = new ArrayList<>();
 		CartInfoRequestItem item = new CartInfoRequestItem();
 		item.setProductId(productId);
 		item.setQuantity(quantity);
-		input.add(item);
+		cartInfoRequestItems.add(item);
+		CartRequest request = new CartRequest();
+		request.setItems(cartInfoRequestItems);
 		
 		Product p = null;
 		// When
@@ -117,7 +121,7 @@ class CartServiceTest {
 		// ... total
 		assertThrows(
 				IllegalStateException.class,
-				()->underTest.getCartInfo(input), 
+				()->underTest.getCartInfo(request), 
 				"Could not find product " + productId);
 		}
 	}

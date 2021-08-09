@@ -1,18 +1,22 @@
 package com.bernardguiang.SnackOverflow.service;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
+import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Product;
-import com.bernardguiang.SnackOverflow.model.ProductPage;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 import com.bernardguiang.SnackOverflow.repository.ProductRepository;
 
@@ -36,6 +40,7 @@ public class ProductService
 		product.setName(productDTO.getName());
 		product.setDescription(productDTO.getDescription());
 		product.setPrice(productDTO.getPrice());
+		product.setCreatedDate(Instant.now());
 		product.setImages(productDTO.getImages());
 		
 		// Should it throw an error if category doesn't exist?
@@ -87,7 +92,24 @@ public class ProductService
 		return productDTOs;
 	}
 	
-	public Page<Product> getProductsPaginated(ProductPage page) {
-		return null;
+	public Page<ProductDTO> searchProductsPaginated(ProductPage page) {
+		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
+		Pageable pageable = PageRequest.of(
+				page.getPageNumber(), 
+				page.getPageSize(), 
+				sort);
+		
+		Page<Product> result = productRepository.findAllByNameContainingIgnoreCase(page.getSearch(), pageable);
+
+		// Returns a new Page with the content of the current one mapped by the given Function.
+		Page<ProductDTO> dtoPage = result.map(new Function<Product, ProductDTO>() {
+		    @Override
+		    public ProductDTO apply(Product entity) {
+		        ProductDTO dto = new ProductDTO(entity);
+				return dto;
+		    }
+		});
+		
+		return dtoPage;
 	}
 }

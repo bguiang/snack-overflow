@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
+import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponseItem;
@@ -24,11 +25,10 @@ public class CartService {
 		this.productRepository = productRepository;
 	}
 	
-	public CartInfoResponse getCartInfo(List<CartInfoRequestItem> cartInfoRequestItems) {
-		
+	public CartInfoResponse getCartInfo(CartRequest cartRequest) {
 		List<CartInfoResponseItem> cartItems = new ArrayList<>();
 
-		for(CartInfoRequestItem item : cartInfoRequestItems) {
+		for(CartInfoRequestItem item : cartRequest.getItems()) {
 			Product product =  productRepository.findById(item.getProductId())
 					.orElseThrow(() -> new IllegalStateException("Could not find product " + item.getProductId()));
 			ProductDTO productInfo = new ProductDTO(product);

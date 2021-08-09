@@ -31,8 +31,14 @@ public class AuthController {
 	
 	// Login is handled by JwtUsernameAndPasswordAuthentication Filter
 	
+	@GetMapping()
+	public String hello() {
+		System.out.println("Hello World");
+		return "Hello World";
+	}
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody @Valid RegisterRequest registerRequest) {
+		System.out.println("Signup called");
 		authService.customerSignup(registerRequest);
 		return new ResponseEntity<>("User Registration Successful", HttpStatus.CREATED);
 	}
@@ -46,8 +52,8 @@ public class AuthController {
 		// Delete Refresh Token
 		// remove current token from client
 		// Generate new and update refresh token and store in an http only cookie
-		Cookie refreshCookie = authService.generateEmptyRefreshTokenCookie();
-		response.addCookie(refreshCookie);
+		Cookie emptyRefreshCookie = authService.generateEmptyRefreshTokenCookie();
+		response.addCookie(emptyRefreshCookie);
 		return new ResponseEntity<>("Logout Successful", HttpStatus.OK); 
 	}
 
@@ -58,10 +64,8 @@ public class AuthController {
 	@GetMapping("/refresh")
 	public AuthenticationResponse refreshTokens(
 			HttpServletResponse response, 
-			@CookieValue(name = "refresh-token", defaultValue = "") String refreshToken
-			) {	
-		System.out.println("TOKEN REFRESH: " + refreshToken);
-		
+			@CookieValue(name = "refresh-token", defaultValue = "") String refreshToken) 
+	{	
 		// Validate Token, generate new Access Token
 		AuthenticationResponse authenticationResponse =  authService.refreshToken(refreshToken);
 		

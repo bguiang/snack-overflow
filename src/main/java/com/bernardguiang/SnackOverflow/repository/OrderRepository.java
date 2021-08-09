@@ -13,4 +13,5 @@ public interface OrderRepository extends CrudRepository<Order, Long>{
 	Iterable<Order> findAllByUser(User user);
 	Iterable<Order> findAllByUserIdAndStatusNot(Long id, OrderStatus status);
 	Optional<Order> findByIdAndUserId(Long id, Long userId);
+	Optional<Order> findByIdAndUserIdAndStatusNot(Long id, Long userId, OrderStatus status);
 }

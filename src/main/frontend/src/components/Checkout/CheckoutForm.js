@@ -148,7 +148,7 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
       console.log(updateRequest);
 
       const response = await SnackOverflow.put(
-        "/checkout/updateBillingAndShipping",
+        "/orders/updateBillingAndShipping",
         updateRequest,
         {
           headers: { Authorization: token },
@@ -159,7 +159,10 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
         confirmPayment();
       }
     } catch (error) {
-      console.log(error);
+      //console.log(error);
+      if (error.status === 400) {
+        console.log(error.response);
+      }
     }
   };
 

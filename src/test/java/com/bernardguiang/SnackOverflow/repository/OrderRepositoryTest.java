@@ -195,5 +195,16 @@ class OrderRepositoryTest {
 		Order result = resultOptional.get();
 		assertEquals(order3, result);
 	}
+	
+	@Test
+	void itShouldFindByIdAndUserIdAndStatusNot() {
+		// Given
+		// When
+		Optional<Order> resultOptional =  underTest.findByIdAndUserIdAndStatusNot(order1.getId(), user1.getId(), OrderStatus.CREATED);
+		
+		// Then
+		Order result = resultOptional.get();
+		assertEquals(order1, result);
+	}
 
 }

@@ -61,7 +61,6 @@ class OrderResponseItemTest {
 		assertEquals(orderItemQuantity, orderResponseItem.getQuantity());
 		// ... Product
 		ProductDTO orderResponseItemProduct = orderResponseItem.getProduct();
-		assertEquals(productId, orderResponseItemProduct.getId());
 		assertEquals(productName, orderResponseItemProduct.getName());
 		assertEquals(productDescription, orderResponseItemProduct.getDescription());
 		assertEquals(productPrice, orderResponseItemProduct.getPrice());

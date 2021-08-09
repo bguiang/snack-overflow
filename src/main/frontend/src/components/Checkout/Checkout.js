@@ -28,9 +28,10 @@ const Checkout = () => {
   const startCheckoutAndCreatePaymentIntent = async () => {
     try {
       console.log("Cart");
+      const cartInfoRequest = { items: cart };
       const response = await SnackOverflow.post(
-        "/checkout/startCheckout",
-        cart,
+        "/orders/start",
+        cartInfoRequest,
         {
           headers: { Authorization: token },
         }

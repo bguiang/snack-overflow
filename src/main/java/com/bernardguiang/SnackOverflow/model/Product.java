@@ -15,14 +15,25 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.search.engine.backend.types.Projectable;
+import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+
 @Entity
+@Indexed
 public class Product {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false, unique = true)
+	@FullTextField//(analyzer = "english", projectable = Projectable.YES)
+	//@KeywordField(name = "title_sort", normalizer = "english", sortable = Sortable.YES)
+	@KeywordField(name = "name_sort", sortable = Sortable.YES) 
 	private String name;
 	@Column(columnDefinition = "TEXT")
+	@FullTextField
 	private String description;
 	private BigDecimal price;
 	private Instant createdDate;

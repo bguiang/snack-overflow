@@ -177,6 +177,11 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     display: "flex",
   },
+  snacksPaginationContainer: {
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingTop: 8,
+  },
   snackCardContainer: {
     display: "flex",
   },
