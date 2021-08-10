@@ -46,13 +46,20 @@ public class DatabaseSeeder {
 	public void setDefaultUsers() {
 		
 		User user = new User();
-		user.setUsername("bernard");
-		user.setEmail("bernardguiang@gmail.com");
+		user.setUsername("admin");
+		user.setEmail("admin@admin.com");
 		user.setPassword(passwordEncoder.encode("password"));
 		user.setRole(ApplicationUserRole.ADMIN.name());
-		user.setFullName("Bernard Guiang");
-		User saved = userRepository.save(user);
-		System.out.println(saved);
+		user.setFullName("Admin Guy");
+		User savedAdmin = userRepository.save(user);
+		
+		User customer = new User();
+		customer.setUsername("customer");
+		customer.setEmail("customer@customer.com");
+		customer.setPassword(passwordEncoder.encode("password"));
+		customer.setRole(ApplicationUserRole.CUSTOMER.name());
+		customer.setFullName("Customer Guy");
+		User savedCustomer = userRepository.save(customer);
 	}
 
 	@EventListener(classes = { ContextRefreshedEvent.class})

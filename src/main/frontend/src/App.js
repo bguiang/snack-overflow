@@ -24,6 +24,8 @@ import CartRoute from "./components/Checkout/CheckoutRoute";
 import Contact from "./components/Contact/Contact";
 import Subscriptions from "./components/Subscriptions/Subscriptions";
 import Order from "./components/Account/Order";
+import AdminRoute from "./components/AdminRoute";
+import Admin from "./components/Admin/Admin";
 
 function App() {
   // Theme colors
@@ -58,7 +60,8 @@ function App() {
     },
     container: {
       backgroundColor: theme.palette.background.paper,
-      padding: 20,
+      // padding: 20,
+      padding: 0,
     },
   }));
 
@@ -93,6 +96,9 @@ function App() {
                     <Route path="/cart">
                       <Cart />
                     </Route>
+                    <AdminRoute path="/admin">
+                      <Admin />
+                    </AdminRoute>
                     <PrivateRoute path="/account/orders/:id">
                       <Order />
                     </PrivateRoute>

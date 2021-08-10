@@ -10,6 +10,7 @@ import { useAuth } from "../../context/AuthContext";
 import SnackOverflow from "../../api/SnackOverflow";
 import { useHistory, useLocation } from "react-router-dom";
 import validator from "validator";
+import jwt_decode from "jwt-decode";
 
 const LoginSignup = () => {
   const { currentUser, login } = useAuth();
@@ -35,9 +36,31 @@ const Login = ({ login, classes, currentUser }) => {
     history.replace(from);
   };
 
+  const isAdmin = () => {
+    if (currentUser === null) return false;
+
+    var decoded = jwt_decode(currentUser.authenticationToken);
+    console.log(decoded);
+    let auth = [];
+    decoded.authorities.map((authority) => {
+      auth.push(authority.authority);
+    });
+    console.log(auth);
+    if (auth.includes("ROLE_ADMIN")) return true;
+    else return false;
+  };
+
   useEffect(() => {
     if (currentUser !== null) {
-      callback();
+      if (from.pathname.startsWith("/admin")) {
+        if (isAdmin()) {
+          callback();
+        } else {
+          history.replace("/");
+        }
+      } else {
+        callback();
+      }
     }
   }, [currentUser]);
 
@@ -72,9 +95,7 @@ const Login = ({ login, classes, currentUser }) => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
+        <h2 className={classes.cartHeaderTitle}>Login</h2>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
             variant="outlined"
@@ -231,9 +252,7 @@ const SignUp = ({ classes }) => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
+        <h2 className={classes.cartHeaderTitle}>Sign Up</h2>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
             variant="outlined"

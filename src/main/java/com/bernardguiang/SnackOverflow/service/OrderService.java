@@ -64,6 +64,18 @@ public class OrderService {
 		return new OrderResponse(order);
 	}
 	
+	//TODO: test
+	public List<OrderResponse> findAllByStatusNot(OrderStatus status) {
+		Iterable<Order> ordersIterator = orderRepository.findAllByStatusNot(status);
+		List<OrderResponse> orderDTOs = new ArrayList<>();
+		for(Order order : ordersIterator)
+		{
+			OrderResponse orderDTO = new OrderResponse(order);
+			orderDTOs.add(orderDTO);
+		}
+		return orderDTOs;
+	}
+	
 	public Long createOrderWithCartItemsAndClientSecret(CartRequest cartRequest, String clientSecret, Long userId) {
 		
 		Order order = new Order();

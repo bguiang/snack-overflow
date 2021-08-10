@@ -54,7 +54,7 @@ const Cart = () => {
   };
 
   return (
-    <div>
+    <div className={classes.content}>
       <Dialog
         open={isTotalTooLow}
         onClose={() => setIsTotalTooLow(false)}

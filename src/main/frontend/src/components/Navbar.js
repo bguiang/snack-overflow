@@ -33,6 +33,8 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import jwt_decode from "jwt-decode";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 
 const Navbar = () => {
   const classes = useStyles();
@@ -40,6 +42,20 @@ const Navbar = () => {
   const { currentUser } = useAuth();
   const { getItemCount } = useCart();
   const [search, setSearch] = useState("");
+
+  const isAdmin = () => {
+    if (currentUser === null) return false;
+
+    var decoded = jwt_decode(currentUser.authenticationToken);
+    console.log(decoded);
+    let auth = [];
+    decoded.authorities.map((authority) => {
+      auth.push(authority.authority);
+    });
+    console.log(auth);
+    if (auth.includes("ROLE_ADMIN")) return true;
+    else return false;
+  };
 
   const accountButtonText = currentUser ? currentUser.username : "Account";
 
@@ -93,27 +109,25 @@ const Navbar = () => {
             />
           </Box>
           <Box className={classes.toolbarMenu}>
-            <Button
-              size="large"
-              className={classes.margin}
-              onClick={() => handleClick("/cart")}
-            >
+            <Button size="large" onClick={() => handleClick("/cart")}>
               <ShoppingCartIcon />
               Cart ({getItemCount()})
             </Button>
-            <Button
-              onClick={() => handleClick("/account")}
-              size="large"
-              className={classes.margin}
-            >
+            <Button onClick={() => handleClick("/account")} size="large">
               <AccountCircleIcon />
               {accountButtonText}
             </Button>
+            {isAdmin() ? (
+              <Button onClick={() => handleClick("/admin")} size="large">
+                <DashboardIcon />
+                Dashboard
+              </Button>
+            ) : null}
           </Box>
           <Box className={classes.toolbarMenuMobile}>
             <Button
               size="large"
-              className={classes.shoppingCartButton}
+              className={classes.mobileIconButton}
               onClick={() => handleClick("/cart")}
             >
               <ShoppingCartIcon />({getItemCount()})
@@ -121,10 +135,19 @@ const Navbar = () => {
             <Button
               onClick={() => handleClick("/account")}
               size="large"
-              className={classes.margin}
+              className={classes.mobileIconButton}
             >
               <AccountCircleIcon />
             </Button>
+            {isAdmin() ? (
+              <Button
+                onClick={() => handleClick("/admin")}
+                size="large"
+                className={classes.mobileIconButton}
+              >
+                <DashboardIcon />
+              </Button>
+            ) : null}
           </Box>
         </Toolbar>
       </Container>

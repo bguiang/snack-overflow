@@ -33,7 +33,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 
 @RestController
-@RequestMapping("/api/v1/orders")
+//@RequestMapping("/api/v1/orders")
 public class OrderController {
 	
 	private final OrderService orderService;
@@ -49,7 +49,7 @@ public class OrderController {
 		this.cartService = cartService;
 	}
 	
-	@PostMapping("/start")
+	@PostMapping("/api/v1/orders/start")
 	@PreAuthorize("hasAuthority('order:write')")
 	public ResponseEntity<Map<String, Object>> startOrder(@RequestBody @Valid CartRequest cartRequest,
 			Authentication authentication) throws StripeException {
@@ -78,7 +78,7 @@ public class OrderController {
 		return new ResponseEntity<>(map, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/updateBillingAndShipping")
+	@PutMapping("/api/v1/orders/updateBillingAndShipping")
 	public ResponseEntity<String> updateOrderBillingAndShipping(
 			@RequestBody @Valid UpdateBillingAndShippingRequest updateBillingAndShippingRequest,
 			Authentication authentication) throws StripeException {
@@ -90,7 +90,7 @@ public class OrderController {
 		return new ResponseEntity<>("Order Updated", HttpStatus.OK);
 	}
 	
-	@GetMapping
+	@GetMapping("/api/v1/orders")
 	@PreAuthorize("hasAuthority('order:read')")
 	public List<OrderResponse> getOrdersByCurrentUser(Authentication authentication) {
 		String username = authentication.getName();
@@ -99,12 +99,18 @@ public class OrderController {
 		return orderService.findAllByUserAndStatusNot(user, OrderStatus.CREATED);
 	}
 	
-	@GetMapping("/{orderId}")
+	@GetMapping("/api/v1/orders/{orderId}")
 	@PreAuthorize("hasAuthority('order:read')")
 	public OrderResponse getOrderByCurrentUser(@PathVariable long orderId, Authentication authentication) {
 		String username = authentication.getName();
 		UserDTO user = userService.findByUsername(username);
 		
 		return orderService.findByIdAndUserIdAndStatusNot(orderId, user.getId(), OrderStatus.CREATED);
+	}
+	
+	@GetMapping("/api/v1/admin/orders")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public List<OrderResponse> getAllStartedOrders() {
+		return orderService.findAllByStatusNot(OrderStatus.CREATED);
 	}
 }

@@ -44,7 +44,7 @@ const Snacks = () => {
   }, [search, pageNumber]);
 
   return (
-    <div>
+    <div className={classes.content}>
       <Grid
         container
         spacing={5}

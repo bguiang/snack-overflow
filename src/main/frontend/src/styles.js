@@ -1,3 +1,4 @@
+import { green, red } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 
 // Theme colors
@@ -8,6 +9,12 @@ import { makeStyles } from "@material-ui/core/styles";
 // style hook
 // uses the theme provider https://material-ui.com/customization/theming/
 const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: 0,
+  },
+  content: {
+    padding: 20,
+  },
   appbar: {
     backgroundColor: theme.palette.secondary.main,
   },
@@ -16,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 0,
   },
   toolbar: {
-    [theme.breakpoints.up("sm")]: {
-      paddingLeft: 0,
-    },
+    // [theme.breakpoints.up("sm")]: {
+    //   paddingLeft: 0,
+    // },
     paddingRight: 0,
     flex: 1,
     display: "flex",
@@ -36,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     alignItems: "center",
   },
+  mobileIconButton: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
   toolbarMenuMobile: {
     [theme.breakpoints.down("sm")]: {
       display: "flex",
@@ -49,10 +60,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   socialsMenu: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "none",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "flex",
     },
     flex: 1,
@@ -389,6 +400,41 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       marginRight: 8,
     },
+  },
+  dashboard: {
+    height: "100%",
+    display: "flex",
+    padding: 0,
+  },
+  dashboardMenu: {
+    backgroundColor: "#242526",
+    width: 160,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+    flexDirection: "column",
+  },
+  dashboardMenuMobile: {
+    backgroundColor: "#242526",
+    width: 40,
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+    flexDirection: "column",
+  },
+  dashboardMenuItem: {
+    color: theme.palette.secondary.main,
+    justifyContent: "left",
+  },
+  dashboardContent: {
+    flex: 1,
+    padding: 20,
   },
 }));
 

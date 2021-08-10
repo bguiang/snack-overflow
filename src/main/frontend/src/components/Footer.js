@@ -4,7 +4,7 @@ import useStyles from "../styles";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="h6" color="textSecondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="http://bernardguiang.com/">
         Bernard Guiang

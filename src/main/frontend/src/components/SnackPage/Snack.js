@@ -27,7 +27,7 @@ const Snack = () => {
   };
 
   return (
-    <div>
+    <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} sm={5}>
           {snack.images ? (
