@@ -6,30 +6,19 @@ import {
   CardContent,
   Typography,
 } from "@material-ui/core";
-import { Grid } from "@material-ui/core";
+import { Grid, Link } from "@material-ui/core";
 import { useAuth } from "../../context/AuthContext";
 import useStyles from "../../styles";
 import SnackOverflow from "../../api/SnackOverflow";
 import { useHistory, useParams } from "react-router-dom";
-import OrderItem from "./OrderItem";
+import OrderItem from "../Account/OrderItem";
 
-const Order = () => {
+const OrderAdmin = () => {
   const { currentUser, logout } = useAuth();
   const history = useHistory();
   const classes = useStyles();
   const [token, setToken] = useState(null);
 
-  // const [order, setOrder] = useState({
-  //   id: null,
-  //   items: [],
-  //   total: 0,
-  //   createdDate: null,
-  //   billingDetails: null,
-  //   shippingDetails: null,
-  //   isShippingSameAsBilling: false,
-  //   userId: null,
-  //   status: null,
-  // });
   const [order, setOrder] = useState(null);
 
   const { id } = useParams();
@@ -42,7 +31,7 @@ const Order = () => {
     const getOrder = async () => {
       try {
         console.log("Order ID: " + id);
-        const response = await SnackOverflow.get(`/orders/${id}`, {
+        const response = await SnackOverflow.get(`/admin/orders/${id}`, {
           headers: { Authorization: token },
         });
 
@@ -50,11 +39,11 @@ const Order = () => {
           console.log(response.data);
           setOrder(response.data);
         } else {
-          history.push("/account");
+          history.push("/admin/orders");
         }
       } catch (error) {
         console.log(error);
-        history.push("/account");
+        history.push("/admin/orders");
       }
     };
 
@@ -70,6 +59,12 @@ const Order = () => {
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} key="orderInfo">
           <Typography variant="h6">Order #{order.id}</Typography>
+          <Typography variant="h6">
+            User:{" "}
+            <Link href={`/admin/members/${order.user.id}`}>
+              {order.user.username}
+            </Link>
+          </Typography>
           <Grid
             item
             xs={12}
@@ -179,4 +174,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default OrderAdmin;

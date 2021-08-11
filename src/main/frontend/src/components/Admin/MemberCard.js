@@ -3,94 +3,93 @@ import useStyles from "../../styles";
 import { Grid, Typography, Card, CardActionArea } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-const OrderCardAdmin = ({ order }) => {
+const MemberCard = ({ member }) => {
   const classes = useStyles();
   const history = useHistory();
 
   const itemClick = (id) => {
-    console.log("Item Clicked: " + id);
-    history.push(`/admin/orders/${id}`);
+    history.push(`/admin/members/${id}`);
   };
   return (
-    <Grid item xs={12} key={order.id}>
+    <Grid item xs={12} key={member.id}>
       <Card className={classes.orderCardMobile}>
         <CardActionArea
-          onClick={() => itemClick(order.id)}
+          onClick={() => itemClick(member.id)}
           className={classes.orderCardActionAreaMobile}
         >
           <Typography
             variant="subtitle1"
             className={classes.orderCardActionAreaItem}
           >
-            Order: #{order.id}
+            ID: {member.id}
           </Typography>
           <Typography
             variant="subtitle1"
             className={classes.orderCardActionAreaItem}
           >
-            User: {order.user.username}
+            Username: {member.username}
           </Typography>
           <Typography
             variant="subtitle1"
             className={classes.orderCardActionAreaItem2}
           >
-            Created: {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
+            Full Name: {member.fullName}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            className={classes.orderCardActionAreaItem}
+          >
+            Role: {member.role}
+          </Typography>
+          {/* <Typography
+            variant="subtitle1"
+            className={classes.orderCardActionAreaItem2}
+          >
+            Joined: {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
             {new Date(order.createdDate).toLocaleTimeString("en-US")}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            Status: {order.status}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            Total: ${order.total.toFixed(2)}
-          </Typography>
+          </Typography> */}
         </CardActionArea>
       </Card>
       <Card className={classes.orderCard}>
         <CardActionArea
-          onClick={() => itemClick(order.id)}
+          onClick={() => itemClick(member.id)}
           className={classes.orderCardActionArea}
         >
           <Typography
             variant="subtitle2"
             className={classes.orderCardActionAreaItem}
           >
-            #{order.id}
+            {member.id}
           </Typography>
           <Typography
             variant="subtitle2"
             className={classes.orderCardActionAreaItem2}
           >
-            {order.user.username}
+            {member.username}
           </Typography>
           <Typography
+            variant="subtitle2"
+            className={classes.orderCardActionAreaItem2}
+          >
+            {member.fullName}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            className={classes.orderCardActionAreaItem2}
+          >
+            {member.role}
+          </Typography>
+          {/* <Typography
             variant="subtitle2"
             className={classes.orderCardActionAreaItem2}
           >
             {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
             {new Date(order.createdDate).toLocaleTimeString("en-US")}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {order.status}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem}
-          >
-            ${order.total.toFixed(2)}
-          </Typography>
+          </Typography> */}
         </CardActionArea>
       </Card>
     </Grid>
   );
 };
 
-export default OrderCardAdmin;
+export default MemberCard;

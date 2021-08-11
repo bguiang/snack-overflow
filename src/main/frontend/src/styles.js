@@ -1,4 +1,3 @@
-import { green, red } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 
 // Theme colors
@@ -416,6 +415,9 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
     },
     flexDirection: "column",
+    boxShadow: "1px 0 10px #242526",
+    WebkitBoxShadow: "1px 0 10px #242526",
+    MozBoxShadow: "1px 0 10px #242526",
   },
   dashboardMenuMobile: {
     backgroundColor: "#242526",

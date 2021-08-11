@@ -14,12 +14,10 @@ function AdminRoute({ children, ...rest }) {
     if (currentUser === null) return false;
 
     var decoded = jwt_decode(currentUser.authenticationToken);
-    console.log(decoded);
     let auth = [];
     decoded.authorities.map((authority) => {
       auth.push(authority.authority);
     });
-    console.log(auth);
     if (auth.includes("ROLE_ADMIN")) return true;
     else return false;
   };

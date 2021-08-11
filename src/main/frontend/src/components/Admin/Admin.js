@@ -6,15 +6,7 @@ import {
   Route,
   useHistory,
 } from "react-router-dom";
-import {
-  Button,
-  Grid,
-  Paper,
-  Card,
-  CardContent,
-  Typography,
-  CardActions,
-} from "@material-ui/core";
+import { Button, Box } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import StorefrontIcon from "@material-ui/icons/Storefront";
 import PeopleIcon from "@material-ui/icons/People";
@@ -23,10 +15,11 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import BookIcon from "@material-ui/icons/Book";
 import Dashboard from "./Dashboard";
 import Orders from "./Orders";
-import Transactions from "./Orders";
+import Transactions from "./Transactions";
 import ProductsAdmin from "./ProductsAdmin";
 import Members from "./Members";
 import Logs from "./Logs";
+import OrderAdmin from "./OrderAdmin";
 
 const Admin = () => {
   const classes = useStyles();
@@ -128,6 +121,9 @@ const Admin = () => {
       </div>
       <div className={classes.dashboardContent}>
         <Switch>
+          <Route path="/admin/orders/:id">
+            <OrderAdmin />
+          </Route>
           <Route path="/admin/orders">
             <Orders />
           </Route>

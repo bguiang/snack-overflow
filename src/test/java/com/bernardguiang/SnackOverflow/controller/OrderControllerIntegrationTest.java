@@ -88,27 +88,45 @@ class OrderControllerIntegrationTest {
 	@BeforeAll
 	static void setupBeforeAll() {
 		customerRoleAuthorities = new ArrayList<>();
+		
 		Map<String, String> auth1 = new HashMap<>();
-		auth1.put("authority", "order:write");
+		auth1.put("authority", "ROLE_CUSTOMER");
 		customerRoleAuthorities.add(auth1);
 		Map<String, String> auth2 = new HashMap<>();
-		auth2.put("authority", "product:write");
+		auth2.put("authority", "order:write");
 		customerRoleAuthorities.add(auth2);
 		Map<String, String> auth3 = new HashMap<>();
-		auth3.put("authority", "order:read");
+		auth3.put("authority", "category:read");
 		customerRoleAuthorities.add(auth3);
 		Map<String, String> auth4 = new HashMap<>();
-		auth4.put("authority", "category:read");
+		auth4.put("authority", "product:read");
 		customerRoleAuthorities.add(auth4);
 		Map<String, String> auth5 = new HashMap<>();
-		auth5.put("authority", "ROLE_ADMIN");
+		auth5.put("authority", "order:read");
 		customerRoleAuthorities.add(auth5);
-		Map<String, String> auth6 = new HashMap<>();
-		auth6.put("authority", "category:write");
-		customerRoleAuthorities.add(auth6);
-		Map<String, String> auth7 = new HashMap<>();
-		auth7.put("authority", "product:read");
-		customerRoleAuthorities.add(auth7);
+
+//		adminRoleAuthorities = new ArrayList<>();
+//		Map<String, String> auth1 = new HashMap<>();
+//		auth1.put("authority", "order:write");
+//		adminRoleAuthorities.add(auth1);
+//		Map<String, String> auth2 = new HashMap<>();
+//		auth2.put("authority", "product:write");
+//		adminRoleAuthorities.add(auth2);
+//		Map<String, String> auth3 = new HashMap<>();
+//		auth3.put("authority", "order:read");
+//		adminRoleAuthorities.add(auth3);
+//		Map<String, String> auth4 = new HashMap<>();
+//		auth4.put("authority", "category:read");
+//		adminRoleAuthorities.add(auth4);
+//		Map<String, String> auth5 = new HashMap<>();
+//		auth5.put("authority", "ROLE_ADMIN");
+//		adminRoleAuthorities.add(auth5);
+//		Map<String, String> auth6 = new HashMap<>();
+//		auth6.put("authority", "category:write");
+//		adminRoleAuthorities.add(auth6);
+//		Map<String, String> auth7 = new HashMap<>();
+//		auth7.put("authority", "product:read");
+//		adminRoleAuthorities.add(auth7);
 	}
 
 	void setCustomerAuthorization() {

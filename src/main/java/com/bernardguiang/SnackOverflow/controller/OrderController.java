@@ -23,6 +23,7 @@ import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
+import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
 import com.bernardguiang.SnackOverflow.service.CartService;
@@ -49,47 +50,6 @@ public class OrderController {
 		this.cartService = cartService;
 	}
 	
-	@PostMapping("/api/v1/orders/start")
-	@PreAuthorize("hasAuthority('order:write')")
-	public ResponseEntity<Map<String, Object>> startOrder(@RequestBody @Valid CartRequest cartRequest,
-			Authentication authentication) throws StripeException {
-		
-		// Get Current User's Email
-		String username = authentication.getName();
-		UserDTO user = userService.findByUsername(username);
-		String userEmail = user.getEmail();
-
-		// Get Cart Product Info and Total
-		CartInfoResponse cart = cartService.getCartInfo(cartRequest);
-
-		// Create Payment Intent and Client Secret
-		Long amount = cart.getTotal().longValue() * 100;
-		PaymentIntent intent = stripeService.createPaymentIntent(amount, userEmail);
-		String clientSecret = intent.getClientSecret();
-
-		// Create Order
-		Long savedOrderId = orderService.createOrderWithCartItemsAndClientSecret(cartRequest, clientSecret, user.getId());
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("client_secret", clientSecret);
-		map.put("cart", cart);
-		map.put("orderId", savedOrderId);
-
-		return new ResponseEntity<>(map, HttpStatus.CREATED);
-	}
-
-	@PutMapping("/api/v1/orders/updateBillingAndShipping")
-	public ResponseEntity<String> updateOrderBillingAndShipping(
-			@RequestBody @Valid UpdateBillingAndShippingRequest updateBillingAndShippingRequest,
-			Authentication authentication) throws StripeException {
-		String username = authentication.getName();
-		UserDTO user = userService.findByUsername(username);
-
-		orderService.updateBillingAndShipping(updateBillingAndShippingRequest, user);
-
-		return new ResponseEntity<>("Order Updated", HttpStatus.OK);
-	}
-	
 	@GetMapping("/api/v1/orders")
 	@PreAuthorize("hasAuthority('order:read')")
 	public List<OrderResponse> getOrdersByCurrentUser(Authentication authentication) {
@@ -108,9 +68,17 @@ public class OrderController {
 		return orderService.findByIdAndUserIdAndStatusNot(orderId, user.getId(), OrderStatus.CREATED);
 	}
 	
+	//TODO: test
 	@GetMapping("/api/v1/admin/orders")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public List<OrderResponse> getAllStartedOrders() {
+	public List<OrderDTO> getAllStartedOrders() {
 		return orderService.findAllByStatusNot(OrderStatus.CREATED);
+	}
+	
+	//TODO: test
+	@GetMapping("/api/v1/admin/orders/{orderId}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public OrderDTO getOrderByCurrentUser(@PathVariable long orderId) {
+		return orderService.findByIdAndStatusNot(orderId, OrderStatus.CREATED);
 	}
 }

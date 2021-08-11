@@ -49,6 +49,9 @@ public class Product {
 	@OneToMany(mappedBy="product")
 	private List<OrderItem> orderedItems;
 	
+	@OneToMany(mappedBy="product")
+	private List<CartItem> cartItem;
+	
 	public Product() {
 		
 	}
@@ -65,14 +68,7 @@ public class Product {
 		this.orderedItems = orderedItems;
 	}
 	
-	public Product(String name) {
-		this.name = name;
-	}
 	
-	public Product(Long id, String name) {
-		this.id = id;
-		this.name = name;
-	}
 
 	public Long getId() {
 		return id;
@@ -105,7 +101,7 @@ public class Product {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
-	
+
 	public Instant getCreatedDate() {
 		return createdDate;
 	}
@@ -129,8 +125,6 @@ public class Product {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
-	
-	
 
 	public List<OrderItem> getOrderedItems() {
 		return orderedItems;
@@ -138,6 +132,14 @@ public class Product {
 
 	public void setOrderedItems(List<OrderItem> orderedItems) {
 		this.orderedItems = orderedItems;
+	}
+
+	public List<CartItem> getCartItem() {
+		return cartItem;
+	}
+
+	public void setCartItem(List<CartItem> cartItem) {
+		this.cartItem = cartItem;
 	}
 
 	@Override

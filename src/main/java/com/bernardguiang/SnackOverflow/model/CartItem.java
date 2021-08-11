@@ -10,39 +10,32 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class OrderItem {
-	
+public class CartItem {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name="order_id", nullable=false)
-	private Order order;
+	@JoinColumn(name="cart_id", nullable=false)
+	private Cart cart;
 	
 	@ManyToOne
 	@JoinColumn(name="product_id", nullable=false)
 	private Product product;
 	
+	private BigDecimal price;
+	
 	private int quantity;
-	private BigDecimal price; // Prices of products could fluctuate so record the price of the item when the order was made
-	
-	public OrderItem() {
+
+	public CartItem() {
+
 	}
 	
-	public OrderItem(Order order, Product product, int quantity, BigDecimal price) {
-		this.order = order;
+	public CartItem(Cart cart, Product product, BigDecimal price, int quantity) {
+		this.cart = cart;
 		this.product = product;
-		this.quantity = quantity;
 		this.price = price;
-	}
-	
-	public OrderItem(Long id, Order order, Product product, int quantity, BigDecimal price) {
-		this.id = id;
-		this.order = order;
-		this.product = product;
 		this.quantity = quantity;
-		this.price = price;
 	}
 
 	public Long getId() {
@@ -53,12 +46,12 @@ public class OrderItem {
 		this.id = id;
 	}
 
-	public Order getOrder() {
-		return order;
+	public Cart getCart() {
+		return cart;
 	}
 
-	public void setOrder(Order order) {
-		this.order = order;
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 
 	public Product getProduct() {
@@ -69,6 +62,14 @@ public class OrderItem {
 		this.product = product;
 	}
 
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
 	public int getQuantity() {
 		return quantity;
 	}
@@ -77,12 +78,4 @@ public class OrderItem {
 		this.quantity = quantity;
 	}
 
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-	
 }

@@ -21,7 +21,6 @@ const Checkout = () => {
   const { cart } = useCart();
   const [cartInfo, setCartInfo] = useState({ items: [], total: 0 });
   const { currentUser } = useAuth();
-  const [orderId, setOrderId] = useState(null);
   const [token, setToken] = useState(null);
   const [clientSecret, setClientSecret] = useState("");
 
@@ -30,19 +29,16 @@ const Checkout = () => {
       console.log("Cart");
       const cartInfoRequest = { items: cart };
       const response = await SnackOverflow.post(
-        "/orders/start",
+        "/stripe/createPaymentIntent",
         cartInfoRequest,
         {
           headers: { Authorization: token },
         }
       );
       if (201 === response.status) {
-        console.log("client_secret: " + response.data.client_secret);
-        console.log("orderId: " + response.data.orderId);
         console.log(response.data);
         setClientSecret(response.data.client_secret);
         setCartInfo(response.data.cart);
-        setOrderId(response.data.orderId);
       } else {
         history.push("/");
       }
@@ -70,7 +66,6 @@ const Checkout = () => {
           elements={elements}
           clientSecret={clientSecret}
           token={token}
-          orderId={orderId}
         />
       )}
     </ElementsConsumer>

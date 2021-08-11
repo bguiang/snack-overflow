@@ -12,6 +12,7 @@ import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
+import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
@@ -65,15 +66,22 @@ public class OrderService {
 	}
 	
 	//TODO: test
-	public List<OrderResponse> findAllByStatusNot(OrderStatus status) {
+	public List<OrderDTO> findAllByStatusNot(OrderStatus status) {
 		Iterable<Order> ordersIterator = orderRepository.findAllByStatusNot(status);
-		List<OrderResponse> orderDTOs = new ArrayList<>();
+		List<OrderDTO> orderDTOs = new ArrayList<>();
 		for(Order order : ordersIterator)
 		{
-			OrderResponse orderDTO = new OrderResponse(order);
+			OrderDTO orderDTO = new OrderDTO(order);
 			orderDTOs.add(orderDTO);
 		}
 		return orderDTOs;
+	}
+	
+	//TODO: test
+	public OrderDTO findByIdAndStatusNot(Long id, OrderStatus status) {
+		Order order = orderRepository.findByIdAndStatusNot(id, status)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id));
+		return new OrderDTO(order);
 	}
 	
 	public Long createOrderWithCartItemsAndClientSecret(CartRequest cartRequest, String clientSecret, Long userId) {
