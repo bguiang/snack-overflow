@@ -62,14 +62,14 @@ public class Order {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status = OrderStatus.CREATED;
 	
-	private String clientSecret;
+	private String paymentIntentId;
 
 	public Order() {
 	}
 	
 	public Order(List<OrderItem> items, BigDecimal total, Instant createdDate, BillingDetails billingDetails,
 			ShippingDetails shippingDetails, boolean isShippingSameAsBilling, User user, OrderStatus status,
-			String clientSecret) {
+			String paymentIntentId) {
 		super();
 		this.items = items;
 		this.total = total;
@@ -79,7 +79,7 @@ public class Order {
 		this.isShippingSameAsBilling = isShippingSameAsBilling;
 		this.user = user;
 		this.status = status;
-		this.clientSecret = clientSecret;
+		this.paymentIntentId = paymentIntentId;
 	}
 
 	public long getId() {
@@ -154,12 +154,11 @@ public class Order {
 		this.status = status;
 	}
 
-	public String getClientSecret() {
-		return clientSecret;
+	public String getPaymentIntentId() {
+		return paymentIntentId;
 	}
 
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
+	public void setPaymentIntentId(String paymentIntentId) {
+		this.paymentIntentId = paymentIntentId;
 	}
-	
 }

@@ -82,7 +82,9 @@ public class StripeService {
 		
 		StripePaymentIntent stripePaymentIntent = new StripePaymentIntent();
 
-		stripePaymentIntent.setClientSecret(clientSecret);
+		String paymentIntentId = intent.getId();
+		stripePaymentIntent.setPaymentIntentId(paymentIntentId);
+		System.out.println("stripePaymentIntent created with paymentIntentId: " + paymentIntentId);
 		
 		// Convert CartInfoResponse to Cart
 		Cart cart = new Cart();
@@ -138,26 +140,26 @@ public class StripeService {
 		switch (event.getType()) {
 		case "payment_intent.processing":
 			PaymentIntent paymentIntentProcessing = (PaymentIntent) stripeObject;
-			System.out.println("payment_intent.processing for clientSecret: " + paymentIntentProcessing.getClientSecret());
+			System.out.println("payment_intent.processing for paymentIntentId: " + paymentIntentProcessing.getId());
 			System.out.println("setting order status to: " + OrderStatus.PAYMENT_PENDING.name());
 			
 			createOrUpdateOrder(paymentIntentProcessing, OrderStatus.PAYMENT_PENDING);
 			break;
 		case "payment_intent.succeeded":
 			PaymentIntent paymentIntentSucceeded = (PaymentIntent) stripeObject;
-			System.out.println("payment_intent.succeeded for clientSecret: " + paymentIntentSucceeded.getClientSecret());
+			System.out.println("payment_intent.succeeded for paymentIntentId: " + paymentIntentSucceeded.getId());
 			System.out.println("setting order status to: " + OrderStatus.PROCESSING.name());
 			createOrUpdateOrder(paymentIntentSucceeded, OrderStatus.PROCESSING);
 			break;
 		case "payment_intent.failed":
 			PaymentIntent paymentIntentFailed = (PaymentIntent) stripeObject;
-			System.out.println("payment_intent.failed for clientSecret: " + paymentIntentFailed.getClientSecret());
+			System.out.println("payment_intent.failed for paymentIntentId: " + paymentIntentFailed.getId());
 			System.out.println("setting order status to: " + OrderStatus.FAILED.name());
 			createOrUpdateOrder(paymentIntentFailed, OrderStatus.FAILED);
 			break;
 		case "payment_intent.cancelled":
 			PaymentIntent paymentIntentCancelled = (PaymentIntent) stripeObject;
-			System.out.println("payment_intent.failed for clientSecret: " + paymentIntentCancelled.getClientSecret());
+			System.out.println("payment_intent.failed for paymentIntentId: " + paymentIntentCancelled.getId());
 			System.out.println("setting order status to: " + OrderStatus.CANCELLED.name());
 			createOrUpdateOrder(paymentIntentCancelled, OrderStatus.CANCELLED);
 			break;
@@ -170,24 +172,25 @@ public class StripeService {
 		
 //		System.out.println("createOrUpdateOrder()");
 //		System.out.println("PaymentIntent: " + paymentIntent.toString());
-		// Check if Order with clientSecret already exists
-		String clientSecret = paymentIntent.getClientSecret();
-		Optional<Order> orderOptional = orderRepository.findByClientSecret(clientSecret);
+		// Check if Order with paymentIntentId already exists
+		String paymentIntentId = paymentIntent.getId();
+		System.out.println("paymentIntentId: " + paymentIntentId);
+		Optional<Order> orderOptional = orderRepository.findByPaymentIntentId(paymentIntentId);
 		
 		// Check first if Order already exists
 		Order order = null;
 		if(orderOptional.isPresent()) {
-			System.out.println("Order for client secret exists. Update existing order");
+			System.out.println("Order for paymentIntentId exists. Update existing order");
 			// Order exists, just need to update status
 			order = orderOptional.get();
 		} else {
-			System.out.println("Order for client secret does not exists. Create new order");
+			System.out.println("Order for paymentIntentId does not exists. Create new order");
 			// Order does not yet exist, create new order with saved StripePaymentIntent and Billing and Shipping info from the event PaymentIntent payload
 			order = new Order();
 			
 			// Find Saved StripePaymentIntent to retrieve Cart and User
-			StripePaymentIntent stripePaymentIntent = stripePaymentIntentRepository.findByClientSecret(clientSecret)
-				.orElseThrow(() -> new IllegalStateException("Could not StripePaymentIntent with clientSecret: " + clientSecret));
+			StripePaymentIntent stripePaymentIntent = stripePaymentIntentRepository.findByPaymentIntentId(paymentIntentId)
+				.orElseThrow(() -> new IllegalStateException("Could not StripePaymentIntent with paymentIntentId: " + paymentIntentId));
 			
 			User user = stripePaymentIntent.getUser();
 			order.setUser(user); // TODO: might need to save User instead of the order? Since User is the owner

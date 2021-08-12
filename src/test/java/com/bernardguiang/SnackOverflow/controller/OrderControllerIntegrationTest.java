@@ -195,7 +195,7 @@ class OrderControllerIntegrationTest {
 
 		when(stripeService.createPaymentIntent(amount, customerEmail)).thenReturn(intent);
 
-		when(orderService.createOrderWithCartItemsAndClientSecret(Mockito.argThat(new ArgumentMatcher<CartRequest>() {
+		when(orderService.createOrderWithCartItemsAndPaymentIntentId(Mockito.argThat(new ArgumentMatcher<CartRequest>() {
 
 			@Override
 			public boolean matches(CartRequest argument) {

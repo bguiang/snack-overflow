@@ -9,7 +9,7 @@ import com.bernardguiang.SnackOverflow.model.OrderStatus;
 import com.bernardguiang.SnackOverflow.model.User;
 
 public interface OrderRepository extends CrudRepository<Order, Long>{
-	Optional<Order> findByClientSecret(String clientSecret);
+	Optional<Order> findByPaymentIntentId(String paymentIntentId);
 	Iterable<Order> findAllByUser(User user);
 	Iterable<Order> findAllByUserIdAndStatusNot(Long id, OrderStatus status);
 	Optional<Order> findByIdAndUserId(Long id, Long userId);

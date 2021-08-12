@@ -84,7 +84,7 @@ public class OrderService {
 		return new OrderDTO(order);
 	}
 	
-	public Long createOrderWithCartItemsAndClientSecret(CartRequest cartRequest, String clientSecret, Long userId) {
+	public Long createOrderWithCartItemsAndPaymentIntentId(CartRequest cartRequest, String paymentIntentId, Long userId) {
 		
 		Order order = new Order();
 		
@@ -107,7 +107,7 @@ public class OrderService {
 		order.setItems(items);
 		order.setTotal(total);
 		order.setUser(user);
-		order.setClientSecret(clientSecret);
+		order.setPaymentIntentId(paymentIntentId);
 		order.setStatus(OrderStatus.CREATED);
 		
 		Order saved = orderRepository.save(order);

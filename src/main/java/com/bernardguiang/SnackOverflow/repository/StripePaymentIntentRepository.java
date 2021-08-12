@@ -9,5 +9,5 @@ import com.bernardguiang.SnackOverflow.model.StripePaymentIntent;
 // TODO: test
 public interface StripePaymentIntentRepository extends CrudRepository<StripePaymentIntent, Long> {
 
-	Optional<StripePaymentIntent> findByClientSecret(String clientSecret);
+	Optional<StripePaymentIntent> findByPaymentIntentId(String paymentIntentId);
 }

@@ -94,7 +94,7 @@ class OrderControllerTest {
 		when(cartService.getCartInfo(request)).thenReturn(cartInfoResponse);
 		when(intent.getClientSecret()).thenReturn(clientSecret);
 		when(stripeService.createPaymentIntent(amount, userEmail)).thenReturn(intent);
-		when(orderService.createOrderWithCartItemsAndClientSecret(request, clientSecret, user.getId())).thenReturn(savedOrderId);
+		when(orderService.createOrderWithCartItemsAndPaymentIntentId(request, clientSecret, user.getId())).thenReturn(savedOrderId);
 		
 		ResponseEntity<Map<String, Object>> response = underTest.startOrder(request, authentication);
 		

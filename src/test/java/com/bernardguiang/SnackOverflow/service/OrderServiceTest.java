@@ -450,7 +450,7 @@ class OrderServiceTest {
 						});
 
 		// Then
-		Long savedOrderId = underTest.createOrderWithCartItemsAndClientSecret(request, clientSecret, userId);
+		Long savedOrderId = underTest.createOrderWithCartItemsAndPaymentIntentId(request, clientSecret, userId);
 
 		assertEquals(orderId, savedOrderId);
 	}
@@ -485,7 +485,7 @@ class OrderServiceTest {
 
 		// Then
 		assertThrows(IllegalStateException.class,
-				() -> underTest.createOrderWithCartItemsAndClientSecret(request, clientSecret, userId),
+				() -> underTest.createOrderWithCartItemsAndPaymentIntentId(request, clientSecret, userId),
 				"Could not find user with id: " + userId);
 	}
 
@@ -513,7 +513,7 @@ class OrderServiceTest {
 
 		// Then
 		assertThrows(IllegalStateException.class,
-				() -> underTest.createOrderWithCartItemsAndClientSecret(request, clientSecret, userId),
+				() -> underTest.createOrderWithCartItemsAndPaymentIntentId(request, clientSecret, userId),
 				"Could not find product with id: " + productId);
 	}
 	

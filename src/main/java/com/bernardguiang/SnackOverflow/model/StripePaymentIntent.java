@@ -18,7 +18,7 @@ public class StripePaymentIntent {
 	private Long id;
 	
 	@Column(unique = true)
-	private String clientSecret;
+	private String paymentIntentId;
 	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_Id", referencedColumnName = "id")
@@ -39,13 +39,13 @@ public class StripePaymentIntent {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getClientSecret() {
-		return clientSecret;
+	
+	public String getPaymentIntentId() {
+		return paymentIntentId;
 	}
 
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
+	public void setPaymentIntentId(String paymentIntentId) {
+		this.paymentIntentId = paymentIntentId;
 	}
 
 	public Cart getCart() {
