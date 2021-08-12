@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
+import com.bernardguiang.SnackOverflow.dto.response.FullProductDTO;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
@@ -111,5 +112,32 @@ public class ProductService
 		});
 		
 		return dtoPage;
+	}
+	
+	public Page<FullProductDTO> searchFullProductDTOsPaginated(ProductPage page) {
+		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
+		Pageable pageable = PageRequest.of(
+				page.getPageNumber(), 
+				page.getPageSize(), 
+				sort);
+		
+		Page<Product> result = productRepository.findAllByNameContainingIgnoreCase(page.getSearch(), pageable);
+
+		// Returns a new Page with the content of the current one mapped by the given Function.
+		Page<FullProductDTO> dtoPage = result.map(new Function<Product, FullProductDTO>() {
+		    @Override
+		    public FullProductDTO apply(Product entity) {
+		        FullProductDTO dto = new FullProductDTO(entity);
+				return dto;
+		    }
+		});
+		
+		return dtoPage;
+	}
+	
+	public FullProductDTO findFullProductDTOById(long id){
+		Product product =  productRepository.findById(id)
+			.orElseThrow(() -> new IllegalStateException("Could not find product " + id));
+		return new FullProductDTO(product);
 	}
 }

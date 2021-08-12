@@ -20,6 +20,8 @@ import ProductsAdmin from "./ProductsAdmin";
 import Members from "./Members";
 import Logs from "./Logs";
 import OrderAdmin from "./OrderAdmin";
+import EditProduct from "./EditProduct";
+import ProductInfo from "./ProductInfo";
 
 const Admin = () => {
   const classes = useStyles();
@@ -129,6 +131,12 @@ const Admin = () => {
           </Route>
           <Route path="/admin/transactions">
             <Transactions />
+          </Route>
+          <Route path="/admin/products/edit/:id">
+            <EditProduct />
+          </Route>
+          <Route path="/admin/products/:id">
+            <ProductInfo />
           </Route>
           <Route path="/admin/products">
             <ProductsAdmin />

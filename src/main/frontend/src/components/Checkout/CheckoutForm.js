@@ -45,8 +45,6 @@ const CheckoutForm = ({ clientSecret, token }) => {
   const [shippingPostalCode, setShippingPostalCode] = useState("");
   const [shippingCountry, setShippingCountry] = useState("US");
 
-  // TODO: this isn't taking into account isShippingSameAsBilling
-
   const confirmPayment = async () => {
     let shipping = {};
 

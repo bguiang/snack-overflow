@@ -2,32 +2,32 @@ import { useState, useEffect } from "react";
 import SnackOverflow from "../api/SnackOverflow";
 import { useAuth } from "../context/AuthContext";
 
-export default () => {
-  const [orders, setOrders] = useState([]);
+export default (id) => {
+  const [product, setProduct] = useState({});
   const [token, setToken] = useState(null);
   const { currentUser } = useAuth();
 
-  const getOrders = async () => {
+  const getProduct = async () => {
     try {
-      let response = await SnackOverflow.get("/admin/orders", {
+      let response = await SnackOverflow.get(`/admin/products/${id}`, {
         headers: { Authorization: token },
       });
-      if (response.status === 200) {
-        setOrders(response.data);
-      }
+      setProduct(response.data);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     if (currentUser) setToken("Bearer " + currentUser.authenticationToken);
   }, [currentUser]);
 
   useEffect(() => {
     if (token !== null) {
-      getOrders();
+      getProduct();
     }
   }, [token]);
 
-  return [orders, getOrders];
+  return [product];
 };

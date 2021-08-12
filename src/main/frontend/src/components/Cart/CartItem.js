@@ -75,7 +75,7 @@ const CartItem = ({ cartItem }) => {
             Update
           </Button>
           <IconButton>
-            <DeleteIcon onClick={() => deleteClick()} />
+            <DeleteIcon color="error" onClick={() => deleteClick()} />
           </IconButton>
         </CardActions>
       </Card>

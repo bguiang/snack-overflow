@@ -2,6 +2,7 @@ package com.bernardguiang.SnackOverflow.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
+import com.bernardguiang.SnackOverflow.dto.response.FullProductDTO;
 import com.bernardguiang.SnackOverflow.service.CategoryService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
 
 @RestController
-@RequestMapping("/api/v1/products")
 public class ProductController 
 {
 	private final ProductService productService;
@@ -25,16 +26,32 @@ public class ProductController
 		this.productService = productService;
 	}
 	
-	@GetMapping
+	@GetMapping("/api/v1/products")
 	public Page<ProductDTO> getProductsPaginated(ProductPage page) 
 	{
 		return productService.searchProductsPaginated(page);
 	}
 	
-	@GetMapping("/{productId}")
+	@GetMapping("/api/v1/products/{productId}")
 	public ProductDTO getProductById(@PathVariable long productId) 
 	{
 		return productService.findById(productId);
+	}
+	
+	// TODO: test
+	@GetMapping("/api/v1/admin/products")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public Page<FullProductDTO> getProductsPaginatedForAdmin(ProductPage page) 
+	{
+		return productService.searchFullProductDTOsPaginated(page);
+	}
+	
+	// TODO: test
+	@GetMapping("/api/v1/admin/products/{productId}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public FullProductDTO getProductByIdForAdmin(@PathVariable long productId) 
+	{
+		return productService.findFullProductDTOById(productId);
 	}
 	
 //	@PostMapping

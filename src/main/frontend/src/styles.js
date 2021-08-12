@@ -438,6 +438,38 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     padding: 20,
   },
+  imageSection: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  editImageContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    padding: 10,
+  },
+  editImageContainerImageContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  editImageInputImage: {
+    flex: 1,
+    backgroundColor: "#bebebe",
+    [theme.breakpoints.down("sm")]: {
+      minHeight: 150,
+      maxWidth: 320,
+    },
+    [theme.breakpoints.up("sm")]: {
+      minHeight: 250,
+      maxWidth: 320,
+    },
+  },
+  editImageInputTextInput: {
+    display: "flex",
+  },
+  deleteImageContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
 }));
 
 export default useStyles;

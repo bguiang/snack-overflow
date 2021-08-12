@@ -29,7 +29,7 @@ const Snack = () => {
   return (
     <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={10}>
           {snack.images ? (
             <CardMedia
               image={snack.images[0]}
@@ -38,7 +38,7 @@ const Snack = () => {
             />
           ) : null}
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={10}>
           <Typography gutterBottom variant="h5" component="h5">
             {snack.name}
           </Typography>

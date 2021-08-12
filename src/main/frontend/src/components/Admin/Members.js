@@ -51,7 +51,7 @@ const Members = () => {
             </div>
           </Grid>
           {members.map((member) => (
-            <MemberCard member={member} />
+            <MemberCard member={member} key={member.id} />
           ))}
         </Grid>
       </Grid>

@@ -123,9 +123,6 @@ const Login = ({ login, classes, currentUser }) => {
               setPassword(event.target.value);
             }}
             autoComplete="current-password"
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
             helperText={passwordError}
             error={passwordError ? true : false}
           />
