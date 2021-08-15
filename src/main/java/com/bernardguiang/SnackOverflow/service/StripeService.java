@@ -251,6 +251,7 @@ public class StripeService {
 			
 			// Set Order CreateDate
 			order.setCreatedDate(Instant.now());
+			order.setPaymentIntentId(paymentIntentId);
 		}
 		
 		// Set/Update Status

@@ -16,8 +16,6 @@ import {
   MenuItem,
   Button,
 } from "@material-ui/core";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { CheckBox } from "@material-ui/icons";
 
 const CheckoutForm = ({ clientSecret, token }) => {
   const { clearItems } = useCart();

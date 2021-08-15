@@ -470,6 +470,81 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
   },
+  productCardHorizontal: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
+      flex: 1,
+      padding: 10,
+    },
+  },
+  productCardHorizontalTitle: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
+      flex: 1,
+      paddingLeft: 14,
+      paddingRight: 14,
+    },
+  },
+  productCardHorizontalMain: {
+    flex: 6,
+    display: "flex",
+    flexDirection: "row",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+  },
+  productCardHorizontalImage: {
+    height: 100,
+    width: 100,
+    margin: 16,
+  },
+  productCardHorizontalName: {
+    flex: 1,
+    margin: 16,
+  },
+  productCardHorizontalID: {
+    minWidth: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  productCardHorizontalPrice: {
+    minWidth: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  productCardHorizontalUnitsSold: {
+    width: 120,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  productCardHorizontalFiller: {
+    width: 80,
+  },
+  verticalCard: {
+    [theme.breakpoints.down("md")]: {
+      display: "flex",
+      flex: 1,
+      flexDirection: "column",
+      marginBottom: 10,
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "none",
+    },
+  },
+  productCardVerticalImage: {
+    height: 200,
+    margin: 16,
+  },
+  selector: {
+    minWidth: 120,
+    marginLeft: 10,
+  },
 }));
 
 export default useStyles;

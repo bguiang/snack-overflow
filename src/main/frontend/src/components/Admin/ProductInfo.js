@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import useProduct from "../../hooks/useProduct";
 import useStyles from "../../styles";
 import { Grid, Typography, CardMedia } from "@material-ui/core";
-import OrderedItemCard from "./OrderedItemCard";
+import ProductPurchasedCard from "./ProductPurchasedCard";
 
 const ProductInfo = () => {
   const classes = useStyles();
@@ -84,7 +84,7 @@ const ProductInfo = () => {
           </Grid>
           {orderedItems
             ? orderedItems.map((orderedItem) => (
-                <OrderedItemCard orderedItem={orderedItem} />
+                <ProductPurchasedCard orderedItem={orderedItem} />
               ))
             : null}
         </Grid>

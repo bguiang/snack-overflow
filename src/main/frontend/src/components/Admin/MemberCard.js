@@ -21,7 +21,7 @@ const MemberCard = ({ member }) => {
             variant="subtitle1"
             className={classes.orderCardActionAreaItem}
           >
-            ID: {member.id}
+            ID: #{member.id}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -59,7 +59,7 @@ const MemberCard = ({ member }) => {
             variant="subtitle2"
             className={classes.orderCardActionAreaItem}
           >
-            {member.id}
+            #{member.id}
           </Typography>
           <Typography
             variant="subtitle2"

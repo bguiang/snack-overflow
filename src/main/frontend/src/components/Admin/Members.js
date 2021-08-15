@@ -9,53 +9,52 @@ const Members = () => {
   const [members, getMembers] = useMembers();
   const classes = useStyles();
   return (
-    <div className={classes.content}>
-      <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={12} key="orderInfo">
-          <Typography variant="h6" className={classes.orderListTitleMobile}>
-            Orders
-          </Typography>
-          <Grid
-            item
-            xs={12}
-            key={"orderListTitle"}
-            className={classes.orderListTitle}
-          >
-            <div className={classes.orderCard}>
-              <div className={classes.orderCardActionArea}>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem}
-                >
-                  ID
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
-                  Username
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
-                  Full Name
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
-                  Role
-                </Typography>
-              </div>
-            </div>
-          </Grid>
-          {members.map((member) => (
-            <MemberCard member={member} key={member.id} />
-          ))}
-        </Grid>
+    <Grid
+      container
+      justifyContent="center"
+      alignItems="center"
+      justifyContent="flex-start"
+      alignItems="flex-start"
+    >
+      <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
+        <h2 className={classes.cartHeaderTitle}>Members</h2>
       </Grid>
-    </div>
+      <Grid container xs={12} spacing={1} key="memberInfo">
+        <Grid item xs={12} key={"listTitle"}>
+          <div className={classes.orderCard}>
+            <div className={classes.orderCardActionArea}>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem}
+              >
+                ID
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem2}
+              >
+                Username
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem2}
+              >
+                Full Name
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem2}
+              >
+                Role
+              </Typography>
+            </div>
+          </div>
+        </Grid>
+        {members.map((member) => (
+          <MemberCard member={member} key={member.id} />
+        ))}
+      </Grid>
+    </Grid>
   );
 };
 

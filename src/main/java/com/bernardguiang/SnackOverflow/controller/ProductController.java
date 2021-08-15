@@ -1,5 +1,7 @@
 package com.bernardguiang.SnackOverflow.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
+import com.bernardguiang.SnackOverflow.dto.request.ProductPageAdmin;
 import com.bernardguiang.SnackOverflow.dto.response.FullProductDTO;
 import com.bernardguiang.SnackOverflow.service.CategoryService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
@@ -39,11 +42,28 @@ public class ProductController
 	}
 	
 	// TODO: test
+//	@GetMapping("/api/v1/admin/products")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	public Page<FullProductDTO> getProductsPaginatedForAdmin(ProductPage page) 
+//	{
+//		return productService.searchFullProductDTOsPaginated(page);
+//	}
+//	
+	
+//	@GetMapping("/api/v1/admin/products")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	public List<FullProductDTO> getProductsPaginatedForAdmin(ProductPage page) 
+//	{
+//		
+//		return productService.getTopSellingProductsThisMonth(page);
+//	}
+	
 	@GetMapping("/api/v1/admin/products")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public Page<FullProductDTO> getProductsPaginatedForAdmin(ProductPage page) 
+	public Page<FullProductDTO> getProductsPaginatedForAdmin(ProductPageAdmin page) 
 	{
-		return productService.searchFullProductDTOsPaginated(page);
+		// This Should always Return all products?
+		return productService.searchFullProductDTOs(page);
 	}
 	
 	// TODO: test

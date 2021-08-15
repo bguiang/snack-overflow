@@ -52,6 +52,11 @@ const OrderAdmin = () => {
     }
   }, [id, token]);
 
+  const orderItemClick = (id) => {
+    console.log("Item Clicked: " + id);
+    history.push(`/admin/products/${id}`);
+  };
+
   if (order === null) return <></>;
 
   return (
@@ -73,7 +78,7 @@ const OrderAdmin = () => {
           <Card className={classes.orderDetailsCard}>
             <CardActionArea>
               {order.items.map((item) => (
-                <OrderItem orderItem={item} />
+                <OrderItem orderItem={item} orderItemClick={orderItemClick} />
               ))}
             </CardActionArea>
             <CardContent>

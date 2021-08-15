@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import {
+  Grid,
+  MenuItem,
+  FormHelperText,
+  FormControl,
+  Select,
+  InputLabel,
+  Typography,
+  CardActionArea,
+  Card,
+} from "@material-ui/core";
 import ProductCard from "./ProductCard";
 import useStyles from "../../styles";
 import SnackOverflow from "../../api/SnackOverflow";
 import Pagination from "@material-ui/lab/Pagination";
 import { useAuth } from "../../context/AuthContext";
+
 const ProductsAdmin = () => {
   const [token, setToken] = useState(null);
   const { currentUser } = useAuth();
@@ -15,6 +26,21 @@ const ProductsAdmin = () => {
   const [pageNumberUI, setPageNumberUI] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const classes = useStyles();
+  const [includeOrders, setIncludeOrders] = useState("all");
+  const [sortBy, setSortBy] = useState("unitsSold");
+  const [direction, setDirection] = useState("DESC");
+
+  const handleIncludeOrdersChange = (event) => {
+    setIncludeOrders(event.target.value);
+  };
+
+  const handleSortByChange = (event) => {
+    setSortBy(event.target.value);
+  };
+
+  const handleDirectionChange = (event) => {
+    setDirection(event.target.value);
+  };
 
   useEffect(() => {
     if (currentUser) setToken("Bearer " + currentUser.authenticationToken);
@@ -28,41 +54,118 @@ const ProductsAdmin = () => {
     }
   }, [location, token]);
 
-  const [snacks, setSnacks] = useState([]);
+  const [products, setProducts] = useState([]);
 
-  const getSnacks = async () => {
+  const getProducts = async () => {
     try {
       let response = await SnackOverflow.get("/admin/products", {
-        params: { search: search, pageSize: 9, pageNumber: pageNumber },
+        params: {
+          search: search,
+          pageSize: 9,
+          pageNumber: pageNumber,
+          itemsSold: includeOrders,
+          sortBy: sortBy,
+          sortDirection: direction,
+        },
         headers: { Authorization: token },
       });
-      setSnacks(response.data.content);
+      setProducts(response.data.content);
       setTotalPages(response.data.totalPages);
-      //console.log(response.data);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   };
   // Call Get Snacks Once
   useEffect(() => {
-    if (token !== null) getSnacks();
-  }, [search, pageNumber, token]);
+    if (token !== null) getProducts();
+  }, [search, pageNumber, token, sortBy, includeOrders, direction]);
 
   return (
     <div>
       <Grid
         container
-        spacing={5}
+        spacing={1}
         justifyContent="center"
         alignItems="center"
         justifyContent="flex-start"
         alignItems="flex-start"
       >
-        <Grid item xs={12} key="title" className={classes.cartHeader}>
+        <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>Products</h2>
+          <FormControl className={classes.selector}>
+            <InputLabel id="includeOrders">Include Orders</InputLabel>
+            <Select
+              labelId="includeOrders"
+              id="includeOrdersSelect"
+              value={includeOrders}
+              onChange={handleIncludeOrdersChange}
+            >
+              <MenuItem value={"all"}>All</MenuItem>
+              <MenuItem value={"month"}>Month</MenuItem>
+              <MenuItem value={"year"}>Year</MenuItem>{" "}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.selector}>
+            <InputLabel id="sortBy">Sort By</InputLabel>
+            <Select
+              labelId="sortBy"
+              id="sortBySelect"
+              value={sortBy}
+              onChange={handleSortByChange}
+            >
+              <MenuItem value={"id"}>ID</MenuItem>
+              <MenuItem value={"name"}>Name</MenuItem>
+              <MenuItem value={"price"}>Price</MenuItem>
+              <MenuItem value={"unitsSold"}>Units Sold</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl className={classes.selector}>
+            <InputLabel id="direction">Direction</InputLabel>
+            <Select
+              labelId="direction"
+              id="direcitonSelect"
+              value={direction}
+              onChange={handleDirectionChange}
+            >
+              <MenuItem value={"ASC"}>Ascending</MenuItem>
+              <MenuItem value={"DESC"}>Descending</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
-        {snacks.map((snack) => (
-          <ProductCard snack={snack} key={snack.id} />
+        <div className={classes.productCardHorizontalTitle}>
+          <div className={classes.cartItemCardActionArea}>
+            <Typography
+              variant="subtitle1"
+              className={classes.productCardHorizontalID}
+            >
+              ID
+            </Typography>
+            <div className={classes.productCardHorizontalMain}>
+              <Typography
+                variant="subtitle1"
+                className={classes.productCardHorizontalName}
+              >
+                Product
+              </Typography>
+            </div>
+            <Typography
+              variant="subtitle1"
+              className={classes.productCardHorizontalPrice}
+            >
+              Price
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              className={classes.productCardHorizontalUnitsSold}
+            >
+              Units Sold
+            </Typography>
+            <div className={classes.productCardHorizontalFiller}></div>
+          </div>
+        </div>
+        {products.map((product) => (
+          <ProductCard product={product} key={product.id} />
         ))}
       </Grid>
       <Grid item xs={12} key="pagination" className={classes.pagination}>

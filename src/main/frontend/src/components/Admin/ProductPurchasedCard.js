@@ -3,7 +3,7 @@ import useStyles from "../../styles";
 import { Grid, Typography, Card, CardActionArea } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-const OrderedItemCard = ({ orderedItem }) => {
+const ProductPurchasedCard = ({ orderedItem }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -81,4 +81,4 @@ const OrderedItemCard = ({ orderedItem }) => {
   );
 };
 
-export default OrderedItemCard;
+export default ProductPurchasedCard;

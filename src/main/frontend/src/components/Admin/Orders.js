@@ -9,59 +9,52 @@ const Orders = () => {
   const [orders, getOrders] = useOrdersAsAdmin();
   const classes = useStyles();
   return (
-    <div className={classes.content}>
-      <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={12} key="orderInfo">
-          <Typography variant="h6" className={classes.orderListTitleMobile}>
-            Orders
-          </Typography>
-          <Grid
-            item
-            xs={12}
-            key={"orderListTitle"}
-            className={classes.orderListTitle}
-          >
-            <div className={classes.orderCard}>
-              <div className={classes.orderCardActionArea}>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem}
-                >
-                  Order
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
-                  Username
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
-                  Created
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
-                >
-                  Status
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  className={classes.orderCardActionAreaItem}
-                >
-                  Total
-                </Typography>
-              </div>
-            </div>
-          </Grid>
-          {orders.map((order) => (
-            <OrderCardAdmin order={order} />
-          ))}
-        </Grid>
+    <Grid container spacing={2} justifyContent="center" alignItems="center">
+      <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
+        <h2 className={classes.cartHeaderTitle}>Orders</h2>
       </Grid>
-    </div>
+      <Grid container xs={12} spacing={1} key="orderInfo">
+        <Grid item xs={12} key={"listTitle"} className={classes.orderListTitle}>
+          <div className={classes.orderCard}>
+            <div className={classes.orderCardActionArea}>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem}
+              >
+                Order
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem2}
+              >
+                Username
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem2}
+              >
+                Created
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem2}
+              >
+                Status
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                className={classes.orderCardActionAreaItem}
+              >
+                Total
+              </Typography>
+            </div>
+          </div>
+        </Grid>
+        {orders.map((order) => (
+          <OrderCardAdmin order={order} />
+        ))}
+      </Grid>
+    </Grid>
   );
 };
 

@@ -50,14 +50,14 @@ const Admin = () => {
         >
           Orders
         </Button>
-        <Button
+        {/* <Button
           onClick={() => handleClick("/admin/transactions")}
           size="large"
           className={classes.dashboardMenuItem}
           startIcon={<MonetizationOnIcon />}
         >
           Transactions
-        </Button>
+        </Button> */}
         <Button
           onClick={() => handleClick("/admin/products")}
           size="large"
@@ -74,14 +74,14 @@ const Admin = () => {
         >
           Members
         </Button>
-        <Button
+        {/* <Button
           onClick={() => handleClick("/admin/logs")}
           size="large"
           className={classes.dashboardMenuItem}
           startIcon={<BookIcon />}
         >
           Logs
-        </Button>
+        </Button> */}
       </div>
       <div className={classes.dashboardMenuMobile}>
         <Button
@@ -96,12 +96,12 @@ const Admin = () => {
           className={classes.dashboardMenuItem}
           startIcon={<ListAltIcon />}
         ></Button>
-        <Button
+        {/* <Button
           onClick={() => handleClick("/admin/transactions")}
           size="large"
           className={classes.dashboardMenuItem}
           startIcon={<MonetizationOnIcon />}
-        ></Button>
+        ></Button> */}
         <Button
           onClick={() => handleClick("/admin/products")}
           size="large"
@@ -114,12 +114,12 @@ const Admin = () => {
           className={classes.dashboardMenuItem}
           startIcon={<PeopleIcon />}
         ></Button>
-        <Button
+        {/* <Button
           onClick={() => handleClick("/admin/logs")}
           size="large"
           className={classes.dashboardMenuItem}
           startIcon={<BookIcon />}
-        ></Button>
+        ></Button> */}
       </div>
       <div className={classes.dashboardContent}>
         <Switch>
@@ -129,9 +129,9 @@ const Admin = () => {
           <Route path="/admin/orders">
             <Orders />
           </Route>
-          <Route path="/admin/transactions">
+          {/* <Route path="/admin/transactions">
             <Transactions />
-          </Route>
+          </Route> */}
           <Route path="/admin/products/edit/:id">
             <EditProduct />
           </Route>
@@ -144,9 +144,9 @@ const Admin = () => {
           <Route path="/admin/members">
             <Members />
           </Route>
-          <Route path="/admin/logs">
+          {/* <Route path="/admin/logs">
             <Logs />
-          </Route>
+          </Route> */}
           <Route path="/admin">
             <Dashboard />
           </Route>

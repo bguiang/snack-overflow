@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.dto.response;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,12 @@ public class FullProductDTO
 	private BigDecimal price;
 	private List<String> images;
 	private List<String> categories;
+	private Instant createdDate;
 	
 	private List<OrderItemDTO> orderedItems;
+	
+	private int unitsSold;
+	
 	
 	public FullProductDTO()
 	{
@@ -38,11 +43,15 @@ public class FullProductDTO
 		}
 		this.setCategories(categoriesDTO);
 		
+		int unitsSold = 0;
 		List<OrderItemDTO> orderedItemsDTO = new ArrayList<>();
 		for(OrderItem orderItem : product.getOrderedItems()) {
 			orderedItemsDTO.add(new OrderItemDTO(orderItem));
+			unitsSold += orderItem.getQuantity();
 		}
 		this.setOrderedItems(orderedItemsDTO);
+		this.createdDate = product.getCreatedDate();
+		this.setUnitsSold(unitsSold);
 	}
 
 	public Long getId() {
@@ -99,6 +108,24 @@ public class FullProductDTO
 
 	public void setOrderedItems(List<OrderItemDTO> orderedItems) {
 		this.orderedItems = orderedItems;
+	}
+	
+	
+
+	public Instant getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Instant createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public int getUnitsSold() {
+		return unitsSold;
+	}
+
+	public void setUnitsSold(int unitsSold) {
+		this.unitsSold = unitsSold;
 	}
 	
 	

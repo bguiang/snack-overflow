@@ -3,17 +3,17 @@ import useStyles from "../../styles";
 import { Grid, Typography, Card, CardMedia } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
-const OrderItem = ({ orderItem }) => {
+const OrderItem = ({ orderItem, orderItemClick }) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const itemClick = (id) => {
-    console.log("Item Clicked: " + id);
-    history.push(`/snacks/${id}`);
-  };
+  // const itemClick = (id) => {
+  //   console.log("Item Clicked: " + id);
+  //   history.push(`/snacks/${id}`);
+  // };
   return (
     <div
-      onClick={() => itemClick(orderItem.product.id)}
+      onClick={() => orderItemClick(orderItem.product.id)}
       className={classes.orderItem}
       key={orderItem.id}
     >

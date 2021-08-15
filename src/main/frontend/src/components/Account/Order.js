@@ -63,6 +63,11 @@ const Order = () => {
     }
   }, [id, token]);
 
+  const orderItemClick = (id) => {
+    console.log("Item Clicked: " + id);
+    history.push(`/snacks/${id}`);
+  };
+
   if (order === null) return <></>;
 
   return (
@@ -79,7 +84,7 @@ const Order = () => {
             <Card className={classes.orderDetailsCard}>
               <CardActionArea>
                 {order.items.map((item) => (
-                  <OrderItem orderItem={item} />
+                  <OrderItem orderItem={item} orderItemClick={orderItemClick} />
                 ))}
               </CardActionArea>
               <CardContent>
