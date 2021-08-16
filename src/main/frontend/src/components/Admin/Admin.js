@@ -22,6 +22,7 @@ import Logs from "./Logs";
 import OrderAdmin from "./OrderAdmin";
 import EditProduct from "./EditProduct";
 import ProductInfo from "./ProductInfo";
+import CreateProduct from "./CreateProduct";
 
 const Admin = () => {
   const classes = useStyles();
@@ -132,6 +133,9 @@ const Admin = () => {
           {/* <Route path="/admin/transactions">
             <Transactions />
           </Route> */}
+          <Route path="/admin/products/new">
+            <CreateProduct />
+          </Route>
           <Route path="/admin/products/edit/:id">
             <EditProduct />
           </Route>

@@ -47,6 +47,7 @@ const Orders = () => {
               >
                 Total
               </Typography>
+              <div className={classes.orderTitleFiller}></div>
             </div>
           </div>
         </Grid>

@@ -11,8 +11,11 @@ import {
   CardActions,
   CardMedia,
   Button,
+  Paper,
 } from "@material-ui/core";
 import { useCart } from "../../context/CartContext";
+import Carousel from "react-material-ui-carousel";
+import CarouselItem from "../CarouselItem";
 
 const Snack = () => {
   const classes = useStyles();
@@ -31,11 +34,19 @@ const Snack = () => {
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} sm={10}>
           {snack.images ? (
-            <CardMedia
-              image={snack.images[0]}
-              className={classes.snackPageImage}
-              title={snack.name}
-            />
+            <Carousel
+              navButtonsAlwaysVisible={true}
+              next={() => {
+                /* Do stuff */
+              }}
+              prev={() => {
+                /* Do other stuff */
+              }}
+            >
+              {snack.images.map((image, i) => (
+                <CarouselItem key={i} name={snack.name} image={image} />
+              ))}
+            </Carousel>
           ) : null}
         </Grid>
         <Grid item xs={12} sm={10}>
@@ -77,5 +88,4 @@ const Snack = () => {
     </div>
   );
 };
-
 export default Snack;

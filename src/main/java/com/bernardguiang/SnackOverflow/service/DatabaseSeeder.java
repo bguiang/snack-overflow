@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,13 +46,14 @@ public class DatabaseSeeder {
 	@EventListener(classes = { ContextRefreshedEvent.class})
 	public void setDefaultUsers() {
 		
-		User user = new User();
-		user.setUsername("admin");
-		user.setEmail("admin@admin.com");
-		user.setPassword(passwordEncoder.encode("password"));
-		user.setRole(ApplicationUserRole.ADMIN.name());
-		user.setFullName("Admin Guy");
-		User savedAdmin = userRepository.save(user);
+		User admin = new User();
+		admin.setUsername("admin");
+		admin.setEmail("admin@admin.com");
+		admin.setPassword(passwordEncoder.encode("password"));
+		admin.setRole(ApplicationUserRole.ADMIN.name());
+		admin.setFullName("Admin Guy");
+		admin.setJoinDate(Instant.now());
+		User savedAdmin = userRepository.save(admin);
 		
 		User customer = new User();
 		customer.setUsername("customer");
@@ -59,6 +61,7 @@ public class DatabaseSeeder {
 		customer.setPassword(passwordEncoder.encode("password"));
 		customer.setRole(ApplicationUserRole.CUSTOMER.name());
 		customer.setFullName("Customer Guy");
+		customer.setJoinDate(Instant.now());
 		User savedCustomer = userRepository.save(customer);
 	}
 

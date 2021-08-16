@@ -214,10 +214,6 @@ const useStyles = makeStyles((theme) => ({
     width: 80,
   },
   snackPageContainer: { display: "flex" },
-  snackPageImage: {
-    minHeight: 250,
-    flex: 1,
-  },
 
   // Cart
   cartHeader: {
@@ -333,6 +329,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 16,
     [theme.breakpoints.down("sm")]: {
       display: "flex",
+      flexDirection: "column",
     },
     [theme.breakpoints.up("sm")]: {
       display: "none",
@@ -544,6 +541,28 @@ const useStyles = makeStyles((theme) => ({
   selector: {
     minWidth: 120,
     marginLeft: 10,
+  },
+  success: {
+    color: "#388e3c",
+  },
+  carouselImageContainer: {
+    flex: 1,
+    display: "flex",
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  carouselImage: {
+    [theme.breakpoints.down("sm")]: {
+      height: 200,
+      width: 200,
+    },
+    [theme.breakpoints.up("sm")]: {
+      height: 300,
+      width: 300,
+    },
+  },
+  orderTitleFiller: {
+    minWidth: 80,
   },
 }));
 

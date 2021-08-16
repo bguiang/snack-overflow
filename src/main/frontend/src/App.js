@@ -41,6 +41,9 @@ function App() {
       secondary: {
         main: "#F8EB37",
       },
+      success: {
+        main: "#4caf50",
+      },
     },
   });
 

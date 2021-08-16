@@ -1,7 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import useSnack from "../../hooks/useSnack";
 import useStyles from "../../styles";
 import {
   TextField,
@@ -17,11 +15,9 @@ import SnackOverflow from "../../api/SnackOverflow";
 import { useAuth } from "../../context/AuthContext";
 import { useHistory } from "react-router-dom";
 
-const EditProduct = () => {
+const CreateProduct = () => {
   const classes = useStyles();
   const history = useHistory();
-  let { id } = useParams();
-  const [snack] = useSnack(id);
   const { currentUser } = useAuth();
   const [token, setToken] = useState(null);
 
@@ -29,6 +25,7 @@ const EditProduct = () => {
   const [images, setImages] = useState([]);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const [categories, setCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
@@ -40,11 +37,11 @@ const EditProduct = () => {
     setSuccessMessage("");
     try {
       const updateProductRequest = {
-        ...snack,
         name,
         images,
         description,
         price,
+        categories,
       };
       console.log(updateProductRequest);
       const response = await SnackOverflow.post(
@@ -55,28 +52,20 @@ const EditProduct = () => {
         }
       );
 
-      if (200 === response.status) {
+      if (201 === response.status) {
         console.log("REPONSE 200");
         console.log(response.data);
         setSuccessMessage("Update Success!");
+        history.push(`/admin/products/${response.data.id}`);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    if (snack !== null && snack.images) {
-      setName(snack.name);
-      setImages(snack.images);
-      setDescription(snack.description);
-      setPrice(snack.price);
-    }
-  }, [snack]);
-
   return (
     <div>
-      <h2 className={classes.cartHeaderTitle}>Edit Product</h2>
+      <h2 className={classes.cartHeaderTitle}>Create New Product</h2>
       <form className={classes.form} onSubmit={handleSubmit} noValidate>
         <TextField
           variant="outlined"
@@ -213,4 +202,4 @@ const Images = ({ images, setImages }) => {
   );
 };
 
-export default EditProduct;
+export default CreateProduct;

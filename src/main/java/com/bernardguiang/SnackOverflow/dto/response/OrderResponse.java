@@ -12,6 +12,7 @@ import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
 
 // Used as response in OrderController
+// TODO: OrderResponse and OrderDTO are duplicates?
 public class OrderResponse {
 
 	private long id;

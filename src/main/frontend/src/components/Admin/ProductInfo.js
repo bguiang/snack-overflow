@@ -6,6 +6,8 @@ import useProduct from "../../hooks/useProduct";
 import useStyles from "../../styles";
 import { Grid, Typography, CardMedia } from "@material-ui/core";
 import ProductPurchasedCard from "./ProductPurchasedCard";
+import Carousel from "react-material-ui-carousel";
+import CarouselItem from "../CarouselItem";
 
 const ProductInfo = () => {
   const classes = useStyles();
@@ -25,11 +27,19 @@ const ProductInfo = () => {
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} sm={12} title="image">
           {product.images ? (
-            <CardMedia
-              image={product.images[0]}
-              className={classes.snackPageImage}
-              title={product.name}
-            />
+            <Carousel
+              navButtonsAlwaysVisible={true}
+              next={() => {
+                /* Do stuff */
+              }}
+              prev={() => {
+                /* Do other stuff */
+              }}
+            >
+              {product.images.map((image, i) => (
+                <CarouselItem key={i} name={product.name} image={image} />
+              ))}
+            </Carousel>
           ) : null}
         </Grid>
         <Grid item xs={12} sm={12} title="description">

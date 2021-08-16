@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
+import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
@@ -161,6 +162,23 @@ public class OrderService {
 			shipping.setOrder(order);
 			order.setShippingDetails(shipping);
 		}
+		
+		Order saved = orderRepository.save(order);	
+		
+		return new OrderResponse(saved);
+	}
+	
+	//TODO: test
+	public OrderResponse updateOrderStatus(OrderStatusUpdateRequest request) {
+		// OrderDTO does not contain the PaymentIntent info
+		
+		// Find order first
+		Long id = request.getId();
+		Order order = orderRepository.findById(id)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id));
+		
+		// Update values minus PaymentIntentId and Cart
+		order.setStatus(request.getStatus());
 		
 		Order saved = orderRepository.save(order);	
 		

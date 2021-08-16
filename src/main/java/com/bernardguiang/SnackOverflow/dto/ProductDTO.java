@@ -11,8 +11,9 @@ import javax.validation.constraints.NotNull;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Product;
 
-// Used as request for creating new product in ProductController
-// Used as response for retrieving products in ProductController
+// Create a separate dto for create request
+// Used as request for UPDATING new product in ProductController
+// Used as response for GETTING products in ProductController
 public class ProductDTO 
 {
 	private Long id;

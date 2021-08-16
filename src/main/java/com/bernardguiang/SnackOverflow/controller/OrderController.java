@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
+import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
 import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
@@ -78,7 +79,14 @@ public class OrderController {
 	//TODO: test
 	@GetMapping("/api/v1/admin/orders/{orderId}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public OrderDTO getOrderByCurrentUser(@PathVariable long orderId) {
-		return orderService.findByIdAndStatusNot(orderId, OrderStatus.CREATED);
+	public OrderDTO getOrder(@PathVariable long orderId) {
+		return orderService.findByIdAndStatusNot(orderId, OrderStatus.CREATED); //TODO: remove OderStatus.CREATE as it is no longer needed
+	}
+	
+	// TODO: test
+	@PutMapping("/api/v1/admin/orders")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public OrderResponse updateOrderStatus(@RequestBody @Valid OrderStatusUpdateRequest orderStatusUpdate) {
+		return orderService.updateOrderStatus(orderStatusUpdate);
 	}
 }

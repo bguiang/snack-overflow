@@ -3,24 +3,25 @@ import { useLocation } from "react-router-dom";
 import {
   Grid,
   MenuItem,
-  FormHelperText,
   FormControl,
   Select,
   InputLabel,
   Typography,
-  CardActionArea,
-  Card,
+  Button,
 } from "@material-ui/core";
 import ProductCard from "./ProductCard";
 import useStyles from "../../styles";
 import SnackOverflow from "../../api/SnackOverflow";
 import Pagination from "@material-ui/lab/Pagination";
 import { useAuth } from "../../context/AuthContext";
+import AddIcon from "@material-ui/icons/Add";
+import { useHistory } from "react-router";
 
 const ProductsAdmin = () => {
   const [token, setToken] = useState(null);
   const { currentUser } = useAuth();
   const location = useLocation();
+  const history = useHistory();
   const [search, setSearch] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const [pageNumberUI, setPageNumberUI] = useState(1);
@@ -103,7 +104,7 @@ const ProductsAdmin = () => {
             >
               <MenuItem value={"all"}>All</MenuItem>
               <MenuItem value={"month"}>Month</MenuItem>
-              <MenuItem value={"year"}>Year</MenuItem>{" "}
+              <MenuItem value={"year"}>Year</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.selector}>
@@ -161,7 +162,16 @@ const ProductsAdmin = () => {
             >
               Units Sold
             </Typography>
-            <div className={classes.productCardHorizontalFiller}></div>
+            <div className={classes.productCardHorizontalFiller}>
+              <Button
+                size="large"
+                color="primary"
+                onClick={() => history.push("/admin/products/new")}
+                startIcon={<AddIcon />}
+              >
+                New
+              </Button>
+            </div>
           </div>
         </div>
         {products.map((product) => (

@@ -1,5 +1,6 @@
 package com.bernardguiang.SnackOverflow.model;
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -24,9 +25,12 @@ public class User {
 	private String email;
 	@Column(unique=true)
 	private String username;
+	@Column(nullable = false)
 	private String password;
 	private String fullName;
+	@Column(nullable = false)
 	private String role;
+	private Instant joinDate;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL) 
 	private List<Order> orders;
@@ -43,30 +47,6 @@ public class User {
 	
 	public User() {}
 	
-	public User(Long id, String email, String username, String password, String fullName, String role,
-			List<Order> orders, Address address, RefreshToken refreshToken) {
-		this.id = id;
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.fullName = fullName;
-		this.role = role;
-		this.orders = orders;
-		this.address = address;
-		this.refreshToken = refreshToken;
-	}
-	
-	public User(String email, String username, String password, String fullName, String role,
-			List<Order> orders, Address address, RefreshToken refreshToken) {
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.fullName = fullName;
-		this.role = role;
-		this.orders = orders;
-		this.address = address;
-		this.refreshToken = refreshToken;
-	}
 
 	public Long getId() {
 		return id;
@@ -115,6 +95,15 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	
+	public Instant getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(Instant joinDate) {
+		this.joinDate = joinDate;
+	}
+
 
 	public List<Order> getOrders() {
 		return orders;
