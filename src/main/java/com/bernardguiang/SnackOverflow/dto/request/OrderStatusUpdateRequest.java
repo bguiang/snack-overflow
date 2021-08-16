@@ -1,6 +1,5 @@
 package com.bernardguiang.SnackOverflow.dto.request;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.bernardguiang.SnackOverflow.model.OrderStatus;

@@ -9,10 +9,7 @@ public class CartInfoResponse {
 	
 	public CartInfoResponse() {
 	}
-	public CartInfoResponse(BigDecimal total, List<CartInfoResponseItem> items) {
-		this.total = total;
-		this.items = items;
-	}
+	
 	public BigDecimal getTotal() {
 		return total;
 	}

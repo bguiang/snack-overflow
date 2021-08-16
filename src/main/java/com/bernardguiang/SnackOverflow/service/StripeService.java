@@ -96,11 +96,11 @@ public class StripeService {
 			int quantity = item.getQuantity();
 			BigDecimal price = product.getPrice();
 			
-			CartItem newItem = new CartItem(
-					cart, 
-					product, 
-					price, 
-					quantity);
+			CartItem newItem = new CartItem();
+			newItem.setCart(cart);
+			newItem.setProduct(product);
+			newItem.setPrice(price);
+			newItem.setQuantity(quantity);
 			
 			items.add(newItem);
 		}
@@ -202,12 +202,12 @@ public class StripeService {
 			// Set order items
 			List<OrderItem> orderItems = new ArrayList<>();
 			for(CartItem cartItem : cart.getItems()) {
-				OrderItem orderItem = new OrderItem(
-						order, 
-						cartItem.getProduct(), 
-						cartItem.getQuantity(), 
-						cartItem.getPrice()
-				);
+				OrderItem orderItem = new OrderItem();
+				orderItem.setOrder(order);
+				orderItem.setProduct(cartItem.getProduct());
+				orderItem.setQuantity(cartItem.getQuantity());
+				orderItem.setPrice(cartItem.getPrice());
+				
 				orderItems.add(orderItem);
 			}
 			order.setItems(orderItems);

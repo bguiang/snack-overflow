@@ -94,7 +94,7 @@ class ProductControllerIntegrationTest {
 
 		
 		// When
-		when(productService.searchProductsPaginated(Mockito.any())).thenReturn(resultsPage);
+		when(productService.findProductsPaginated(Mockito.any())).thenReturn(resultsPage);
 		
 		// Then
 		mockMvc.perform(

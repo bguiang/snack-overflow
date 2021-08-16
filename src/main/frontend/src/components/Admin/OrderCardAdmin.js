@@ -62,8 +62,7 @@ const OrderCardAdmin = ({ order }) => {
             variant="subtitle1"
             className={classes.orderCardActionAreaItem2}
           >
-            Created: {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-            {new Date(order.createdDate).toLocaleTimeString("en-US")}
+            Created: {new Date(order.createdDate).toLocaleDateString("en-US")}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -103,8 +102,7 @@ const OrderCardAdmin = ({ order }) => {
             variant="subtitle2"
             className={classes.orderCardActionAreaItem2}
           >
-            {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-            {new Date(order.createdDate).toLocaleTimeString("en-US")}
+            {new Date(order.createdDate).toLocaleDateString("en-US")}
           </Typography>
           <Typography
             variant="subtitle2"
@@ -202,7 +200,6 @@ const UpdateOrder = ({ order, buttonSize, token }) => {
               value={status}
               onChange={handleStatusChange}
             >
-              <MenuItem value={"CREATED"}>Created</MenuItem>
               <MenuItem value={"PAYMENT_PENDING"}>Payment Processing</MenuItem>
               <MenuItem value={"PROCESSING"}>Processing</MenuItem>
               <MenuItem value={"COMPLETED"}>Completed</MenuItem>

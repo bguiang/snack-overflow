@@ -8,11 +8,11 @@ const MemberCard = ({ member }) => {
   const history = useHistory();
 
   const itemClick = (id) => {
-    history.push(`/admin/members/${id}`);
+    //history.push(`/admin/members/${id}`);
   };
   return (
     <Grid item xs={12} key={member.id}>
-      <Card className={classes.orderCardMobile}>
+      <Card className={classes.memberCardMobile}>
         <CardActionArea
           onClick={() => itemClick(member.id)}
           className={classes.orderCardActionAreaMobile}
@@ -31,6 +31,12 @@ const MemberCard = ({ member }) => {
           </Typography>
           <Typography
             variant="subtitle1"
+            className={classes.orderCardActionAreaItem}
+          >
+            Email: {member.email}
+          </Typography>
+          <Typography
+            variant="subtitle1"
             className={classes.orderCardActionAreaItem2}
           >
             Full Name: {member.fullName}
@@ -41,16 +47,9 @@ const MemberCard = ({ member }) => {
           >
             Role: {member.role}
           </Typography>
-          {/* <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            Joined: {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-            {new Date(order.createdDate).toLocaleTimeString("en-US")}
-          </Typography> */}
         </CardActionArea>
       </Card>
-      <Card className={classes.orderCard}>
+      <Card className={classes.memberCard}>
         <CardActionArea
           onClick={() => itemClick(member.id)}
           className={classes.orderCardActionArea}
@@ -71,6 +70,12 @@ const MemberCard = ({ member }) => {
             variant="subtitle2"
             className={classes.orderCardActionAreaItem2}
           >
+            {member.email}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            className={classes.orderCardActionAreaItem2}
+          >
             {member.fullName}
           </Typography>
           <Typography
@@ -79,13 +84,12 @@ const MemberCard = ({ member }) => {
           >
             {member.role}
           </Typography>
-          {/* <Typography
+          <Typography
             variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
+            className={classes.orderCardActionAreaItem1}
           >
-            {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-            {new Date(order.createdDate).toLocaleTimeString("en-US")}
-          </Typography> */}
+            {new Date(member.joinDate).toLocaleDateString("en-US")}
+          </Typography>
         </CardActionArea>
       </Card>
     </Grid>

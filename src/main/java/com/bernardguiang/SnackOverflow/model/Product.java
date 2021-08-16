@@ -55,20 +55,6 @@ public class Product {
 	public Product() {
 		
 	}
-	
-	public Product(String name, String description, BigDecimal price, Instant createdDate, List<String> images,
-			Set<Category> categories, List<OrderItem> orderedItems) {
-		super();
-		this.name = name;
-		this.description = description;
-		this.price = price;
-		this.createdDate = createdDate;
-		this.images = images;
-		this.categories = categories;
-		this.orderedItems = orderedItems;
-	}
-	
-	
 
 	public Long getId() {
 		return id;

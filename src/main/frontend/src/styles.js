@@ -545,6 +545,9 @@ const useStyles = makeStyles((theme) => ({
   success: {
     color: "#388e3c",
   },
+  error: {
+    color: "#d32f2f",
+  },
   carouselImageContainer: {
     flex: 1,
     display: "flex",
@@ -563,6 +566,70 @@ const useStyles = makeStyles((theme) => ({
   },
   orderTitleFiller: {
     minWidth: 80,
+  },
+  adminSelector: {
+    minWidth: 120,
+    marginLeft: 10,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+  },
+  adminSelectorMobileContainer: {
+    display: "flex",
+    paddingTop: 10,
+    paddingBottom: 20,
+    paddingRight: 10,
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+  },
+  adminSelectorMobile: {
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  adminSearchContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  adminSearchBar: {
+    flex: 1,
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: 0,
+      marginRight: 10,
+    },
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: 30,
+      marginRight: 40,
+    },
+
+    display: "flex",
+    alignItems: "center",
+  },
+  memberCard: {
+    padding: 16,
+    [theme.breakpoints.down("lg")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("lg")]: {
+      display: "flex",
+    },
+  },
+  memberCardMobile: {
+    padding: 16,
+    [theme.breakpoints.down("lg")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("lg")]: {
+      display: "none",
+    },
   },
 }));
 

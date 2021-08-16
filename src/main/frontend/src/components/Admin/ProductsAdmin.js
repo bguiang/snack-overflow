@@ -8,6 +8,9 @@ import {
   InputLabel,
   Typography,
   Button,
+  InputBase,
+  IconButton,
+  Paper,
 } from "@material-ui/core";
 import ProductCard from "./ProductCard";
 import useStyles from "../../styles";
@@ -16,6 +19,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import { useAuth } from "../../context/AuthContext";
 import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from "react-router";
+import SearchIcon from "@material-ui/icons/Search";
 
 const ProductsAdmin = () => {
   const [token, setToken] = useState(null);
@@ -27,9 +31,18 @@ const ProductsAdmin = () => {
   const [pageNumberUI, setPageNumberUI] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const classes = useStyles();
+
+  const [products, setProducts] = useState([]);
   const [includeOrders, setIncludeOrders] = useState("all");
   const [sortBy, setSortBy] = useState("unitsSold");
   const [direction, setDirection] = useState("DESC");
+
+  const handleSearchSubmit = () => {
+    history.push({
+      pathname: "/admin/products",
+      search: `?search=${search}`,
+    });
+  };
 
   const handleIncludeOrdersChange = (event) => {
     setIncludeOrders(event.target.value);
@@ -54,8 +67,6 @@ const ProductsAdmin = () => {
       setPageNumberUI(1);
     }
   }, [location, token]);
-
-  const [products, setProducts] = useState([]);
 
   const getProducts = async () => {
     try {
@@ -94,7 +105,7 @@ const ProductsAdmin = () => {
       >
         <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>Products</h2>
-          <FormControl className={classes.selector}>
+          <FormControl className={classes.adminSelector}>
             <InputLabel id="includeOrders">Include Orders</InputLabel>
             <Select
               labelId="includeOrders"
@@ -107,7 +118,7 @@ const ProductsAdmin = () => {
               <MenuItem value={"year"}>Year</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={classes.selector}>
+          <FormControl className={classes.adminSelector}>
             <InputLabel id="sortBy">Sort By</InputLabel>
             <Select
               labelId="sortBy"
@@ -121,7 +132,7 @@ const ProductsAdmin = () => {
               <MenuItem value={"unitsSold"}>Units Sold</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={classes.selector}>
+          <FormControl className={classes.adminSelector}>
             <InputLabel id="direction">Direction</InputLabel>
             <Select
               labelId="direction"
@@ -133,6 +144,73 @@ const ProductsAdmin = () => {
               <MenuItem value={"DESC"}>Descending</MenuItem>
             </Select>
           </FormControl>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          key="search"
+          className={classes.adminSearchContainer}
+        >
+          <Paper className={classes.adminSearchBar}>
+            <InputBase
+              className={classes.search}
+              autocomplete="off"
+              placeholder="Search Products"
+              inputProps={{ "aria-label": "search" }}
+              onChange={(event) => {
+                setSearch(event.target.value);
+              }}
+            />
+            <IconButton
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search"
+              onClick={() => handleSearchSubmit()}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+          <div className={classes.adminSelectorMobileContainer}>
+            <FormControl className={classes.adminSelectorMobile}>
+              <InputLabel id="includeOrders">Include Orders</InputLabel>
+              <Select
+                labelId="includeOrders"
+                id="includeOrdersSelect"
+                value={includeOrders}
+                onChange={handleIncludeOrdersChange}
+              >
+                <MenuItem value={"all"}>All</MenuItem>
+                <MenuItem value={"month"}>Month</MenuItem>
+                <MenuItem value={"year"}>Year</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl className={classes.adminSelectorMobile}>
+              <InputLabel id="sortBy">Sort By</InputLabel>
+              <Select
+                labelId="sortBy"
+                id="sortBySelect"
+                value={sortBy}
+                onChange={handleSortByChange}
+              >
+                <MenuItem value={"id"}>ID</MenuItem>
+                <MenuItem value={"name"}>Name</MenuItem>
+                <MenuItem value={"price"}>Price</MenuItem>
+                <MenuItem value={"unitsSold"}>Units Sold</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl className={classes.adminSelectorMobile}>
+              <InputLabel id="direction">Direction</InputLabel>
+              <Select
+                labelId="direction"
+                id="direcitonSelect"
+                value={direction}
+                onChange={handleDirectionChange}
+              >
+                <MenuItem value={"ASC"}>Ascending</MenuItem>
+                <MenuItem value={"DESC"}>Descending</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
         </Grid>
         <div className={classes.productCardHorizontalTitle}>
           <div className={classes.cartItemCardActionArea}>

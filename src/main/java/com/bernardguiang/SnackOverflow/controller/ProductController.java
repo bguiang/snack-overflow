@@ -9,14 +9,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPageAdmin;
-import com.bernardguiang.SnackOverflow.dto.response.FullProductDTO;
+import com.bernardguiang.SnackOverflow.dto.response.FullProductInfo;
 import com.bernardguiang.SnackOverflow.service.ProductService;
 
 @RestController
@@ -34,7 +33,7 @@ public class ProductController
 	@GetMapping("/api/v1/products")
 	public Page<ProductDTO> getProductsPaginated(ProductPage page) 
 	{
-		return productService.searchProductsPaginated(page);
+		return productService.findProductsPaginated(page);
 	}
 	
 	@GetMapping("/api/v1/products/{productId}")
@@ -51,49 +50,24 @@ public class ProductController
 		return dto;
 	}
 	
-	// TODO: test
-//	@GetMapping("/api/v1/admin/products")
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
-//	public Page<FullProductDTO> getProductsPaginatedForAdmin(ProductPage page) 
-//	{
-//		return productService.searchFullProductDTOsPaginated(page);
-//	}
-//	
-	
-//	@GetMapping("/api/v1/admin/products")
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
-//	public List<FullProductDTO> getProductsPaginatedForAdmin(ProductPage page) 
-//	{
-//		
-//		return productService.getTopSellingProductsThisMonth(page);
-//	}
-	
 	@GetMapping("/api/v1/admin/products")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public Page<FullProductDTO> getProductsPaginatedForAdmin(ProductPageAdmin page) 
+	public Page<FullProductInfo> getProductsPaginatedForAdmin(ProductPageAdmin page) 
 	{
 		// This Should always Return all products?
-		return productService.searchFullProductDTOs(page);
+		return productService.findFullProductInfosPaginated(page);
 	}
 	
 	// TODO: test
 	@GetMapping("/api/v1/admin/products/{productId}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public FullProductDTO getProductByIdForAdmin(@PathVariable long productId) 
+	public FullProductInfo getProductByIdForAdmin(@PathVariable long productId) 
 	{
-		return productService.findFullProductDTOById(productId);
+		return productService.findFullProductInfoById(productId);
 	}
 	
-//	@PostMapping
-//	@PreAuthorize("hasAuthority('product:write')") // hasRole('ROLE_') hasAnyRole('ROLE_') hasAuthority('permission') hasAnyAuthority('permission')
-//	public ProductDTO addProduct (@Valid @RequestBody ProductDTO productDTO)
-//	{
-//		System.out.println("DTO Received: " + productDTO.toString());
-//		return productService.save(productDTO);
-//	}
-//	
 //	@DeleteMapping
-//	@PreAuthorize("hasAuthority('product:write')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 //	public void removeProduct()
 //	{
 //		

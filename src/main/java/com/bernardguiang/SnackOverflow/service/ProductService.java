@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPageAdmin;
-import com.bernardguiang.SnackOverflow.dto.response.FullProductDTO;
+import com.bernardguiang.SnackOverflow.dto.response.FullProductInfo;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.Product;
@@ -75,31 +75,7 @@ public class ProductService {
 		return new ProductDTO(product);
 	}
 
-	public List<ProductDTO> findAll() {
-		Iterable<Product> productsIterator = productRepository.findAll();
-
-		List<ProductDTO> productDTOs = new ArrayList<>();
-		for (Product product : productsIterator) {
-			ProductDTO productDTO = new ProductDTO(product);
-			productDTOs.add(productDTO);
-		}
-
-		return productDTOs;
-	}
-
-	public List<ProductDTO> findAllByCategoryName(String categoryName) {
-		List<ProductDTO> productDTOs = new ArrayList<>();
-
-		Category category = categoryRepository.findByName(categoryName)
-				.orElseThrow(() -> new IllegalStateException("Could not find category " + categoryName));
-		for (Product product : category.getProducts()) {
-			productDTOs.add(new ProductDTO(product));
-		}
-
-		return productDTOs;
-	}
-
-	public Page<ProductDTO> searchProductsPaginated(ProductPage page) {
+	public Page<ProductDTO> findProductsPaginated(ProductPage page) {
 		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
@@ -118,8 +94,7 @@ public class ProductService {
 		return dtoPage;
 	}
 
-
-	public Page<FullProductDTO> searchFullProductDTOs(ProductPageAdmin page) {
+	public Page<FullProductInfo> findFullProductInfosPaginated(ProductPageAdmin page) {
 		Sort sort = null;
 		switch(page.getSortBy()) {
 			case "unitsSold": 
@@ -131,7 +106,10 @@ public class ProductService {
 				// do not let users pass in data though it manually
 				// Also, () are needed to use am Alias with JpaSort.unsafe()
 				// https://github.com/spring-projects/spring-data-jpa/issues/1404#issuecomment-784871680
-				sort = JpaSort.unsafe(page.getSortDirection(), "(UNITS_SOLD)");
+				
+				// Since the UNITS_SOLD column doesn't exist, we have to sort by another column to keep the order
+				// of the results consistent
+				sort = JpaSort.unsafe(page.getSortDirection(), "(UNITS_SOLD)", "(ID)");
 				break;
 			case "id": 
 				sort = JpaSort.unsafe(page.getSortDirection(), "(ID)");
@@ -158,9 +136,9 @@ public class ProductService {
 			result = productRepository.findAllBySearchTextAndIncludeOrdersAfter(page.getSearch(), null, pageable);
 		}
 
-		Page<FullProductDTO> dtoPage = result.map(new Function<Product, FullProductDTO>() {
+		Page<FullProductInfo> dtoPage = result.map(new Function<Product, FullProductInfo>() {
 			@Override
-			public FullProductDTO apply(Product product) {
+			public FullProductInfo apply(Product product) {
 
 				// Update ordered items list on date range on orders to include
 				if (page.getItemsSold().equalsIgnoreCase("month")) {
@@ -181,7 +159,7 @@ public class ProductService {
 					product.setOrderedItems(orderItemsThisMonth);
 				}
 
-				FullProductDTO dto = new FullProductDTO(product);
+				FullProductInfo dto = new FullProductInfo(product);
 				return dto;
 			}
 		});
@@ -189,9 +167,9 @@ public class ProductService {
 		return dtoPage;
 	}
 
-	public FullProductDTO findFullProductDTOById(long id) {
+	public FullProductInfo findFullProductInfoById(long id) {
 		Product product = productRepository.findById(id)
 				.orElseThrow(() -> new IllegalStateException("Could not find product " + id));
-		return new FullProductDTO(product);
+		return new FullProductInfo(product);
 	}
 }

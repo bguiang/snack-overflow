@@ -1,5 +1,6 @@
 package com.bernardguiang.SnackOverflow.dto.response;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.bernardguiang.SnackOverflow.dto.Address;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.User;
 
+// The main use of FullUserDTO is to display the User Page which lists the orders
 public class FullUserDTO {
 	private Long id;
 	private String email;
@@ -15,6 +17,7 @@ public class FullUserDTO {
 	private String role;
 	private List<OrderDTO> orders;
 	private Address address;
+	private Instant joinDate;
 	
 	public FullUserDTO() {
 		
@@ -32,6 +35,9 @@ public class FullUserDTO {
 		for(Order order : orders) {
 			orderDTOs.add(new OrderDTO(order));
 		}
+		
+		this.setJoinDate(user.getJoinDate());
+		
 		this.setOrders(orderDTOs);
 		
 		this.setRole(user.getRole());
@@ -75,6 +81,14 @@ public class FullUserDTO {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public Instant getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(Instant joinDate) {
+		this.joinDate = joinDate;
 	}
 
 	public List<OrderDTO> getOrders() {

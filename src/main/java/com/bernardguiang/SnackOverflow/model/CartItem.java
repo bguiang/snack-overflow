@@ -30,13 +30,6 @@ public class CartItem {
 	public CartItem() {
 
 	}
-	
-	public CartItem(Cart cart, Product product, BigDecimal price, int quantity) {
-		this.cart = cart;
-		this.product = product;
-		this.price = price;
-		this.quantity = quantity;
-	}
 
 	public Long getId() {
 		return id;

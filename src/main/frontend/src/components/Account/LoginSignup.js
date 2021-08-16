@@ -150,6 +150,7 @@ const Login = ({ login, classes, currentUser }) => {
 
 const SignUp = ({ classes }) => {
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupError, setSignupError] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -171,6 +172,9 @@ const SignUp = ({ classes }) => {
     setPasswordError("");
     setPasswordRepeatError("");
 
+    // Reset Request Error
+    setSignupError("");
+
     // Email
     if (!validator.isEmail(email)) {
       console.log("Invalid Email: " + email);
@@ -180,6 +184,7 @@ const SignUp = ({ classes }) => {
 
     // Full Name
     if (validator.isEmpty(fullName, { ignore_whitespace: true })) {
+      console.log("Invalid FullName: " + fullName);
       setFullNameError("Please enter your full name");
       isValid = false;
     }
@@ -190,6 +195,7 @@ const SignUp = ({ classes }) => {
       validator.contains(username, " ") ||
       !validator.isLength(username, { min: 6, max: 20 })
     ) {
+      console.log("Username is invalid: " + username);
       setUsernameError(
         "Username must be 6-20 characters long and contain only letters and numbers and no spaces"
       );
@@ -207,6 +213,7 @@ const SignUp = ({ classes }) => {
       validator.contains(password, " ") ||
       !validator.isLength(password, { min: 6, max: 20 })
     ) {
+      console.log("Password is invalid: " + password);
       setPasswordError(
         "Password must be 6-20 characters long including at least one lowercase letter, one uppercase letter, one number, and one symbol. No spaces"
       );
@@ -214,7 +221,8 @@ const SignUp = ({ classes }) => {
     }
 
     // PasswordRepeat
-    if (!password === passwordRepeat) {
+    if (password !== passwordRepeat) {
+      console.log("Password does not match: " + passwordRepeat);
       setPasswordRepeatError("Passwords do not match");
       isValid = false;
     }
@@ -222,7 +230,6 @@ const SignUp = ({ classes }) => {
     return isValid;
   };
 
-  const [signupError, setSignupError] = useState("");
   const signup = async (fullName, email, username, password) => {
     const signupRequest = { fullName, email, username, password };
 
@@ -232,7 +239,21 @@ const SignUp = ({ classes }) => {
         setSignupSuccess(true);
       }
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        // Request made and server responded
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        setSignupError(error.response.data.message);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+        setSignupError("Something went wrong. Try again later");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+        setSignupError("Something went wrong. Try again later");
+      }
     }
   };
 
@@ -331,6 +352,16 @@ const SignUp = ({ classes }) => {
           >
             Submit
           </Button>
+          {signupSuccess ? (
+            <Typography variant="h6" className={classes.success}>
+              {"Signup success!"}
+            </Typography>
+          ) : null}
+          {signupError ? (
+            <Typography variant="subtitle2" className={classes.error}>
+              {signupError}
+            </Typography>
+          ) : null}
         </form>
       </div>
     </Container>

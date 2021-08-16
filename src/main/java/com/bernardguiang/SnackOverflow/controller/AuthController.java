@@ -30,12 +30,6 @@ public class AuthController {
 	}
 	
 	// Login is handled by JwtUsernameAndPasswordAuthentication Filter
-	
-	@GetMapping()
-	public String hello() {
-		System.out.println("Hello World");
-		return "Hello World";
-	}
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody @Valid RegisterRequest registerRequest) {
 		System.out.println("Signup called");

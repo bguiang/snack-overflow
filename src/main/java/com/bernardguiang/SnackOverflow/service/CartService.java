@@ -37,7 +37,12 @@ public class CartService {
 			cartItem.setProduct(productInfo);
 			cartItems.add(cartItem);
 		}
-		return new CartInfoResponse(getCartTotal(cartItems), cartItems);
+		
+		CartInfoResponse response = new CartInfoResponse();
+		response.setTotal(getCartTotal(cartItems));
+		response.setItems(cartItems);
+		
+		return response;
 	}
 	
 	private BigDecimal getCartTotal(List<CartInfoResponseItem> cartItems) {

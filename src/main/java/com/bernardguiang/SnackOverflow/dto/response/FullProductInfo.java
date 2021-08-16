@@ -9,7 +9,7 @@ import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.Product;
 
-public class FullProductDTO 
+public class FullProductInfo 
 {
 	private Long id;
 	private String name;
@@ -24,12 +24,12 @@ public class FullProductDTO
 	private int unitsSold;
 	
 	
-	public FullProductDTO()
+	public FullProductInfo()
 	{
 		
 	}
 	
-	public FullProductDTO(Product product) {
+	public FullProductInfo(Product product) {
 		this.setId(product.getId());
 		this.setName(product.getName());
 		this.setDescription(product.getDescription());
