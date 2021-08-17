@@ -36,36 +36,29 @@ const Members = () => {
 
   useEffect(() => {
     console.log("Location changed");
-    if (token !== null) {
-      let urlParams = new URLSearchParams(location.search);
-      console.log("urlParams: " + urlParams);
+    let urlParams = new URLSearchParams(location.search);
+    console.log("urlParams: " + urlParams);
 
-      //setSearch(urlParams.get("search"));
-      // setPageNumber(0);
-      // setPageNumberUI(1);
-      // setPageNumber(new URLSearchParams(location.search).get("page"));
-
-      if (urlParams.get("search") !== null) {
-        setSearch(urlParams.get("search"));
-        console.log("Search: " + urlParams.get("search"));
-      }
-
-      if (urlParams.get("page")) {
-        let currentPage = parseInt(urlParams.get("page"));
-        setPageNumber(currentPage - 1);
-        setPageNumberUI(currentPage);
-        console.log("PageUI: " + currentPage);
-      }
-      if (urlParams.get("sortBy")) {
-        setSortBy(urlParams.get("sortBy"));
-        console.log("SortBy: " + urlParams.get("sortBy"));
-      }
-      if (urlParams.get("direction")) {
-        setDirection(urlParams.get("direction"));
-        console.log("Direction: " + urlParams.get("direction"));
-      }
+    if (urlParams.get("search") !== null) {
+      setSearch(urlParams.get("search"));
+      console.log("Search: " + urlParams.get("search"));
     }
-  }, [location, token]);
+
+    if (urlParams.get("page")) {
+      let currentPage = parseInt(urlParams.get("page"));
+      setPageNumber(currentPage - 1);
+      setPageNumberUI(currentPage);
+      console.log("PageUI: " + currentPage);
+    }
+    if (urlParams.get("sortBy")) {
+      setSortBy(urlParams.get("sortBy"));
+      console.log("SortBy: " + urlParams.get("sortBy"));
+    }
+    if (urlParams.get("direction")) {
+      setDirection(urlParams.get("direction"));
+      console.log("Direction: " + urlParams.get("direction"));
+    }
+  }, [location]);
 
   const handleSearchSubmit = () => {
     history.push({
@@ -75,7 +68,6 @@ const Members = () => {
   };
 
   const handleSearchChange = (event) => {
-    //setSearch(event.target.value);
     history.push({
       pathname: `/admin/members`,
       search: `?search=${event.target.value}&sortBy=${sortBy}&direction=${direction}&page=${pageNumberUI}`,
@@ -83,7 +75,6 @@ const Members = () => {
   };
 
   const handleSortByChange = (event) => {
-    //setSortBy(event.target.value);
     history.push({
       pathname: `/admin/members`,
       search: `?search=${search}&sortBy=${event.target.value}&direction=${direction}&page=${pageNumberUI}`,
@@ -91,10 +82,16 @@ const Members = () => {
   };
 
   const handleDirectionChange = (event) => {
-    //setDirection(event.target.value);
     history.push({
       pathname: `/admin/members`,
       search: `?search=${search}&sortBy=${sortBy}&direction=${event.target.value}&page=${pageNumberUI}`,
+    });
+  };
+
+  const handlePageChange = (value) => {
+    history.push({
+      pathname: `/admin/members`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&page=${value}`,
     });
   };
 
@@ -170,7 +167,7 @@ const Members = () => {
           <InputBase
             className={classes.search}
             autocomplete="off"
-            placeholder="Search Members"
+            placeholder="Search Members by Username"
             inputProps={{ "aria-label": "search" }}
             onChange={handleSearchChange}
           />
@@ -266,8 +263,7 @@ const Members = () => {
             color="primary"
             page={pageNumberUI}
             onChange={(event, value) => {
-              setPageNumberUI(value);
-              setPageNumber(value - 1);
+              handlePageChange(value);
             }}
           />
         </div>

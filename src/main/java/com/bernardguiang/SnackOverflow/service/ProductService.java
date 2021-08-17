@@ -120,6 +120,9 @@ public class ProductService {
 			case "price": 
 				sort = JpaSort.unsafe(page.getSortDirection(), "(PRICE)");
 				break;
+			case "joinDate": 
+				sort = JpaSort.unsafe(page.getSortDirection(), "(JOIN_DATE)");
+				break;
 		}
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 

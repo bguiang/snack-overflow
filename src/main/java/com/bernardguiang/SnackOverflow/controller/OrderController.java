@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
+import com.bernardguiang.SnackOverflow.dto.request.OrderPage;
 import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
 import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
@@ -53,8 +55,8 @@ public class OrderController {
 	//TODO: test
 	@GetMapping("/api/v1/admin/orders")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public List<OrderDTO> getAllStartedOrders() {
-		return orderService.findAllIncludeUserInfo();
+	public Page<OrderDTO> getOrders(OrderPage orderPage) {
+		return orderService.findOrdersPaginated(orderPage);
 	}
 	
 	//TODO: test

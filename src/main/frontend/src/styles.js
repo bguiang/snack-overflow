@@ -568,7 +568,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 80,
   },
   adminSelector: {
-    minWidth: 120,
+    minWidth: 110,
     marginLeft: 10,
     [theme.breakpoints.down("sm")]: {
       display: "none",

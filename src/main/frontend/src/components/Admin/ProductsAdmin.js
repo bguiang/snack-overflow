@@ -37,36 +37,81 @@ const ProductsAdmin = () => {
   const [sortBy, setSortBy] = useState("unitsSold");
   const [direction, setDirection] = useState("DESC");
 
+  useEffect(() => {
+    console.log("Location changed");
+    let urlParams = new URLSearchParams(location.search);
+    console.log("urlParams: " + urlParams);
+
+    if (urlParams.get("search") !== null) {
+      setSearch(urlParams.get("search"));
+      console.log("Search: " + urlParams.get("search"));
+    }
+
+    if (urlParams.get("page")) {
+      let currentPage = parseInt(urlParams.get("page"));
+      setPageNumber(currentPage - 1);
+      setPageNumberUI(currentPage);
+      console.log("PageUI: " + currentPage);
+    }
+    if (urlParams.get("sortBy")) {
+      setSortBy(urlParams.get("sortBy"));
+      console.log("SortBy: " + urlParams.get("sortBy"));
+    }
+    if (urlParams.get("direction")) {
+      setDirection(urlParams.get("direction"));
+      console.log("Direction: " + urlParams.get("direction"));
+    }
+    if (urlParams.get("includeOrders")) {
+      setIncludeOrders(urlParams.get("includeOrders"));
+      console.log("includeOrders: " + urlParams.get("includeOrders"));
+    }
+  }, [location]);
+
   const handleSearchSubmit = () => {
     history.push({
-      pathname: "/admin/products",
-      search: `?search=${search}`,
+      pathname: `/admin/products`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
+    });
+  };
+
+  const handleSearchChange = (event) => {
+    history.push({
+      pathname: `/admin/products`,
+      search: `?search=${event.target.value}&sortBy=${sortBy}&direction=${direction}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
     });
   };
 
   const handleIncludeOrdersChange = (event) => {
-    setIncludeOrders(event.target.value);
+    history.push({
+      pathname: `/admin/products`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&includeOrders=${event.target.value}&page=${pageNumberUI}`,
+    });
   };
 
   const handleSortByChange = (event) => {
-    setSortBy(event.target.value);
+    history.push({
+      pathname: `/admin/products`,
+      search: `?search=${search}&sortBy=${event.target.value}&direction=${direction}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
+    });
   };
 
   const handleDirectionChange = (event) => {
-    setDirection(event.target.value);
+    history.push({
+      pathname: `/admin/products`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${event.target.value}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
+    });
+  };
+
+  const handlePageChange = (value) => {
+    history.push({
+      pathname: `/admin/products`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&includeOrders=${includeOrders}&page=${value}`,
+    });
   };
 
   useEffect(() => {
     if (currentUser) setToken("Bearer " + currentUser.authenticationToken);
   }, [currentUser]);
-
-  useEffect(() => {
-    if (token !== null) {
-      setSearch(new URLSearchParams(location.search).get("search"));
-      setPageNumber(0);
-      setPageNumberUI(1);
-    }
-  }, [location, token]);
 
   const getProducts = async () => {
     try {
@@ -155,11 +200,9 @@ const ProductsAdmin = () => {
             <InputBase
               className={classes.search}
               autocomplete="off"
-              placeholder="Search Products"
+              placeholder="Search Products by Name"
               inputProps={{ "aria-label": "search" }}
-              onChange={(event) => {
-                setSearch(event.target.value);
-              }}
+              onChange={handleSearchChange}
             />
             <IconButton
               type="submit"
@@ -263,8 +306,7 @@ const ProductsAdmin = () => {
             color="primary"
             page={pageNumberUI}
             onChange={(event, value) => {
-              setPageNumberUI(value);
-              setPageNumber(value - 1);
+              handlePageChange(value);
             }}
           />
         </div>
