@@ -309,29 +309,29 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
   orderListTitleMobile: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "flex",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
   orderCard: {
     padding: 16,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "none",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "flex",
     },
   },
   orderCardMobile: {
     padding: 16,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "flex",
       flexDirection: "column",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
@@ -630,6 +630,14 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("lg")]: {
       display: "none",
     },
+  },
+  dashboardTile: {
+    display: "flex",
+    minHeight: 100,
+  },
+  dashboardTileItem: {
+    flex: 1,
+    padding: 5,
   },
 }));
 

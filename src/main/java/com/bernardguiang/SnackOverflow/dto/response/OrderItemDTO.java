@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 import com.bernardguiang.SnackOverflow.model.OrderItem;
+import com.bernardguiang.SnackOverflow.model.OrderStatus;
 
 public class OrderItemDTO {
 	private Long id;
@@ -13,8 +14,10 @@ public class OrderItemDTO {
 	
 	// Replace Order with Order Id and Order Create Date
 	// private Order order;
-	Long orderId;
-	Instant orderCreatedDate;
+	private Long orderId;
+	private Instant orderCreatedDate;
+	private OrderStatus orderStatus;
+	
 	// Replace Product with ProductId
 	//	private Product product;
 	private Long productId;
@@ -24,12 +27,13 @@ public class OrderItemDTO {
 	}
 	
 	public OrderItemDTO(OrderItem orderItem) {
-		this.id = orderItem.getId();
-		this.quantity = orderItem.getQuantity();
-		this.price = orderItem.getPrice();
-		this.orderId = orderItem.getOrder().getId();
-		this.orderCreatedDate = orderItem.getOrder().getCreatedDate();
-		this.productId = orderItem.getProduct().getId();
+		this.setId(orderItem.getId());
+		this.setQuantity(orderItem.getQuantity());
+		this.setPrice(orderItem.getPrice());
+		this.setOrderId(orderItem.getOrder().getId());
+		this.setOrderCreatedDate(orderItem.getOrder().getCreatedDate());
+		this.setOrderStatus(orderItem.getOrder().getStatus());
+		this.setProductId(orderItem.getProduct().getId());
 		
 	}
 
@@ -71,6 +75,14 @@ public class OrderItemDTO {
 
 	public void setOrderCreatedDate(Instant orderCreatedDate) {
 		this.orderCreatedDate = orderCreatedDate;
+	}
+	
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 
 	public Long getProductId() {

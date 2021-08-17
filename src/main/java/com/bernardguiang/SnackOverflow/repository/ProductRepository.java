@@ -31,6 +31,9 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 			+ "WHERE "
 			+ "ORDER_ITEM.PRODUCT_ID = PRODUCT.ID "
 			+ "AND (:start IS NULL OR ORDERS.CREATED_DATE > :start)"
+			+ "AND ORDERS.STATUS != 'CANCELLED'"	// do not count units from cancelled, failed, or refunded orders
+			+ "AND ORDERS.STATUS != 'FAILED'"
+			+ "AND ORDERS.STATUS != 'REFUNDED'"
 		+ ") AS UNITS_SOLD "
 		+ "FROM PRODUCT "
 		+ "WHERE UPPER(NAME) LIKE UPPER(CONCAT('%',:searchText,'%'))"

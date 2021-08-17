@@ -170,6 +170,7 @@ const Members = () => {
             placeholder="Search Members by Username"
             inputProps={{ "aria-label": "search" }}
             onChange={handleSearchChange}
+            value={search}
           />
           <IconButton
             type="submit"

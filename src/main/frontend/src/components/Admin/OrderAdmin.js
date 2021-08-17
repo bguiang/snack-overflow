@@ -65,7 +65,7 @@ const OrderAdmin = () => {
         <Typography variant="h6">Order #{order.id}</Typography>
         <Typography variant="h6">
           User:{" "}
-          <Link href={`/admin/members/${order.user.id}`}>
+          <Link href={`/admin/members?search=${order.user.username}`}>
             {order.user.username}
           </Link>
         </Typography>

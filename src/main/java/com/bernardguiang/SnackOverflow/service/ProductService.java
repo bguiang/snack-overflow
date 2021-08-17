@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ import com.bernardguiang.SnackOverflow.dto.request.ProductPageAdmin;
 import com.bernardguiang.SnackOverflow.dto.response.FullProductInfo;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
+import com.bernardguiang.SnackOverflow.model.OrderStatus;
 import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
 import com.bernardguiang.SnackOverflow.repository.OrderItemRepository;
@@ -144,23 +146,30 @@ public class ProductService {
 			public FullProductInfo apply(Product product) {
 
 				// Update ordered items list on date range on orders to include
+				List<OrderStatus> excludedStatuses = 
+						Arrays.asList(OrderStatus.FAILED, OrderStatus.CANCELLED, OrderStatus.REFUNDED);
+				
+				Iterable<OrderItem> iterable;
+				List<OrderItem> orderedItems = new ArrayList<>();
 				if (page.getItemsSold().equalsIgnoreCase("month")) {
 					LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
 					Instant start = firstDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant();
-					Iterable<OrderItem> iterable = orderItemRepository
-							.findAllByProductIdAndOrderCreatedDateAfter(product.getId(), start);
-					List<OrderItem> orderItemsThisMonth = new ArrayList<>();
-					iterable.forEach(orderItemsThisMonth::add);
-					product.setOrderedItems(orderItemsThisMonth);
-				} else if (page.getItemsSold().equalsIgnoreCase("year")) {
+					iterable = orderItemRepository
+							.findAllByProductIdAndOrderCreatedDateAfterAndOrderStatusNotIn(product.getId(), start, excludedStatuses);
+				} 
+				else if (page.getItemsSold().equalsIgnoreCase("year")) {
 					LocalDate firstDayOfYear = LocalDate.now().with(firstDayOfYear());
 					Instant start = firstDayOfYear.atStartOfDay(ZoneId.systemDefault()).toInstant();
-					Iterable<OrderItem> iterable = orderItemRepository
-							.findAllByProductIdAndOrderCreatedDateAfter(product.getId(), start);
-					List<OrderItem> orderItemsThisMonth = new ArrayList<>();
-					iterable.forEach(orderItemsThisMonth::add);
-					product.setOrderedItems(orderItemsThisMonth);
+					iterable = orderItemRepository
+							.findAllByProductIdAndOrderCreatedDateAfterAndOrderStatusNotIn(product.getId(), start, excludedStatuses);
 				}
+				else {
+					iterable = orderItemRepository
+							.findAllByProductIdAndOrderStatusNotIn(product.getId(), excludedStatuses);
+				}
+
+				iterable.forEach(orderedItems::add);
+				product.setOrderedItems(orderedItems);
 
 				FullProductInfo dto = new FullProductInfo(product);
 				return dto;

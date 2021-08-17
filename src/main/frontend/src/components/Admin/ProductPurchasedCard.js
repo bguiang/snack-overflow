@@ -35,6 +35,12 @@ const ProductPurchasedCard = ({ orderedItem }) => {
             variant="subtitle1"
             className={classes.orderCardActionAreaItem}
           >
+            Order Status: {orderedItem.orderStatus}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            className={classes.orderCardActionAreaItem}
+          >
             Price: ${orderedItem.price.toFixed(2)}
           </Typography>
           <Typography
@@ -58,23 +64,57 @@ const ProductPurchasedCard = ({ orderedItem }) => {
           </Typography>
           <Typography
             variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {new Date(orderedItem.orderCreatedDate).toLocaleDateString("en-US")}{" "}
-            {new Date(orderedItem.orderCreatedDate).toLocaleTimeString("en-US")}
-          </Typography>
-          <Typography
-            variant="subtitle1"
             className={classes.orderCardActionAreaItem}
           >
-            ${orderedItem.price.toFixed(2)}
+            {new Date(orderedItem.orderCreatedDate).toLocaleDateString("en-US")}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            {orderedItem.quantity}
-          </Typography>
+          {orderedItem.orderStatus === "CANCELLED" ||
+          orderedItem.orderStatus === "FAILED" ||
+          orderedItem.orderStatus === "REFUNDED" ? (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.error}>
+                {orderedItem.orderStatus}
+              </Typography>
+            </div>
+          ) : (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.success}>
+                {orderedItem.orderStatus}
+              </Typography>
+            </div>
+          )}
+
+          {orderedItem.orderStatus === "CANCELLED" ||
+          orderedItem.orderStatus === "FAILED" ||
+          orderedItem.orderStatus === "REFUNDED" ? (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.error}>
+                ${orderedItem.price.toFixed(2)}
+              </Typography>
+            </div>
+          ) : (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.success}>
+                ${orderedItem.price.toFixed(2)}
+              </Typography>
+            </div>
+          )}
+
+          {orderedItem.orderStatus === "CANCELLED" ||
+          orderedItem.orderStatus === "FAILED" ||
+          orderedItem.orderStatus === "REFUNDED" ? (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.error}>
+                {orderedItem.quantity}
+              </Typography>
+            </div>
+          ) : (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.success}>
+                {orderedItem.quantity}
+              </Typography>
+            </div>
+          )}
         </CardActionArea>
       </Card>
     </Grid>

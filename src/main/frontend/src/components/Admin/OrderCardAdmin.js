@@ -64,18 +64,35 @@ const OrderCardAdmin = ({ order }) => {
           >
             Created: {new Date(order.createdDate).toLocaleDateString("en-US")}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            Status: {order.status}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            Total: ${order.total.toFixed(2)}
-          </Typography>
+          {order.status === "CANCELLED" ||
+          order.status === "FAILED" ||
+          order.status === "REFUNDED" ? (
+            <div>
+              <div className={classes.orderCardActionAreaItem2}>
+                <Typography variant="subtitle1" className={classes.error}>
+                  Status: {order.status}
+                </Typography>
+              </div>
+              <div className={classes.orderCardActionAreaItem}>
+                <Typography variant="subtitle1" className={classes.error}>
+                  Total: ${order.total.toFixed(2)}
+                </Typography>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className={classes.orderCardActionAreaItem2}>
+                <Typography variant="subtitle1" className={classes.success}>
+                  Status: {order.status}
+                </Typography>
+              </div>
+              <div className={classes.orderCardActionAreaItem}>
+                <Typography variant="subtitle1" className={classes.success}>
+                  Total: ${order.total.toFixed(2)}
+                </Typography>
+              </div>
+            </div>
+          )}
         </CardActionArea>
         <CardActions className={classes.snackCardActions}>
           <UpdateOrder order={order} buttonSize="large" token={token} />
@@ -104,7 +121,37 @@ const OrderCardAdmin = ({ order }) => {
           >
             {new Date(order.createdDate).toLocaleDateString("en-US")}
           </Typography>
-          <Typography
+          {order.status === "CANCELLED" ||
+          order.status === "FAILED" ||
+          order.status === "REFUNDED" ? (
+            <div className={classes.orderCardActionAreaItem2}>
+              <Typography variant="subtitle1" className={classes.error}>
+                {order.status}
+              </Typography>
+            </div>
+          ) : (
+            <div className={classes.orderCardActionAreaItem2}>
+              <Typography variant="subtitle1" className={classes.success}>
+                {order.status}
+              </Typography>
+            </div>
+          )}
+          {order.status === "CANCELLED" ||
+          order.status === "FAILED" ||
+          order.status === "REFUNDED" ? (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.error}>
+                ${order.total.toFixed(2)}
+              </Typography>
+            </div>
+          ) : (
+            <div className={classes.orderCardActionAreaItem}>
+              <Typography variant="subtitle1" className={classes.success}>
+                ${order.total.toFixed(2)}
+              </Typography>
+            </div>
+          )}
+          {/* <Typography
             variant="subtitle2"
             className={classes.orderCardActionAreaItem2}
           >
@@ -115,7 +162,7 @@ const OrderCardAdmin = ({ order }) => {
             className={classes.orderCardActionAreaItem}
           >
             ${order.total.toFixed(2)}
-          </Typography>
+          </Typography> */}
         </CardActionArea>
         <CardActions className={classes.snackCardActions}>
           <UpdateOrder order={order} buttonSize="small" token={token} />

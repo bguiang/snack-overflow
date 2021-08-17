@@ -73,9 +73,15 @@ const ProductInfo = () => {
                 </Typography>
                 <Typography
                   variant="subtitle1"
-                  className={classes.orderCardActionAreaItem2}
+                  className={classes.orderCardActionAreaItem}
                 >
                   Date
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  className={classes.orderCardActionAreaItem}
+                >
+                  Status
                 </Typography>
                 <Typography
                   variant="subtitle1"
