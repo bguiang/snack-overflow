@@ -26,6 +26,7 @@ import Subscriptions from "./components/Subscriptions/Subscriptions";
 import Order from "./components/Account/Order";
 import AdminRoute from "./components/AdminRoute";
 import Admin from "./components/Admin/Admin";
+import Home from "./components/Home/Home";
 
 function App() {
   // Theme colors
@@ -117,7 +118,7 @@ function App() {
                       </CartRoute>
                     </PrivateRoute>
                     <Route path="/">
-                      <Snacks />
+                      <Home />
                     </Route>
                   </Switch>
                 </Container>

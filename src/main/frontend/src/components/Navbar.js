@@ -71,10 +71,17 @@ const Navbar = () => {
     history.push(url);
   };
 
+  // const handleSearchSubmit = () => {
+  //   history.push({
+  //     pathname: "/snacks",
+  //     search: `?search=${search}`,
+  //   });
+  // };
+
   const handleSearchSubmit = () => {
     history.push({
-      pathname: "/snacks",
-      search: `?search=${search}`,
+      pathname: `/snacks`,
+      search: `?search=${search}&sortBy=${"unitsSold"}&direction=${"DESC"}&&page=${1}`,
     });
   };
 
@@ -158,19 +165,19 @@ const Navbar = () => {
                   Home
                 </Typography>
               </Button>
-              <Button onClick={() => handleClick("/")} size="large">
+              <Button onClick={() => handleClick("/snacks")} size="large">
                 <Typography className={classes.toolbar2MenuItem} variant="h6">
                   Snacks
                 </Typography>
               </Button>
-              <Button
+              {/* <Button
                 onClick={() => handleClick("/subscriptions")}
                 size="large"
               >
                 <Typography className={classes.toolbar2MenuItem} variant="h6">
                   Subscriptions
                 </Typography>
-              </Button>
+              </Button> */}
               <Button onClick={() => handleClick("/contact")} size="large">
                 <Typography className={classes.toolbar2MenuItem} variant="h6">
                   Contact Us
@@ -208,14 +215,14 @@ const Navbar = () => {
                 >
                   Snacks
                 </MenuItem>
-                <MenuItem
+                {/* <MenuItem
                   onClick={() => {
                     handleMenuClose();
                     handleClick("/subscriptions");
                   }}
                 >
                   Subscriptions
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   onClick={() => {
                     handleMenuClose();

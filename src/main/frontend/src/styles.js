@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 0,
     paddingRight: 0,
   },
+  menuButton: {
+    color: "white",
+  },
   toolbarMenuMobile: {
     [theme.breakpoints.down("sm")]: {
       display: "flex",
@@ -134,14 +137,12 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.up("md")]: {
       marginLeft: "10%",
-      width: 375,
-      //marginRight: 32,
+      width: 450,
       marginRight: 24,
     },
     [theme.breakpoints.up("lg")]: {
       marginLeft: "10%",
-      width: 450,
-      //marginRight: 32,
+      width: 650,
       marginRight: 0,
     },
     padding: "2px 4px",
@@ -510,6 +511,11 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     paddingRight: 10,
   },
+  productCardHorizontalDate: {
+    minWidth: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
   productCardHorizontalPrice: {
     minWidth: 100,
     paddingLeft: 10,
@@ -638,6 +644,73 @@ const useStyles = makeStyles((theme) => ({
   dashboardTileItem: {
     flex: 1,
     padding: 5,
+  },
+  homeCarousel: {
+    width: "100%",
+  },
+  snackCarouselItem: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingRight: 10,
+    paddingLeft: 10,
+  },
+  snackCarouselItemContent: {
+    display: "flex",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      flex: 1,
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: 600,
+    },
+    [theme.breakpoints.up("md")]: {
+      width: 800,
+    },
+    [theme.breakpoints.up("lg")]: {
+      width: 1000,
+    },
+  },
+  snackItemCarouselImage: {
+    [theme.breakpoints.down("sm")]: {
+      height: 200,
+      marginLeft: 10,
+      marginRight: 10,
+    },
+    [theme.breakpoints.up("sm")]: {
+      flex: 1,
+      minHeight: 300,
+    },
+    [theme.breakpoints.up("md")]: {
+      flex: 1,
+      minHeight: 300,
+    },
+    [theme.breakpoints.up("lg")]: {
+      flex: 1,
+      minHeight: 400,
+    },
+  },
+  snackItemCarouselDescription: {
+    overflow: "hidden",
+    [theme.breakpoints.down("sm")]: {
+      height: 200,
+      padding: 20,
+    },
+    [theme.breakpoints.up("sm")]: {
+      flex: 2,
+      height: 300,
+      padding: 40,
+    },
+    [theme.breakpoints.up("md")]: {
+      flex: 2,
+      height: 300,
+    },
+    [theme.breakpoints.up("lg")]: {
+      flex: 2,
+      minHeight: 400,
+      padding: 40,
+    },
   },
 }));
 

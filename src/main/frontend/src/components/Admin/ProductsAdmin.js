@@ -22,17 +22,19 @@ import { useHistory } from "react-router";
 import SearchIcon from "@material-ui/icons/Search";
 
 const ProductsAdmin = () => {
-  const [token, setToken] = useState(null);
-  const { currentUser } = useAuth();
+  const classes = useStyles();
+
   const location = useLocation();
   const history = useHistory();
+
+  const [token, setToken] = useState(null);
+  const { currentUser } = useAuth();
+
+  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const [pageNumberUI, setPageNumberUI] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const classes = useStyles();
-
-  const [products, setProducts] = useState([]);
   const [includeOrders, setIncludeOrders] = useState("all");
   const [sortBy, setSortBy] = useState("unitsSold");
   const [direction, setDirection] = useState("DESC");
@@ -70,35 +72,43 @@ const ProductsAdmin = () => {
   const handleSearchSubmit = () => {
     history.push({
       pathname: `/admin/products`,
-      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&includeOrders=${includeOrders}&page=${1}`,
     });
   };
 
   const handleSearchChange = (event) => {
     history.push({
       pathname: `/admin/products`,
-      search: `?search=${event.target.value}&sortBy=${sortBy}&direction=${direction}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
+      search: `?search=${
+        event.target.value
+      }&sortBy=${sortBy}&direction=${direction}&includeOrders=${includeOrders}&page=${1}`,
     });
   };
 
   const handleIncludeOrdersChange = (event) => {
     history.push({
       pathname: `/admin/products`,
-      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&includeOrders=${event.target.value}&page=${pageNumberUI}`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&includeOrders=${
+        event.target.value
+      }&page=${1}`,
     });
   };
 
   const handleSortByChange = (event) => {
     history.push({
       pathname: `/admin/products`,
-      search: `?search=${search}&sortBy=${event.target.value}&direction=${direction}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
+      search: `?search=${search}&sortBy=${
+        event.target.value
+      }&direction=${direction}&includeOrders=${includeOrders}&page=${1}`,
     });
   };
 
   const handleDirectionChange = (event) => {
     history.push({
       pathname: `/admin/products`,
-      search: `?search=${search}&sortBy=${sortBy}&direction=${event.target.value}&includeOrders=${includeOrders}&page=${pageNumberUI}`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${
+        event.target.value
+      }&includeOrders=${includeOrders}&page=${1}`,
     });
   };
 
@@ -171,6 +181,7 @@ const ProductsAdmin = () => {
               value={sortBy}
               onChange={handleSortByChange}
             >
+              <MenuItem value={"createdDate"}>Created Date</MenuItem>
               <MenuItem value={"id"}>ID</MenuItem>
               <MenuItem value={"name"}>Name</MenuItem>
               <MenuItem value={"price"}>Price</MenuItem>
@@ -271,6 +282,12 @@ const ProductsAdmin = () => {
                 Product
               </Typography>
             </div>
+            <Typography
+              variant="subtitle1"
+              className={classes.productCardHorizontalDate}
+            >
+              Created
+            </Typography>
             <Typography
               variant="subtitle1"
               className={classes.productCardHorizontalPrice}

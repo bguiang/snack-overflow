@@ -37,16 +37,20 @@ const ProductCard = ({ product }) => {
             title={product.name}
           />
           <CardContent className={classes.snackCardContent}>
-            <Typography gutterBottom variant="h5" component="h5">
+            <Typography gutterBottom variant="subtitle1">
               ID: #{product.id}
             </Typography>
-            <Typography gutterBottom variant="h5" component="h5">
+            <Typography gutterBottom variant="subtitle1">
               Name: {product.name}
             </Typography>
-            <Typography variant="h6" component="h6">
+            <Typography variant="subtitle1">
+              Created Date:{" "}
+              {new Date(product.createdDate).toLocaleDateString("en-US")}
+            </Typography>
+            <Typography variant="subtitle1">
               Price: ${product.price.toFixed(2)}
             </Typography>
-            <Typography variant="h6" component="h6">
+            <Typography variant="subtitle1">
               Units Sold This Month: {product.unitsSold}
             </Typography>
           </CardContent>
@@ -87,6 +91,12 @@ const ProductCard = ({ product }) => {
               {product.name}
             </Typography>
           </div>
+          <Typography
+            variant="subtitle2"
+            className={classes.productCardHorizontalDate}
+          >
+            {new Date(product.createdDate).toLocaleDateString("en-US")}
+          </Typography>
           <Typography
             variant="subtitle2"
             className={classes.productCardHorizontalPrice}

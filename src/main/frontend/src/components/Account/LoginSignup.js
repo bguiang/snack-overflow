@@ -135,13 +135,13 @@ const Login = ({ login, classes, currentUser }) => {
           >
             Submit
           </Button>
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
       </div>
     </Container>

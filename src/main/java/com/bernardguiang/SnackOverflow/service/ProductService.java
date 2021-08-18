@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
-import com.bernardguiang.SnackOverflow.dto.request.ProductPageAdmin;
 import com.bernardguiang.SnackOverflow.dto.response.FullProductInfo;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
@@ -48,12 +47,23 @@ public class ProductService {
 
 	public ProductDTO save(ProductDTO productDTO) {
 		// Convert Product to ProductDTO
-		Product product = new Product();
-		product.setId(productDTO.getId());
+		Product product;
+		
+		// Check if product exists
+		Long id = productDTO.getId();
+		if(id != null) {
+			product = productRepository.findById(id)
+					.orElseThrow(() -> new IllegalStateException("Could not find product " + id));
+		}
+		else {
+			product = new Product();
+			product.setCreatedDate(Instant.now());
+		}
+		
 		product.setName(productDTO.getName());
 		product.setDescription(productDTO.getDescription());
 		product.setPrice(productDTO.getPrice());
-		product.setCreatedDate(Instant.now());
+		
 		product.setImages(productDTO.getImages());
 
 		// Should it throw an error if category doesn't exist?
@@ -77,26 +87,64 @@ public class ProductService {
 		return new ProductDTO(product);
 	}
 
+//	public Page<ProductDTO> findProductsPaginated(ProductPage page) {
+//		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
+//		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+//
+//		Page<Product> result = productRepository.findAllByNameContainingIgnoreCase(page.getSearch(), pageable);
+//
+//		// Returns a new Page with the content of the current one mapped by the given
+//		// Function.
+//		Page<ProductDTO> dtoPage = result.map(new Function<Product, ProductDTO>() {
+//			@Override
+//			public ProductDTO apply(Product entity) {
+//				ProductDTO dto = new ProductDTO(entity);
+//				return dto;
+//			}
+//		});
+//
+//		return dtoPage;
+//	}
+	
+	
 	public Page<ProductDTO> findProductsPaginated(ProductPage page) {
-		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
+		Sort sort = null;
+		switch(page.getSortBy()) {
+			case "unitsSold": 
+				sort = JpaSort.unsafe(page.getSortDirection(), "(UNITS_SOLD)", "(ID)");
+				break;
+			case "id": 
+				sort = JpaSort.unsafe(page.getSortDirection(), "(ID)");
+				break;
+			case "name": 
+				sort = JpaSort.unsafe(page.getSortDirection(), "(NAME)");
+				break;
+			case "price": 
+				sort = JpaSort.unsafe(page.getSortDirection(), "(PRICE)");
+				break;
+			case "createdDate": 
+				sort = JpaSort.unsafe(page.getSortDirection(), "(CREATED_DATE)");
+				break;
+		}
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
-		Page<Product> result = productRepository.findAllByNameContainingIgnoreCase(page.getSearch(), pageable);
+		Page<Product> result = productRepository.findAllBySearchTextAndIncludeOrdersAfter(page.getSearch(), null, pageable);;
 
-		// Returns a new Page with the content of the current one mapped by the given
-		// Function.
 		Page<ProductDTO> dtoPage = result.map(new Function<Product, ProductDTO>() {
 			@Override
-			public ProductDTO apply(Product entity) {
-				ProductDTO dto = new ProductDTO(entity);
+			public ProductDTO apply(Product product) {
+
+				ProductDTO dto = new ProductDTO(product);
 				return dto;
 			}
 		});
 
 		return dtoPage;
 	}
+	
+	
 
-	public Page<FullProductInfo> findFullProductInfosPaginated(ProductPageAdmin page) {
+	public Page<FullProductInfo> findFullProductInfosPaginated(ProductPage page) {
 		Sort sort = null;
 		switch(page.getSortBy()) {
 			case "unitsSold": 
@@ -122,8 +170,8 @@ public class ProductService {
 			case "price": 
 				sort = JpaSort.unsafe(page.getSortDirection(), "(PRICE)");
 				break;
-			case "joinDate": 
-				sort = JpaSort.unsafe(page.getSortDirection(), "(JOIN_DATE)");
+			case "createdDate": 
+				sort = JpaSort.unsafe(page.getSortDirection(), "(CREATED_DATE)");
 				break;
 		}
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);

@@ -9,12 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
-import com.bernardguiang.SnackOverflow.dto.request.ProductPageAdmin;
 import com.bernardguiang.SnackOverflow.dto.response.FullProductInfo;
 import com.bernardguiang.SnackOverflow.service.ProductService;
 
@@ -42,9 +42,16 @@ public class ProductController
 		return productService.findById(productId);
 	}
 	
+	@PutMapping("/api/v1/admin/products")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ProductDTO updateProduct(@RequestBody @Valid ProductDTO product, HttpServletResponse response) {
+		ProductDTO dto = productService.save(product);
+		return dto;
+	}
+	
 	@PostMapping("/api/v1/admin/products")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ProductDTO createOrUpdateProduct(@RequestBody @Valid ProductDTO product, HttpServletResponse response) {
+	public ProductDTO createProduct(@RequestBody @Valid ProductDTO product, HttpServletResponse response) {
 		ProductDTO dto = productService.save(product);
 		response.setStatus(201);
 		return dto;
@@ -52,7 +59,7 @@ public class ProductController
 	
 	@GetMapping("/api/v1/admin/products")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public Page<FullProductInfo> getProductsPaginatedForAdmin(ProductPageAdmin page) 
+	public Page<FullProductInfo> getProductsPaginatedForAdmin(ProductPage page) 
 	{
 		// This Should always Return all products?
 		return productService.findFullProductInfosPaginated(page);

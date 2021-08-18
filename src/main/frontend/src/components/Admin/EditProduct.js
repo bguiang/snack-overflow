@@ -47,7 +47,7 @@ const EditProduct = () => {
         price,
       };
       console.log(updateProductRequest);
-      const response = await SnackOverflow.post(
+      const response = await SnackOverflow.put(
         "/admin/products",
         updateProductRequest,
         {

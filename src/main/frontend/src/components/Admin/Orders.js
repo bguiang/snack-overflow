@@ -64,28 +64,34 @@ const Orders = () => {
   const handleSearchSubmit = () => {
     history.push({
       pathname: `/admin/orders`,
-      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&page=${pageNumberUI}`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&page=${1}`,
     });
   };
 
   const handleSearchChange = (event) => {
     history.push({
       pathname: `/admin/orders`,
-      search: `?search=${event.target.value}&sortBy=${sortBy}&direction=${direction}&page=${pageNumberUI}`,
+      search: `?search=${
+        event.target.value
+      }&sortBy=${sortBy}&direction=${direction}&page=${1}`,
     });
   };
 
   const handleSortByChange = (event) => {
     history.push({
       pathname: `/admin/orders`,
-      search: `?search=${search}&sortBy=${event.target.value}&direction=${direction}&page=${pageNumberUI}`,
+      search: `?search=${search}&sortBy=${
+        event.target.value
+      }&direction=${direction}&page=${1}`,
     });
   };
 
   const handleDirectionChange = (event) => {
     history.push({
       pathname: `/admin/orders`,
-      search: `?search=${search}&sortBy=${sortBy}&direction=${event.target.value}&page=${pageNumberUI}`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${
+        event.target.value
+      }&page=${1}`,
     });
   };
 

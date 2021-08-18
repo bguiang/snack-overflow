@@ -9,6 +9,7 @@ public class ProductPage {
 	private int pageSize = 9;
 	private Sort.Direction sortDirection = Sort.Direction.ASC;
 	private String sortBy = "createdDate";
+	private String itemsSold = "all"; // all, month, year
 	
 	public String getSearch() {
 		return search;
@@ -39,5 +40,11 @@ public class ProductPage {
 	}
 	public void setSortBy(String sortBy) {
 		this.sortBy = sortBy;
+	}
+	public String getItemsSold() {
+		return itemsSold;
+	}
+	public void setItemsSold(String itemsSold) {
+		this.itemsSold = itemsSold;
 	}
 }

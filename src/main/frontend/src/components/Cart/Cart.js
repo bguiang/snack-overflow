@@ -39,6 +39,7 @@ const Cart = () => {
         }
       } catch (error) {
         console.log(error);
+        setCartInfo({ items: [], total: 0 });
       }
     };
 
