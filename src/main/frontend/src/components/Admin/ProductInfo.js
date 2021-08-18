@@ -1,16 +1,18 @@
 import React from "react";
 
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import useProduct from "../../hooks/useProduct";
 import useStyles from "../../styles";
-import { Grid, Typography, CardMedia } from "@material-ui/core";
+import { Grid, Typography, Button } from "@material-ui/core";
 import ProductPurchasedCard from "./ProductPurchasedCard";
 import Carousel from "react-material-ui-carousel";
 import CarouselItem from "../CarouselItem";
+import EditIcon from "@material-ui/icons/Edit";
 
 const ProductInfo = () => {
   const classes = useStyles();
+  const history = useHistory();
   let { id } = useParams();
   const [product] = useProduct(id);
   const [orderedItems, setOrderedItems] = useState([]);
@@ -22,9 +24,24 @@ const ProductInfo = () => {
     }
   }, [product]);
 
+  const editProductClick = (product) => {
+    history.push(`/admin/products/edit/${product.id}`);
+  };
+
   return (
     <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
+        <Grid item xs={12} key="title" className={classes.cartHeader}>
+          <h2 className={classes.cartHeaderTitle}>Product Information</h2>
+          <Button
+            size="large"
+            color="primary"
+            onClick={() => editProductClick(product)}
+            startIcon={<EditIcon />}
+          >
+            Edit
+          </Button>
+        </Grid>
         <Grid item xs={12} sm={12} title="image">
           {product.images ? (
             <Carousel

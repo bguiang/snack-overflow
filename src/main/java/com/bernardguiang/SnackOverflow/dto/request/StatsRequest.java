@@ -3,7 +3,7 @@ package com.bernardguiang.SnackOverflow.dto.request;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-public class OrderStatsRequest {
+public class StatsRequest {
 
 	@NotBlank(message = "Please include a `range` query parameter with value of `all`, `month`, or `year`")
 	@Pattern(regexp="^(all|month|year)$",
@@ -11,7 +11,7 @@ public class OrderStatsRequest {
 	)
 	private String range;
 
-	public OrderStatsRequest() {
+	public StatsRequest() {
 		super();
 	}
 

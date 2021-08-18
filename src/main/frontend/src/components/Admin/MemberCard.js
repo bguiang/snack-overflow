@@ -47,6 +47,12 @@ const MemberCard = ({ member }) => {
           >
             Role: {member.role}
           </Typography>
+          <Typography
+            variant="subtitle1"
+            className={classes.orderCardActionAreaItem1}
+          >
+            Join Date: {new Date(member.joinDate).toLocaleDateString("en-US")}
+          </Typography>
         </CardActionArea>
       </Card>
       <Card className={classes.memberCard}>

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
 import com.bernardguiang.SnackOverflow.dto.request.OrderPage;
-import com.bernardguiang.SnackOverflow.dto.request.OrderStatsRequest;
+import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
 import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
 import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
@@ -78,7 +78,7 @@ public class OrderController {
 	// Month, Year, All
 	@GetMapping("/api/v1/admin/orders/stats")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public OrderStatsResponse getOrderStats(@Valid OrderStatsRequest request) {
+	public OrderStatsResponse getOrderStats(@Valid StatsRequest request) {
 		return orderService.getOrderStats(request);
 	}
 }

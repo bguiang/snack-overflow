@@ -1,5 +1,7 @@
 package com.bernardguiang.SnackOverflow.repository;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -15,4 +17,5 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>{
 	Optional<User> findByEmail(String email);
 	
 	Page<User> findAllByUsernameContainingIgnoreCase(String search, Pageable pageable);
+	List<User> findAllByJoinDateAfter(Instant monthStart);
 }

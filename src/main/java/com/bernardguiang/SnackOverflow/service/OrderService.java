@@ -20,16 +20,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.OrderPage;
-import com.bernardguiang.SnackOverflow.dto.request.OrderStatsRequest;
 import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
+import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
 import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
 import com.bernardguiang.SnackOverflow.dto.response.OrderStatsResponse;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
-import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.OrderRepository;
 
 @Service
@@ -43,7 +41,7 @@ public class OrderService {
 	}
 	
 	// Find all this month, year, all
-	public OrderStatsResponse getOrderStats(OrderStatsRequest request) {
+	public OrderStatsResponse getOrderStats(StatsRequest request) {
 
 		Iterable<Order> result = null;
 		switch(request.getRange()) {
