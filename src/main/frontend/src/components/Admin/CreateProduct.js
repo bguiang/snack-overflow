@@ -27,6 +27,7 @@ const CreateProduct = () => {
   const [price, setPrice] = useState(0);
   const [categories, setCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (currentUser) setToken("Bearer " + currentUser.authenticationToken);
@@ -35,6 +36,7 @@ const CreateProduct = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSuccessMessage("");
+    setErrorMessage("");
     try {
       const updateProductRequest = {
         name,
@@ -59,7 +61,24 @@ const CreateProduct = () => {
         history.push(`/admin/products/${response.data.id}`);
       }
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        setErrorMessage(error.response.data.errors[0].defaultMessage);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+        setErrorMessage("Something went wrong. Try again later");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+        setErrorMessage(error.message);
+      }
     }
   };
 
@@ -129,6 +148,9 @@ const CreateProduct = () => {
         </Button>
         <Typography variant="h6" className={classes.success}>
           {successMessage}
+        </Typography>
+        <Typography variant="h6" className={classes.error}>
+          {errorMessage}
         </Typography>
       </form>
     </div>

@@ -43,6 +43,8 @@ const CheckoutForm = ({ clientSecret, token }) => {
   const [shippingPostalCode, setShippingPostalCode] = useState("");
   const [shippingCountry, setShippingCountry] = useState("US");
 
+  const [submitting, setSubmitting] = useState(false);
+
   const confirmPayment = async () => {
     let shipping = {};
 
@@ -96,8 +98,8 @@ const CheckoutForm = ({ clientSecret, token }) => {
 
     if (result.error) {
       // Show error to your customer (e.g., insufficient funds)
-      console.log(result.error.message);
       setPaymentErrorMessage(result.error.message);
+      setSubmitting(false); // only re-activate button here. No need to do so when success
     } else {
       // The payment has been processed!
       if (result.paymentIntent.status === "succeeded") {
@@ -111,7 +113,6 @@ const CheckoutForm = ({ clientSecret, token }) => {
         clearItems();
         history.push("/checkout/success");
       }
-      console.log(result);
     }
   };
 
@@ -120,10 +121,13 @@ const CheckoutForm = ({ clientSecret, token }) => {
     // which would refresh the page.
     event.preventDefault();
 
+    setSubmitting(true);
+
     setPaymentErrorMessage("");
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
+      setSubmitting(false);
       return;
     }
 
@@ -409,7 +413,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
         <Button
           type="submit"
           fullWidth
-          disabled={!stripe}
+          disabled={!stripe && !submitting}
           variant="contained"
           color="primary"
           className={classes.submit}
