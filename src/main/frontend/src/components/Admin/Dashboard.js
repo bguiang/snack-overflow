@@ -43,10 +43,7 @@ const Dashboard = () => {
         headers: { Authorization: token },
       });
       setOrderStats(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getUserStats = async () => {
@@ -58,10 +55,7 @@ const Dashboard = () => {
         headers: { Authorization: token },
       });
       setNewUsers(response.data.newUsers);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getTopSellingProducts = async () => {
@@ -78,10 +72,7 @@ const Dashboard = () => {
         headers: { Authorization: token },
       });
       setTopProducts(response.data.content);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

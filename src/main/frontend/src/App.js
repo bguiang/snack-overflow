@@ -22,7 +22,6 @@ import Checkout from "./components/Checkout/Checkout";
 import CheckoutSuccess from "./components/Checkout/CheckoutSuccess";
 import CartRoute from "./components/Checkout/CheckoutRoute";
 import Contact from "./components/Contact/Contact";
-import Subscriptions from "./components/Subscriptions/Subscriptions";
 import Order from "./components/Account/Order";
 import AdminRoute from "./components/AdminRoute";
 import Admin from "./components/Admin/Admin";
@@ -87,9 +86,6 @@ function App() {
                     </Route>
                     <Route path="/snacks">
                       <Snacks />
-                    </Route>
-                    <Route path="/subscriptions">
-                      <Subscriptions />
                     </Route>
                     <Route path="/contact">
                       <Contact />

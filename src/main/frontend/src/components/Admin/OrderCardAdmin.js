@@ -10,7 +10,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   useMediaQuery,
   MenuItem,
@@ -151,18 +150,6 @@ const OrderCardAdmin = ({ order }) => {
               </Typography>
             </div>
           )}
-          {/* <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {order.status}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem}
-          >
-            ${order.total.toFixed(2)}
-          </Typography> */}
         </CardActionArea>
         <CardActions className={classes.snackCardActions}>
           <UpdateOrder order={order} buttonSize="small" token={token} />
@@ -179,7 +166,7 @@ const UpdateOrder = ({ order, buttonSize, token }) => {
 
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   const submitOrderUpdate = async () => {
     try {
@@ -196,14 +183,9 @@ const UpdateOrder = ({ order, buttonSize, token }) => {
       );
 
       if (200 === response.status) {
-        console.log("REPONSE 200");
-        console.log(response.data);
-        //setSuccessMessage("Update Success!");
         history.push(`/admin/orders/${response.data.id}`);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const handleClickOpen = () => {
@@ -223,7 +205,6 @@ const UpdateOrder = ({ order, buttonSize, token }) => {
       <Button
         size={buttonSize}
         color="primary"
-        // onClick={() => editOrderClick(order.id)}
         onClick={() => handleClickOpen()}
         startIcon={<EditIcon />}
       >

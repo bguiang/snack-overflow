@@ -40,32 +40,25 @@ const ProductsAdmin = () => {
   const [direction, setDirection] = useState("DESC");
 
   useEffect(() => {
-    console.log("Location changed");
     let urlParams = new URLSearchParams(location.search);
-    console.log("urlParams: " + urlParams);
 
     if (urlParams.get("search") !== null) {
       setSearch(urlParams.get("search"));
-      console.log("Search: " + urlParams.get("search"));
     }
 
     if (urlParams.get("page")) {
       let currentPage = parseInt(urlParams.get("page"));
       setPageNumber(currentPage - 1);
       setPageNumberUI(currentPage);
-      console.log("PageUI: " + currentPage);
     }
     if (urlParams.get("sortBy")) {
       setSortBy(urlParams.get("sortBy"));
-      console.log("SortBy: " + urlParams.get("sortBy"));
     }
     if (urlParams.get("direction")) {
       setDirection(urlParams.get("direction"));
-      console.log("Direction: " + urlParams.get("direction"));
     }
     if (urlParams.get("includeOrders")) {
       setIncludeOrders(urlParams.get("includeOrders"));
-      console.log("includeOrders: " + urlParams.get("includeOrders"));
     }
   }, [location]);
 
@@ -138,10 +131,7 @@ const ProductsAdmin = () => {
       });
       setProducts(response.data.content);
       setTotalPages(response.data.totalPages);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   // Call Get Snacks Once
   useEffect(() => {

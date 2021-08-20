@@ -32,6 +32,8 @@ public class ProductDTO
 	
 	private List<String> categories;
 	
+	private boolean deleted;
+	
 	public ProductDTO()
 	{
 		
@@ -50,6 +52,8 @@ public class ProductDTO
 			categoriesDTO.add(category.getName());
 		}
 		this.setCategories(categoriesDTO);
+		
+		this.setDeleted(product.isDeleted());
 	}
 
 	public Long getId() {
@@ -98,6 +102,14 @@ public class ProductDTO
 
 	public void setCategories(List<String> categories) {
 		this.categories = categories;
+	}
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

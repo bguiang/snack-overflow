@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 
 import CardSection from "./CardSection";
-import SnackOverflow from "../../api/SnackOverflow";
 import {
   Card,
   Typography,
@@ -108,8 +107,6 @@ const CheckoutForm = ({ clientSecret, token }) => {
         // execution. Set up a webhook or plugin to listen for the
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
-
-        console.log("Payment Success");
         clearItems();
         history.push("/checkout/success");
       }

@@ -23,6 +23,8 @@ public class FullProductInfo
 	
 	private int unitsSold;
 	
+	private boolean deleted;
+	
 	
 	public FullProductInfo()
 	{
@@ -52,6 +54,7 @@ public class FullProductInfo
 		this.setOrderedItems(orderedItemsDTO);
 		this.createdDate = product.getCreatedDate();
 		this.setUnitsSold(unitsSold);
+		this.setDeleted(product.isDeleted());
 	}
 
 	public Long getId() {
@@ -127,6 +130,12 @@ public class FullProductInfo
 	public void setUnitsSold(int unitsSold) {
 		this.unitsSold = unitsSold;
 	}
-	
-	
+
+	public boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 }

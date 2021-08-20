@@ -26,7 +26,6 @@ const Checkout = () => {
 
   const startCheckoutAndCreatePaymentIntent = async () => {
     try {
-      console.log("Cart");
       const cartInfoRequest = { items: cart };
       const response = await SnackOverflow.post(
         "/stripe/createPaymentIntent",
@@ -36,14 +35,12 @@ const Checkout = () => {
         }
       );
       if (201 === response.status) {
-        console.log(response.data);
         setClientSecret(response.data.client_secret);
         setCartInfo(response.data.cart);
       } else {
         history.push("/");
       }
     } catch (error) {
-      console.log(error);
       history.push("/");
     }
   };

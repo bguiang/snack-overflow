@@ -9,17 +9,13 @@ export default () => {
 
   const getOrders = async () => {
     try {
-      console.log("Calling Get Orders()");
       let response = await SnackOverflow.get("/orders", {
         headers: { Authorization: token },
       });
       if (response.status === 200) {
         setOrders(response.data);
-        console.log(response.data);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   useEffect(() => {
     if (currentUser) setToken("Bearer " + currentUser.authenticationToken);

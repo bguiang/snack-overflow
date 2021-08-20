@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import {
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  CardActionArea,
-  CardMedia,
-} from "@material-ui/core";
+import { Grid, Typography, CardMedia } from "@material-ui/core";
 
 import SnackCard from "../SnackSearch/SnackCard";
 import useStyles from "../../styles";
@@ -24,7 +17,6 @@ const Home = () => {
   const [newestSnacks, setNewestSnacks] = useState([]);
 
   useEffect(() => {
-    console.log("Location changed");
     setSearch(new URLSearchParams(location.search).get("search"));
   }, [location]);
 
@@ -41,9 +33,7 @@ const Home = () => {
         },
       });
       setSnacks(response.data.content);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getNewestSnacks = async () => {
@@ -59,14 +49,11 @@ const Home = () => {
         },
       });
       setNewestSnacks(response.data.content);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   // Call Get Snacks Once
   useEffect(() => {
-    console.log("search updated");
     getPopularSnacks();
     getNewestSnacks();
   }, [search]);

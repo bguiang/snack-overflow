@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,12 +66,19 @@ public class ProductController
 		return productService.findFullProductInfosPaginated(page);
 	}
 	
-	// TODO: test
 	@GetMapping("/api/v1/admin/products/{productId}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public FullProductInfo getProductByIdForAdmin(@PathVariable long productId) 
 	{
 		return productService.findFullProductInfoById(productId);
+	}
+	
+	// Soft Delete
+	// Product Will no longer show up on search but can still be loaded by id
+	@DeleteMapping("/api/v1/admin/products/{productId}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public void deleteProductById(@PathVariable long productId) {
+		productService.deleteById(productId);
 	}
 	
 //	@DeleteMapping

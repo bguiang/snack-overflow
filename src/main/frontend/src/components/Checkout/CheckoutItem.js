@@ -1,13 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import useStyles from "../../styles";
-import {
-  Grid,
-  Typography,
-  Card,
-  CardActions,
-  CardContent,
-  TextField,
-} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 const CheckoutItem = ({ checkoutItem }) => {
   const classes = useStyles();

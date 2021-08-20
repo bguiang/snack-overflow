@@ -11,11 +11,18 @@ import {
   InputAdornment,
   Card,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  useMediaQuery,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SnackOverflow from "../../api/SnackOverflow";
 import { useAuth } from "../../context/AuthContext";
 import { useHistory } from "react-router-dom";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { useTheme } from "@material-ui/core/styles";
 
 const EditProduct = () => {
   const classes = useStyles();
@@ -32,6 +39,10 @@ const EditProduct = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
+
   useEffect(() => {
     if (currentUser) setToken("Bearer " + currentUser.authenticationToken);
   }, [currentUser]);
@@ -47,7 +58,6 @@ const EditProduct = () => {
         description,
         price,
       };
-      console.log(updateProductRequest);
       const response = await SnackOverflow.put(
         "/admin/products",
         updateProductRequest,
@@ -57,27 +67,20 @@ const EditProduct = () => {
       );
 
       if (200 === response.status) {
-        console.log("REPONSE 200");
-        console.log(response.data);
         setSuccessMessage("Update Success!");
       }
     } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
         setErrorMessage(error.response.data.errors[0].defaultMessage);
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log(error.request);
         setErrorMessage("Something went wrong. Try again later");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
         setErrorMessage(error.message);
       }
     }
@@ -92,9 +95,112 @@ const EditProduct = () => {
     }
   }, [snack]);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setConfirmId("");
+  };
+
+  const [confirmId, setConfirmId] = useState("");
+  const [confirmIdError, setConfirmIdError] = useState("");
+
+  const deleteProduct = async () => {
+    try {
+      const response = await SnackOverflow.delete(`/admin/products/${id}`, {
+        headers: { Authorization: token },
+      });
+
+      if (200 === response.status) {
+        history.push("/admin/products");
+      }
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setConfirmIdError(error.response.data.errors[0].defaultMessage);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        setConfirmIdError("Something went wrong. Try again later");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setConfirmIdError(error.message);
+      }
+    }
+  };
+
+  const handleConfirmDelete = (event) => {
+    event.preventDefault();
+    setConfirmIdError("");
+    if (confirmId == snack.id) {
+      deleteProduct();
+    } else {
+      setConfirmIdError("ID does not match match");
+    }
+  };
+
+  if (snack.deleted) {
+    return (
+      <div>
+        <div className={classes.cartHeader}>
+          <h2 className={classes.error}>Product #{id} no longer exists</h2>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
-      <h2 className={classes.cartHeaderTitle}>Edit Product</h2>
+      <div className={classes.cartHeader}>
+        <h2 className={classes.cartHeaderTitle}>Product #{id}</h2>
+        <Button
+          className={classes.error}
+          size="small"
+          onClick={handleClickOpen}
+          startIcon={<DeleteForeverIcon />}
+        >
+          Delete
+        </Button>
+        <Dialog
+          fullScreen={fullScreen}
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">
+            {`Confirm delete by entering the Product ID`}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="confirmId"
+              label={`Enter '${id}' to confirm`}
+              name="confirmId"
+              autoComplete="false"
+              onChange={(event) => {
+                setConfirmId(event.target.value);
+              }}
+              helperText={confirmIdError}
+              error={confirmIdError ? true : false}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
       <form className={classes.form} onSubmit={handleSubmit} noValidate>
         <TextField
           variant="outlined"
@@ -142,7 +248,6 @@ const EditProduct = () => {
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
           onChange={(event) => {
-            console.log("Price changed: " + event.target.value);
             setPrice(event.target.value);
           }}
         />
@@ -185,8 +290,6 @@ const Images = ({ images, setImages }) => {
     arrayUpdate[index] = value;
     setImages(arrayUpdate);
   };
-
-  console.log(images.length);
 
   return (
     <div className={classes.imageSection}>

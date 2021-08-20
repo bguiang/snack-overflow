@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -30,19 +29,16 @@ const OrderAdmin = () => {
   useEffect(() => {
     const getOrder = async () => {
       try {
-        console.log("Order ID: " + id);
         const response = await SnackOverflow.get(`/admin/orders/${id}`, {
           headers: { Authorization: token },
         });
 
         if (response.status === 200) {
-          console.log(response.data);
           setOrder(response.data);
         } else {
           history.push("/admin/orders");
         }
       } catch (error) {
-        console.log(error);
         history.push("/admin/orders");
       }
     };
@@ -53,7 +49,6 @@ const OrderAdmin = () => {
   }, [id, token]);
 
   const orderItemClick = (id) => {
-    console.log("Item Clicked: " + id);
     history.push(`/admin/products/${id}`);
   };
 

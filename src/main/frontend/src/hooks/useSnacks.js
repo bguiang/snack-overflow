@@ -10,10 +10,7 @@ export default (search) => {
         params: { search: search, pageSize: 9 },
       });
       setSnacks(response.data.content);
-      //console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   // Call Get Snacks Once

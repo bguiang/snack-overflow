@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, CardActionArea, Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { useAuth } from "../../context/AuthContext";
 import useStyles from "../../styles";

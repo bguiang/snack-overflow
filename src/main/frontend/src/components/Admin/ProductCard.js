@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import useStyles from "../../styles";
 import {
   Grid,
@@ -9,7 +9,6 @@ import {
   CardContent,
   CardMedia,
   Button,
-  IconButton,
 } from "@material-ui/core";
 
 import { useHistory } from "react-router-dom";

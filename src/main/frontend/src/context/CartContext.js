@@ -1,5 +1,4 @@
 import React, { useContext, createContext, useEffect, useReducer } from "react";
-import SnackOverflow from "../api/SnackOverflow";
 
 const SNACK_OVERFLOW_CART = "snackoverflow-cart";
 
@@ -74,7 +73,6 @@ const cartReducer = (state, action) => {
         if (localCartData !== null) state = JSON.parse(localCartData);
         else state = [];
       } catch (err) {
-        console.log(err);
         state = [];
       }
       return state;

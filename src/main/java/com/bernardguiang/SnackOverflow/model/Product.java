@@ -40,6 +40,8 @@ public class Product {
 	@ElementCollection
 	private List<String> images;
 	
+	private boolean deleted = Boolean.FALSE;
+	
 	// Category has the mappedBy attribute on its @ManyToMany annotation
 	// This means that the Product is the owner in the relationship
 	// Changes to Product will cascade to the Category as well
@@ -126,6 +128,14 @@ public class Product {
 
 	public void setCartItem(List<CartItem> cartItem) {
 		this.cartItem = cartItem;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

@@ -19,7 +19,6 @@ const ProductInfo = () => {
 
   useEffect(() => {
     if (product !== null) {
-      console.log(product.orderedItems);
       setOrderedItems(product.orderedItems);
     }
   }, [product]);
@@ -31,16 +30,21 @@ const ProductInfo = () => {
   return (
     <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
+        {product.deleted ? (
+          <h2 className={classes.error}>This product is no longer available</h2>
+        ) : null}
         <Grid item xs={12} key="title" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>Product Information</h2>
-          <Button
-            size="large"
-            color="primary"
-            onClick={() => editProductClick(product)}
-            startIcon={<EditIcon />}
-          >
-            Edit
-          </Button>
+          {product.deleted ? null : (
+            <Button
+              size="large"
+              color="primary"
+              onClick={() => editProductClick(product)}
+              startIcon={<EditIcon />}
+            >
+              Edit
+            </Button>
+          )}
         </Grid>
         <Grid item xs={12} sm={12} title="image">
           {product.images ? (

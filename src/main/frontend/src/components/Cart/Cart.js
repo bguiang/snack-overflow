@@ -38,7 +38,6 @@ const Cart = () => {
           setCartInfo(response.data);
         }
       } catch (error) {
-        console.log(error);
         setCartInfo({ items: [], total: 0 });
       }
     };

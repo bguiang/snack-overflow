@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { Route, Redirect } from "react-router-dom";
 import jwt_decode from "jwt-decode";

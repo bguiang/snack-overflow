@@ -86,26 +86,15 @@ public class ProductService {
 				.orElseThrow(() -> new IllegalStateException("Could not find product " + id));
 		return new ProductDTO(product);
 	}
-
-//	public Page<ProductDTO> findProductsPaginated(ProductPage page) {
-//		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
-//		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
-//
-//		Page<Product> result = productRepository.findAllByNameContainingIgnoreCase(page.getSearch(), pageable);
-//
-//		// Returns a new Page with the content of the current one mapped by the given
-//		// Function.
-//		Page<ProductDTO> dtoPage = result.map(new Function<Product, ProductDTO>() {
-//			@Override
-//			public ProductDTO apply(Product entity) {
-//				ProductDTO dto = new ProductDTO(entity);
-//				return dto;
-//			}
-//		});
-//
-//		return dtoPage;
-//	}
 	
+	public void deleteById(long id) {
+		Product product = productRepository.findById(id)
+				.orElseThrow(() -> new IllegalStateException("Could not find product " + id));
+		
+		product.setDeleted(true);
+		
+		productRepository.save(product);
+	}
 	
 	public Page<ProductDTO> findProductsPaginated(ProductPage page) {
 		Sort sort = null;

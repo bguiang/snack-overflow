@@ -8,7 +8,6 @@ const OrderCard = ({ order }) => {
   const history = useHistory();
 
   const itemClick = (id) => {
-    console.log("Item Clicked: " + id);
     history.push(`/account/orders/${id}`);
   };
   return (

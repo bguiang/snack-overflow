@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import useStyles from "../../styles";
@@ -177,14 +175,12 @@ const SignUp = ({ classes }) => {
 
     // Email
     if (!validator.isEmail(email)) {
-      console.log("Invalid Email: " + email);
       setEmailError("Please use a valid email");
       isValid = false;
     }
 
     // Full Name
     if (validator.isEmpty(fullName, { ignore_whitespace: true })) {
-      console.log("Invalid FullName: " + fullName);
       setFullNameError("Please enter your full name");
       isValid = false;
     }
@@ -195,7 +191,6 @@ const SignUp = ({ classes }) => {
       validator.contains(username, " ") ||
       !validator.isLength(username, { min: 6, max: 20 })
     ) {
-      console.log("Username is invalid: " + username);
       setUsernameError(
         "Username must be 6-20 characters long and contain only letters and numbers and no spaces"
       );
@@ -213,7 +208,6 @@ const SignUp = ({ classes }) => {
       validator.contains(password, " ") ||
       !validator.isLength(password, { min: 6, max: 20 })
     ) {
-      console.log("Password is invalid: " + password);
       setPasswordError(
         "Password must be 6-20 characters long including at least one lowercase letter, one uppercase letter, one number, and one symbol. No spaces"
       );
@@ -222,7 +216,6 @@ const SignUp = ({ classes }) => {
 
     // PasswordRepeat
     if (password !== passwordRepeat) {
-      console.log("Password does not match: " + passwordRepeat);
       setPasswordRepeatError("Passwords do not match");
       isValid = false;
     }
@@ -241,17 +234,12 @@ const SignUp = ({ classes }) => {
     } catch (error) {
       if (error.response) {
         // Request made and server responded
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
         setSignupError(error.response.data.message);
       } else if (error.request) {
         // The request was made but no response was received
-        console.log(error.request);
         setSignupError("Something went wrong. Try again later");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
         setSignupError("Something went wrong. Try again later");
       }
     }

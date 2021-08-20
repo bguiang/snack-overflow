@@ -45,7 +45,6 @@ const CreateProduct = () => {
         price,
         categories,
       };
-      console.log(updateProductRequest);
       const response = await SnackOverflow.post(
         "/admin/products",
         updateProductRequest,
@@ -55,8 +54,6 @@ const CreateProduct = () => {
       );
 
       if (201 === response.status) {
-        console.log("REPONSE 200");
-        console.log(response.data);
         setSuccessMessage("Update Success!");
         history.push(`/admin/products/${response.data.id}`);
       }
@@ -64,19 +61,14 @@ const CreateProduct = () => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
         setErrorMessage(error.response.data.errors[0].defaultMessage);
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log(error.request);
         setErrorMessage("Something went wrong. Try again later");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
         setErrorMessage(error.message);
       }
     }
@@ -132,7 +124,6 @@ const CreateProduct = () => {
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
           onChange={(event) => {
-            console.log("Price changed: " + event.target.value);
             setPrice(event.target.value);
           }}
         />
@@ -175,8 +166,6 @@ const Images = ({ images, setImages }) => {
     arrayUpdate[index] = value;
     setImages(arrayUpdate);
   };
-
-  console.log(images.length);
 
   return (
     <div className={classes.imageSection}>

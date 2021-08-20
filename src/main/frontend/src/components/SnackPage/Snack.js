@@ -9,9 +9,7 @@ import {
   Typography,
   TextField,
   CardActions,
-  CardMedia,
   Button,
-  Paper,
 } from "@material-ui/core";
 import { useCart } from "../../context/CartContext";
 import Carousel from "react-material-ui-carousel";
@@ -59,30 +57,34 @@ const Snack = () => {
           <Typography variant="body2" color="textSecondary" component="p">
             {snack.description}
           </Typography>
-          <CardActions className={classes.snackCardActions}>
-            <TextField
-              className={classes.snackCardQuantity}
-              label="Quantity"
-              variant="outlined"
-              size="small"
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(event) => {
-                let val = parseInt(event.target.value);
-                if (isNaN(val)) val = 1;
-                if (val < 1) val = 1;
-                setQuantity(val);
-              }}
-            />
-            <Button
-              size="small"
-              color="primary"
-              onClick={() => addToCartClick(snack)}
-            >
-              Add To Cart
-            </Button>
-          </CardActions>
+          {snack.deleted ? (
+            <h2 className={classes.error}>This snack is no longer available</h2>
+          ) : (
+            <CardActions className={classes.snackCardActions}>
+              <TextField
+                className={classes.snackCardQuantity}
+                label="Quantity"
+                variant="outlined"
+                size="small"
+                type="number"
+                min={1}
+                value={quantity}
+                onChange={(event) => {
+                  let val = parseInt(event.target.value);
+                  if (isNaN(val)) val = 1;
+                  if (val < 1) val = 1;
+                  setQuantity(val);
+                }}
+              />
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => addToCartClick(snack)}
+              >
+                Add To Cart
+              </Button>
+            </CardActions>
+          )}
         </Grid>
       </Grid>
     </div>

@@ -1,17 +1,10 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useHistory,
-  Link,
-} from "react-router-dom";
+import { BrowserRouter as Router, useHistory } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
   Typography,
   Box,
-  TextField,
   Container,
   Button,
   InputBase,

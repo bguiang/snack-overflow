@@ -14,8 +14,6 @@ import com.bernardguiang.SnackOverflow.model.Product;
 @Repository //TODO: look into JPA specification
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long>{//, JpaSpecificationExecutor<Product>{
 	
-	Page<Product> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
-	
 	// JPA Supports Pagination with native queries by using countQuery but does not support execution of dynamic sorting for native queries
 	// JPQL doesn't only supports SELECT inside WHEN and HAVING clauses so this isnt possible there either.
 	// For now, just manually handle sorting with JpaSort.unsafe()
@@ -36,8 +34,9 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 			+ "AND ORDERS.STATUS != 'REFUNDED'"
 		+ ") AS UNITS_SOLD "
 		+ "FROM PRODUCT "
-		+ "WHERE UPPER(NAME) LIKE UPPER(CONCAT('%',:searchText,'%'))"
-		,countQuery = "SELECT count(*) FROM PRODUCT WHERE UPPER(NAME) LIKE UPPER(CONCAT('%',:searchText,'%'))",
+		+ "WHERE UPPER(NAME) LIKE UPPER(CONCAT('%',:searchText,'%')) "
+		+ "AND DELETED = FALSE"
+		,countQuery = "SELECT count(*) FROM PRODUCT WHERE UPPER(NAME) LIKE UPPER(CONCAT('%',:searchText,'%')) AND DELETED = FALSE",
 		nativeQuery = true
 	)
 	Page<Product> findAllBySearchTextAndIncludeOrdersAfter(@Param("searchText") String searchText, @Param("start")Instant start, Pageable pageable);

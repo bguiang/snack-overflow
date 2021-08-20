@@ -5,12 +5,7 @@ import { useHistory } from "react-router-dom";
 
 const OrderItem = ({ orderItem, orderItemClick }) => {
   const classes = useStyles();
-  const history = useHistory();
 
-  // const itemClick = (id) => {
-  //   console.log("Item Clicked: " + id);
-  //   history.push(`/snacks/${id}`);
-  // };
   return (
     <div
       onClick={() => orderItemClick(orderItem.product.id)}
