@@ -14,10 +14,10 @@ public class OrderStatsResponse {
 	
 	public OrderStatsResponse(int successfulOrders, int unsuccessfulOrders, BigDecimal totalIncome,
 			BigDecimal unsuccessfulPayments) {
-		this.successfulOrders = successfulOrders;
-		this.unsuccessfulOrders = unsuccessfulOrders;
-		this.totalIncome = totalIncome;
-		this.unsuccessfulPayments = unsuccessfulPayments;
+		this.setSuccessfulOrders(successfulOrders);
+		this.setUnsuccessfulOrders(unsuccessfulOrders);
+		this.setTotalIncome(totalIncome);
+		this.setUnsuccessfulPayments(unsuccessfulPayments);
 	}
 	public int getSuccessfulOrders() {
 		return successfulOrders;

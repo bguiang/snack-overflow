@@ -22,16 +22,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldPass() {
 		// Given
-		String email = "test@email.com";
-		String fullName = "full name";
-		String username = "username";
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@email.com");
+		request.setFullName("full name");
+		request.setUsername("username");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -43,17 +38,12 @@ class RegisterRequestTest {
 	
 	@Test
 	void registerRequestValidationShouldFailIfEmailIsNull() {
-		// Given
-		String email = null;
-		String fullName = "full name";
-		String username = "username";
-		String password = "Password123!";
-		
+		// Given	
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail(null);
+		request.setFullName("full name");
+		request.setUsername("username");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -67,17 +57,12 @@ class RegisterRequestTest {
 	
 	@Test
 	void registerRequestValidationShouldFailIfEmailIsBlank() {
-		// Given
-		String email = "";
-		String fullName = "full name";
-		String username = "username";
-		String password = "Password123!";
-		
+		// Given	
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("");
+		request.setFullName("full name");
+		request.setUsername("username");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -92,16 +77,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldFailIfEmailIsInvalid() {
 		// Given
-		String email = "notanEmail";
-		String fullName = "full name";
-		String username = "username";
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("notanEmail");
+		request.setFullName("full name");
+		request.setUsername("username");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -116,16 +96,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldFailIfFullNameIsNull() {
 		// Given
-		String email = "test@gmail.com";
-		String fullName = null;
-		String username = "username";
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName(null);
+		request.setUsername("username");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -140,16 +115,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldFailIfFullNameIsBlank() {
 		// Given
-		String email = "test@gmail.com";
-		String fullName = "   ";
-		String username = "username";
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("   ");
+		request.setUsername("username");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -164,16 +134,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldFailIfUsernameIsNull() {
 		// Given
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = null;
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername(null);
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -188,16 +153,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldFailIfUsernameLengthIsLessThanSix() {
 		// Given
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "abc";
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("abc");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -212,16 +172,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldFailIfUsernameLengthIsGreaterThanTwenty() {
 		// Given
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "123456789012345678901";
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("123456789012345678901");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -236,16 +191,11 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfUsernameContainsNonAlphabeticOrNonNumericCharacter() {
 		// Given
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "abcdefg$";
-		String password = "Password123!";
-		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("abcdefg$");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -260,21 +210,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordIsNull() {
 		// Given
-		String expectedPasswordViolationMessage = "Password is null";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = null;
+		expectedViolationMessages.add("Password is null");
 		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword(null);
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -291,21 +235,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordLengthIsLessThanSix() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must be 6 or more characters in length.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = "Aa!2";
-		
+		expectedViolationMessages.add("Password must be 6 or more characters in length.");
+
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword("Aa!2");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -323,21 +261,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordLengthIsMoreThanTwenty() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must be no more than 20 characters in length.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = "Aa!200000000000000000";
+		expectedViolationMessages.add("Password must be no more than 20 characters in length.");
 		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword("Aa!200000000000000000");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -355,21 +287,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneUppercase() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more uppercase characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = "password123!";
+		expectedViolationMessages.add("Password must contain 1 or more uppercase characters.");
 		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword("password123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -387,21 +313,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneLowercase() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more lowercase characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = "PASSWORD123!";
-		
+		expectedViolationMessages.add("Password must contain 1 or more lowercase characters.");
+	
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword("PASSWORD123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -419,21 +339,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneDigit() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more digit characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = "Password!";
-		
+		expectedViolationMessages.add("Password must contain 1 or more digit characters.");
+	
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword("Password!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -451,21 +365,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneSpecialCharacter() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more special characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = "Password123";
-		
+		expectedViolationMessages.add("Password must contain 1 or more special characters.");
+
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword("Password123");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);
@@ -483,21 +391,15 @@ class RegisterRequestTest {
 	@Test
 	void registerRequestValidationShouldShouldFailIfPasswordDoesNotContainContainsWhitespace() {
 		// Given
-		String expectedPasswordViolationMessage = "Password contains a whitespace character.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String email = "test@gmail.com";
-		String fullName = "Full Name";
-		String username = "username";
-		String password = "P assword123!";
+		expectedViolationMessages.add("Password contains a whitespace character.");
 		
 		RegisterRequest request = new RegisterRequest();
-		request.setEmail(email);
-		request.setFullName(fullName);
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setEmail("test@gmail.com");
+		request.setFullName("Full Name");
+		request.setUsername("username");
+		request.setPassword("P assword123!");
 		
 		// When
 		Set<ConstraintViolation<RegisterRequest>> violations = validator.validate(request);

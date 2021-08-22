@@ -144,7 +144,6 @@ class OrderServiceTest {
 		assertEquals(userId, orderResponse.getUserId());
 		assertEquals(total, orderResponse.getTotal());
 		assertEquals(status, orderResponse.getStatus());
-		assertEquals(userId, orderResponse.getUserId());
 		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
 
 		// ... compare billing
@@ -179,7 +178,6 @@ class OrderServiceTest {
 		assertEquals(item1.getPrice(), responseItem1.getPrice());
 		assertEquals(item1.getQuantity(), responseItem1.getQuantity());
 		assertEquals(item1.getProduct().getId(), responseItem1.getProduct().getId());
-
 		assertEquals(item2.getId(), responseItem2.getId());
 		assertEquals(item2.getPrice(), responseItem2.getPrice());
 		assertEquals(item2.getQuantity(), responseItem2.getQuantity());

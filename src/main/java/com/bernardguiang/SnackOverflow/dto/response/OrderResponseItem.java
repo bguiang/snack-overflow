@@ -11,10 +11,7 @@ public class OrderResponseItem {
 	private ProductDTO product;
 	private BigDecimal price;
 	private int quantity;
-	
-	public OrderResponseItem() {
-	}
-	
+
 	public OrderResponseItem(OrderItem orderItem) {
 		this.setId(orderItem.getId());
 		ProductDTO productDTO = new ProductDTO(orderItem.getProduct());

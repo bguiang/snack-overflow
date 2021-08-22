@@ -50,7 +50,12 @@ class ShippingDetailsDTOTest {
 		Long orderId = 2L;
 		order.setId(orderId);
 		
-		ShippingDetails shippingDetails = new ShippingDetails(id, name, phone, address, order);
+		ShippingDetails shippingDetails = new ShippingDetails();
+		shippingDetails.setId(id);
+		shippingDetails.setName(name);
+		shippingDetails.setPhone(phone);
+		shippingDetails.setAddress(address);
+		shippingDetails.setOrder(order);
 		
 		// When
 		ShippingDetailsDTO dto = new ShippingDetailsDTO(shippingDetails);

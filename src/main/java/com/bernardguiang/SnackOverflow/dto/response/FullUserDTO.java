@@ -19,10 +19,6 @@ public class FullUserDTO {
 	private Address address;
 	private Instant joinDate;
 	
-	public FullUserDTO() {
-		
-	}
-	
 	public FullUserDTO(User user) {
 		this.setId(user.getId());
 		this.setUsername(user.getUsername());
@@ -35,6 +31,8 @@ public class FullUserDTO {
 		for(Order order : orders) {
 			orderDTOs.add(new OrderDTO(order));
 		}
+		
+		this.setAddress(user.getAddress());
 		
 		this.setJoinDate(user.getJoinDate());
 		

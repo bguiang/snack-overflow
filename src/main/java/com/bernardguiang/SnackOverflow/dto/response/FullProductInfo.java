@@ -24,13 +24,7 @@ public class FullProductInfo
 	private int unitsSold;
 	
 	private boolean deleted;
-	
-	
-	public FullProductInfo()
-	{
-		
-	}
-	
+
 	public FullProductInfo(Product product) {
 		this.setId(product.getId());
 		this.setName(product.getName());
@@ -52,7 +46,7 @@ public class FullProductInfo
 			unitsSold += orderItem.getQuantity();
 		}
 		this.setOrderedItems(orderedItemsDTO);
-		this.createdDate = product.getCreatedDate();
+		this.setCreatedDate(product.getCreatedDate());
 		this.setUnitsSold(unitsSold);
 		this.setDeleted(product.isDeleted());
 	}
@@ -113,8 +107,6 @@ public class FullProductInfo
 		this.orderedItems = orderedItems;
 	}
 	
-	
-
 	public Instant getCreatedDate() {
 		return createdDate;
 	}

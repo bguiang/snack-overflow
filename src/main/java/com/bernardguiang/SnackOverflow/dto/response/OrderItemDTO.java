@@ -11,20 +11,10 @@ public class OrderItemDTO {
 	
 	private int quantity;
 	private BigDecimal price;
-	
-	// Replace Order with Order Id and Order Create Date
-	// private Order order;
 	private Long orderId;
 	private Instant orderCreatedDate;
 	private OrderStatus orderStatus;
-	
-	// Replace Product with ProductId
-	//	private Product product;
 	private Long productId;
-	
-	public OrderItemDTO() {
-
-	}
 	
 	public OrderItemDTO(OrderItem orderItem) {
 		this.setId(orderItem.getId());

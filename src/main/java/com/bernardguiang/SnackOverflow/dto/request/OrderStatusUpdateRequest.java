@@ -5,9 +5,9 @@ import javax.validation.constraints.NotNull;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
 
 public class OrderStatusUpdateRequest {
-	@NotNull
-	private long id;
-	@NotNull
+	@NotNull(message = "ID cannot be null")
+	private Long id;
+	@NotNull(message = "OrderStatus cannot be null")
 	private OrderStatus status;
 	
 	public OrderStatusUpdateRequest() {

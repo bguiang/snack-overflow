@@ -10,7 +10,6 @@ public class OrderPage {
 	private String sortBy = "createdDate";
 	
 	public OrderPage() {
-		super();
 	}
 	
 	public String getSearch() {

@@ -4,8 +4,7 @@ public class UserStatsResponse {
 	int newUsers;
 
 	public UserStatsResponse(int newUsers) {
-		super();
-		this.newUsers = newUsers;
+		this.setNewUsers(newUsers);
 	}
 
 	public int getNewUsers() {
