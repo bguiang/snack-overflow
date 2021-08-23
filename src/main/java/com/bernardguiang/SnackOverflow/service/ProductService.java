@@ -117,7 +117,8 @@ public class ProductService {
 		}
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
-		Page<Product> result = productRepository.findAllBySearchTextAndIncludeOrdersAfter(page.getSearch(), null, pageable);;
+		Instant beforeAll = Instant.ofEpochMilli(0);
+		Page<Product> result = productRepository.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(page.getSearch(), beforeAll, pageable);;
 
 		Page<ProductDTO> dtoPage = result.map(new Function<Product, ProductDTO>() {
 			@Override
@@ -130,8 +131,7 @@ public class ProductService {
 
 		return dtoPage;
 	}
-	
-	
+
 
 	public Page<FullProductInfo> findFullProductInfosPaginated(ProductPage page) {
 		Sort sort = null;
@@ -169,13 +169,14 @@ public class ProductService {
 		if (page.getItemsSold().equalsIgnoreCase("month")) {
 			LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
 			Instant start = firstDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant();
-			result = productRepository.findAllBySearchTextAndIncludeOrdersAfter(page.getSearch(), start, pageable);
+			result = productRepository.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(page.getSearch(), start, pageable);
 		} else if (page.getItemsSold().equalsIgnoreCase("year")) {
 			LocalDate firstDayOfYear = LocalDate.now().with(firstDayOfYear());
 			Instant start = firstDayOfYear.atStartOfDay(ZoneId.systemDefault()).toInstant();
-			result = productRepository.findAllBySearchTextAndIncludeOrdersAfter(page.getSearch(), start, pageable);
+			result = productRepository.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(page.getSearch(), start, pageable);
 		} else { // ALL
-			result = productRepository.findAllBySearchTextAndIncludeOrdersAfter(page.getSearch(), null, pageable);
+			Instant beforeAll = Instant.ofEpochMilli(0);
+			result = productRepository.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(page.getSearch(), beforeAll, pageable);
 		}
 
 		Page<FullProductInfo> dtoPage = result.map(new Function<Product, FullProductInfo>() {

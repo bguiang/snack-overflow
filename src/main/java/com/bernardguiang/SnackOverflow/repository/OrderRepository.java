@@ -17,6 +17,5 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 	Optional<Order> findByPaymentIntentId(String paymentIntentId);
 	Iterable<Order> findAllByUserId(Long userId);
 	Optional<Order> findByIdAndUserId(Long id, Long userId);
-	
 	Page<Order> findAllByUserUsernameContainingIgnoreCase(String search, Pageable pageable);
 }

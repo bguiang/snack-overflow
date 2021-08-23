@@ -63,7 +63,6 @@ public class UserService {
 		return new UserStatsResponse(result.size());
 	}
 
-	// TODO: test
 	public Page<UserDTO> findUsersPaginated(UserPage page) {
 		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
@@ -83,7 +82,6 @@ public class UserService {
 		return dtoPage;
 	}
 
-	// TODO: test
 	public UserDTO findByUsername(String username) {
 		Optional<User> user = userRepository.findByUsername(username);
 		user.orElseThrow(() -> new IllegalStateException("Could not find user: " + username));
@@ -91,7 +89,6 @@ public class UserService {
 		return userDTO;
 	}
 
-	// TODO: test.
 	public FullUserDTO findById(Long userId) {
 		Optional<User> user = userRepository.findById(userId);
 		user.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + userId));

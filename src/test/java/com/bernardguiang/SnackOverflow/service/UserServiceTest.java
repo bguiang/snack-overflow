@@ -29,23 +29,6 @@ class UserServiceTest {
 		userRepository = Mockito.mock(UserRepository.class);
 		underTest = new UserService(userRepository);
 	}
-
-	@Test
-	void itShouldFindAll() {
-		// Given
-		List<User> users = new ArrayList<>();
-		users.add(new User());
-		users.add(new User());
-		users.add(new User());
-		
-		
-		// When
-		when(userRepository.findAll()).thenReturn(users);
-		List<UserDTO> userDTOs = underTest.findAll();
-		
-		// Then
-		assertEquals(3, userDTOs.size());
-	}
 	
 	@Test
 	void itShouldFindFindByUsername() {

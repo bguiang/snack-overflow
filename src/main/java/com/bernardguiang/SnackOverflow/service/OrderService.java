@@ -88,7 +88,6 @@ public class OrderService {
 		return new OrderStatsResponse(successfulOrders, unsuccessfulOrders, totalIncome, unsuccessfulPayments);
 	}
 
-	// TODO: test
 	public Page<OrderDTO> findOrdersPaginated(OrderPage page) {
 		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
@@ -107,7 +106,6 @@ public class OrderService {
 		return dtoPage;
 	}
 	
-	// TODO: test
 	public OrderDTO findByIdIncludUserInfo(Long id) {
 		Order order = orderRepository.findById(id)
 			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id));
@@ -131,7 +129,6 @@ public class OrderService {
 		return orderDTOs;
 	}
 	
-	//TODO: test
 	public OrderResponse updateOrderStatus(OrderStatusUpdateRequest request) {
 		// Find order first
 		Long id = request.getId();

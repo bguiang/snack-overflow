@@ -39,5 +39,5 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 		,countQuery = "SELECT count(*) FROM PRODUCT WHERE UPPER(NAME) LIKE UPPER(CONCAT('%',:searchText,'%')) AND DELETED = FALSE",
 		nativeQuery = true
 	)
-	Page<Product> findAllBySearchTextAndIncludeOrdersAfter(@Param("searchText") String searchText, @Param("start")Instant start, Pageable pageable);
+	Page<Product> findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(@Param("searchText") String searchText, @Param("start")Instant start, Pageable pageable);
 }

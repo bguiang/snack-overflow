@@ -7,40 +7,38 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.model.Category;
-import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.CategoryRepository;
+import com.bernardguiang.SnackOverflow.repository.OrderItemRepository;
 import com.bernardguiang.SnackOverflow.repository.ProductRepository;
 
 class ProductServiceTest {
 
 	private ProductService underTest;
-
+	
 	private ProductRepository productRepository;
 	private CategoryRepository categoryRepository;
+	private OrderItemRepository orderItemRepository;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		productRepository = Mockito.mock(ProductRepository.class);
 		categoryRepository = Mockito.mock(CategoryRepository.class);
+		orderItemRepository = Mockito.mock(OrderItemRepository.class);
 		
-		underTest = new ProductService(productRepository, categoryRepository);
+		underTest = new ProductService(productRepository, categoryRepository, orderItemRepository);
 	}
 
 	@Test
@@ -152,64 +150,5 @@ class ProductServiceTest {
 		assertThrows(IllegalStateException.class,
 				()->underTest.findById(id),
 				"Could not find product " + id);
-	}
-	
-	@Test
-	void itShouldFindAll() {
-		
-		// Given
-		List<Product> products = new ArrayList<>();
-		Product p1 = new Product();
-		Product p2 = new Product();
-		products.add(p1);
-		products.add(p2);
-		
-		// When
-		when(productRepository.findAll()).thenReturn(products);
-		
-		// Then
-		List<ProductDTO> productDTOs = underTest.findAll();
-		assertEquals(2, productDTOs.size());
-	}
-	
-	@Test
-	void itShouldFindAllByCategoryName() {
-		
-		// Given
-		String categoryName = "Japan";
-		Category category = new Category();
-		category.setId(1L);
-		category.setName(categoryName);
-		
-		List<Product> products = new ArrayList<>();
-		Product p1 = new Product();
-		Product p2 = new Product();
-		products.add(p1);
-		products.add(p2);
-		
-		category.setProducts(new HashSet<>(products));
-		
-		Optional<Category> categoryOptional = Optional.of(category);
-		
-		// When
-		when(categoryRepository.findByName(categoryName)).thenReturn(categoryOptional);
-		
-		// Then
-		List<ProductDTO> productDTOs = underTest.findAllByCategoryName(categoryName);
-		assertEquals(2, productDTOs.size());
-	}
-	
-	@Test
-	void FindAllByCategoryShouldThrowAnExceptionWhenCategoryDoesNotExist() {
-		// Given
-		String categoryName = "Japan";
-
-		// When
-		when(categoryRepository.findByName(categoryName)).thenReturn(Optional.ofNullable(null));
-		
-		// Then
-		assertThrows(IllegalStateException.class,
-			()-> underTest.findAllByCategoryName(categoryName),
-			"Could not find category Japan");
 	}
 }

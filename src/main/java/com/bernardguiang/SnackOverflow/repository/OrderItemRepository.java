@@ -11,8 +11,6 @@ import com.bernardguiang.SnackOverflow.model.OrderStatus;
 
 @Repository
 public interface OrderItemRepository extends CrudRepository<OrderItem, Long>{
-
-	Iterable<OrderItem> findAllByProductIdAndOrderCreatedDateAfter(Long productId, Instant date);
 	
 	Iterable<OrderItem> findAllByProductIdAndOrderStatusNotIn(Long productId, List<OrderStatus> excludeStatuses);
 	
