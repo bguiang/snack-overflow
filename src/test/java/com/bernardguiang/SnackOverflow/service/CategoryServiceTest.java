@@ -32,14 +32,12 @@ class CategoryServiceTest {
 	@Test
 	void itShouldSave() {
 		// Given
-		String name = "Japan";
 		CategoryDTO toSave = new CategoryDTO();
-		toSave.setName(name);
-		
-		Long savedId = 5L;
+		toSave.setName("Japan");
+
 		Category saved = new Category();
-		saved.setId(savedId);
-		saved.setName(name);
+		saved.setId(5L);
+		saved.setName("Japan");
 		// When
 		when(categoryRepository
 				.save(Mockito.argThat(
@@ -48,8 +46,8 @@ class CategoryServiceTest {
 		CategoryDTO savedDTO = underTest.save(toSave);
 		
 		// Then
-		assertEquals(savedId, savedDTO.getId());
-		assertEquals(name, savedDTO.getName());
+		assertEquals(5L, savedDTO.getId());
+		assertEquals("Japan", savedDTO.getName());
 	}
 	
 	@Test

@@ -44,22 +44,18 @@ class RefreshTokenRepositoryIntegrationTest {
 		u2.setRole(ApplicationUserRole.CUSTOMER.name());
 		user2 = userRepository.save(u2);
 		
-		String token1 = "token 1";
-		String token2 = "token 2";
-		String token3 = "token 3";
-		
 		RefreshToken r1 = new RefreshToken();
-		r1.setToken(token1);
+		r1.setToken("token 1");
 		r1.setCreatedDate(Instant.now());
 		r1.setUser(user1);
 		
 		RefreshToken r2 = new RefreshToken();
-		r2.setToken(token2);
+		r2.setToken("token 2");
 		r2.setCreatedDate(Instant.now());
 		r2.setUser(user2);
 		
 		RefreshToken r3 = new RefreshToken();
-		r3.setToken(token3);
+		r3.setToken("token 3");
 		r3.setCreatedDate(Instant.now());
 		r3.setUser(user2);
 		

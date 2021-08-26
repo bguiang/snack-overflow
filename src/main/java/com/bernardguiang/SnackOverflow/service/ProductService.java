@@ -118,7 +118,7 @@ public class ProductService {
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
 		Instant beforeAll = Instant.ofEpochMilli(0);
-		Page<Product> result = productRepository.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(page.getSearch(), beforeAll, pageable);;
+		Page<Product> result = productRepository.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(page.getSearch(), beforeAll, pageable);
 
 		Page<ProductDTO> dtoPage = result.map(new Function<Product, ProductDTO>() {
 			@Override
@@ -165,10 +165,11 @@ public class ProductService {
 		}
 		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
 
+		// TODO: this would be much easier to test if we extracted the use of LocalDate.now out and just pass in a date to use
 		Page<Product> result = null;
 		if (page.getItemsSold().equalsIgnoreCase("month")) {
-			LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
-			Instant start = firstDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant();
+			LocalDate firstDayThisMonth = LocalDate.now().withDayOfMonth(1);
+			Instant start = firstDayThisMonth.atStartOfDay(ZoneId.systemDefault()).toInstant();
 			result = productRepository.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(page.getSearch(), start, pageable);
 		} else if (page.getItemsSold().equalsIgnoreCase("year")) {
 			LocalDate firstDayOfYear = LocalDate.now().with(firstDayOfYear());

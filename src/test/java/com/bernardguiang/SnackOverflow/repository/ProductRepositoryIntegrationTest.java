@@ -70,12 +70,11 @@ class ProductRepositoryIntegrationTest {
 	void itShouldFindAllBySearchTextAndIncludeOrdersAfter() {
 		// Given
 		Instant beforeAll = Instant.ofEpochMilli(0);
-		String name = "prod";
 		Sort sort = JpaSort.unsafe(Sort.Direction.ASC, "(PRICE)"); // Native query requires unsafe sort
 		Pageable pageable = PageRequest.of(0, 10, sort);
 		
 		// When
-		Page<Product> result = underTest.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted(name, beforeAll, pageable);
+		Page<Product> result = underTest.findAllBySearchTextAndIncludeOrdersAfterAndNotDeleted("prod", beforeAll, pageable);
 		
 		// Then
 		assertEquals(2, result.getTotalElements());

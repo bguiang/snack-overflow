@@ -190,7 +190,7 @@ public class StripeService {
 			
 			// Find Saved StripePaymentIntent to retrieve Cart and User
 			StripePaymentIntent stripePaymentIntent = stripePaymentIntentRepository.findByPaymentIntentId(paymentIntentId)
-				.orElseThrow(() -> new IllegalStateException("Could not StripePaymentIntent with paymentIntentId: " + paymentIntentId));
+				.orElseThrow(() -> new IllegalStateException("Could not find StripePaymentIntent with paymentIntentId: " + paymentIntentId));
 			
 			User user = stripePaymentIntent.getUser();
 			order.setUser(user); // TODO: might need to save User instead of the order? Since User is the owner
