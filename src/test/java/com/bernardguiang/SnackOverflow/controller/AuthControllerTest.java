@@ -30,9 +30,8 @@ class AuthControllerTest {
 	}
 	
 	@Test
-	void itShouldReturnSuccessMessageAndCreatedStatusWithValidRegisterRequest() {
+	void itShouldReturnSuccessMessageAndStatusCreatedWithValidRegisterRequest() {
 		// Given
-		// ... Java bean validation does not work in unit tests so this will always be valid here
 		RegisterRequest registerRequest = null;
 		
 		// When
@@ -44,7 +43,7 @@ class AuthControllerTest {
 	}
 	
 	@Test
-	void logoutShouldReturnSuccessMessageAndOkStatusAndSetEmptyRefreshCookie() {
+	void logoutShouldReturnSuccessMessageAndStatusOkAndSetEmptyRefreshCookie() {
 		// Given	
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		Cookie emptyRefreshCookie = new Cookie("refresh-token", null);

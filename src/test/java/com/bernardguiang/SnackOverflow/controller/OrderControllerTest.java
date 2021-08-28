@@ -1,41 +1,29 @@
 package com.bernardguiang.SnackOverflow.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
-import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
-import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
-import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
+import com.bernardguiang.SnackOverflow.dto.request.OrderPage;
+import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
+import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
+import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
-import com.bernardguiang.SnackOverflow.model.OrderStatus;
-import com.bernardguiang.SnackOverflow.service.CartService;
+import com.bernardguiang.SnackOverflow.dto.response.OrderStatsResponse;
 import com.bernardguiang.SnackOverflow.service.OrderService;
-import com.bernardguiang.SnackOverflow.service.StripeService;
 import com.bernardguiang.SnackOverflow.service.UserService;
-import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
 
 class OrderControllerTest {
 
@@ -43,102 +31,111 @@ class OrderControllerTest {
 	
 	private OrderService orderService;
 	private UserService userService;
-	private StripeService stripeService;
-	private CartService cartService;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		orderService = Mockito.mock(OrderService.class);
 		userService = Mockito.mock(UserService.class);
-		stripeService = Mockito.mock(StripeService.class);
-		cartService = Mockito.mock(CartService.class);
 		
-		underTest = new OrderController(orderService, userService, stripeService, cartService);
+		underTest = new OrderController(orderService, userService);
 	}
-
+	
 	@Test
-	void itShouldStartCheckout() throws StripeException {
+	void getOrdersByCurrentUser() {
 		// Given
-		String authUsername = "authUsername";
-		Authentication authentication = Mockito.mock(Authentication.class);
-		
+		Authentication authenticationMock = Mockito.mock(Authentication.class);
 		UserDTO user = new UserDTO();
-		String userEmail = "user@user.com";
-		user.setEmail(userEmail);
-		Long userId = 3L;
-		user.setId(userId);
-		
-		List<CartInfoRequestItem> cartItems = new ArrayList<>();
-		Long productId = 2L;
-		int quantity = 5;
-		CartInfoRequestItem cartItem = new CartInfoRequestItem();
-		cartItem.setProductId(productId);
-		cartItem.setQuantity(quantity);
-		cartItems.add(cartItem);
-		CartRequest request = new CartRequest();
-		request.setItems(cartItems);
-		
-		CartInfoResponse cartInfoResponse = new CartInfoResponse();
-		BigDecimal cartTotal = new BigDecimal(10);
-		cartInfoResponse.setTotal(cartTotal);
-		
-		PaymentIntent intent = Mockito.mock(PaymentIntent.class);
-		String clientSecret = "clientSecret";
-		
-		Long savedOrderId = 10L;
-		Long amount = 1000L;
+		user.setId(1L);
+		OrderResponse orderResponseMock = Mockito.mock(OrderResponse.class);
+		List<OrderResponse> orderResponseList = Arrays.asList(orderResponseMock);
 		
 		// When
-		when(authentication.getName()).thenReturn(authUsername);
-		when(userService.findByUsername(authUsername)).thenReturn(user);
-		when(cartService.getCartInfo(request)).thenReturn(cartInfoResponse);
-		when(intent.getClientSecret()).thenReturn(clientSecret);
-		when(stripeService.createPaymentIntent(amount, userEmail)).thenReturn(intent);
-		when(orderService.createOrderWithCartItemsAndPaymentIntentId(request, clientSecret, user.getId())).thenReturn(savedOrderId);
+		when(orderResponseMock.getId()).thenReturn(2L);
 		
-		ResponseEntity<Map<String, Object>> response = underTest.startOrder(request, authentication);
+		when(authenticationMock.getName()).thenReturn("username");
+		when(userService.findByUsername("username")).thenReturn(user);
+		when(orderService.findAllByUserId(1L)).thenReturn(orderResponseList);
+		List<OrderResponse> response = underTest.getOrdersByCurrentUser(authenticationMock);
 		
 		// Then
-		assertEquals(HttpStatus.CREATED, response.getStatusCode());
-		Map<String, Object> responseBody = response.getBody();
-		assertEquals(clientSecret, (String) responseBody.get("client_secret"));
-		CartInfoResponse responseCart = (CartInfoResponse) responseBody.get("cart");
-		assertEquals(cartInfoResponse.getTotal(), responseCart.getTotal());
-		assertEquals(savedOrderId, (Long) responseBody.get("orderId"));
+		assertEquals(1, response.size());
+		assertEquals(2L, response.get(0).getId());
 	}
 	
 	@Test
-	void updateOrderBillingAndShippingShouldReturnStatusOk( ) throws StripeException {
+	void getOrderByCurrentUser() {
 		// Given
-		UpdateBillingAndShippingRequest updateBillingAndShippingRequest = null;
-		Authentication authentication = Mockito.mock(Authentication.class);
-		String authUsername = "authUsername";
-		
+		Authentication authenticationMock = Mockito.mock(Authentication.class);
+		OrderResponse orderResponseMock = Mockito.mock(OrderResponse.class);
 		UserDTO user = new UserDTO();
-		String userEmail = "user@user.com";
-		user.setEmail(userEmail);
-		Long userId = 3L;
-		user.setId(userId);
+		user.setId(1L);
 		
 		// When
-		when(userService.findByUsername(authUsername)).thenReturn(user);
-
-		when(orderService.updateBillingAndShipping(updateBillingAndShippingRequest, user)).thenReturn(null);
+		when(orderResponseMock.getId()).thenReturn(2L);
 		
-		ResponseEntity<String> response = underTest.updateOrderBillingAndShipping(
-				updateBillingAndShippingRequest, authentication);
+		when(authenticationMock.getName()).thenReturn("username");
+		when(userService.findByUsername("username")).thenReturn(user);
+		when(orderService.findByIdAndUserId(2L, 1L)).thenReturn(orderResponseMock);
+		OrderResponse orderResponse = underTest.getOrderByCurrentUser(2L, authenticationMock);
+		
 		// Then
-		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(2L, orderResponse.getId());
 	}
 	
 	@Test
-	void itShouldGetOrdersByCurrentUser() {
-		// Pointless to unit test
+	void getOrders() {
+		// Given
+		Page<OrderDTO> pageMock = Mockito.mock(Page.class);
+		OrderPage orderPageMock = Mockito.mock(OrderPage.class);
+		
+		// When
+		when(orderService.findOrdersPaginated(orderPageMock)).thenReturn(pageMock);
+		Page<OrderDTO> result = underTest.getOrders(orderPageMock);
+		
+		// Then
+		assertEquals(pageMock, result);
+		
 	}
 	
 	@Test
-	void itShouldGetOrderByCurrentUser() {
-		// Pointless to unit test
+	void getOrder() {
+		// Given
+		OrderDTO orderDTOMock = Mockito.mock(OrderDTO.class);
+		
+		// When
+		when(orderService.findByIdIncludUserInfo(1L)).thenReturn(orderDTOMock);
+		OrderDTO result = underTest.getOrder(1L);
+		
+		// Then
+		assertEquals(orderDTOMock, result);
+	}
+	
+	@Test
+	void updateOrderStatus() {
+		// Given
+		OrderStatusUpdateRequest orderStatusUpdate = Mockito.mock(OrderStatusUpdateRequest.class);
+		OrderResponse orderResponseMock = Mockito.mock(OrderResponse.class);
+		
+		// When
+		when(orderService.updateOrderStatus(orderStatusUpdate)).thenReturn(orderResponseMock);
+		OrderResponse response = underTest.updateOrderStatus(orderStatusUpdate);
+				
+		// Then
+		assertEquals(orderResponseMock, response);
+	}
+	
+	@Test
+	void getOrderStats() {
+		// Given
+		OrderStatsResponse orderStatsResponseMock = Mockito.mock(OrderStatsResponse.class);
+		StatsRequest statsRequestMock = Mockito.mock(StatsRequest.class);
+		
+		// When
+		when(orderService.getOrderStats(statsRequestMock)).thenReturn(orderStatsResponseMock);
+		OrderStatsResponse response =  underTest.getOrderStats(statsRequestMock);
+		
+		// Then
+		assertEquals(orderStatsResponseMock, response);
 	}
 
 }

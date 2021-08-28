@@ -31,15 +31,15 @@ class CartControllerTest {
 		underTest = new CartController(cartService);
 	}
 
-	// Pretty useless test
 	@Test
-	void itShouldReturnCartInfoResponse() {
+	void getCartInfoShouldReturnCartInfoResponse() {
 		// Given
-		// ... Java bean validation does not work in unit tests so this will always be valid here
 		List<CartInfoRequestItem> cartItems = null;
 		
 		List<CartInfoResponseItem> items = null;
-		CartInfoResponse cart = new CartInfoResponse(new BigDecimal(2), items);
+		CartInfoResponse cart = new CartInfoResponse();
+		cart.setItems(items);
+		cart.setTotal(new BigDecimal(2));
 		
 		CartRequest request = new CartRequest();
 		request.setItems(cartItems);

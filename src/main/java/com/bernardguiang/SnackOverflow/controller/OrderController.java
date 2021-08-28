@@ -54,21 +54,18 @@ public class OrderController {
 		return orderService.findByIdAndUserId(orderId, user.getId());
 	}
 	
-	//TODO: test
 	@GetMapping("/api/v1/admin/orders")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Page<OrderDTO> getOrders(OrderPage orderPage) {
 		return orderService.findOrdersPaginated(orderPage);
 	}
 	
-	//TODO: test
 	@GetMapping("/api/v1/admin/orders/{orderId}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public OrderDTO getOrder(@PathVariable long orderId) {
 		return orderService.findByIdIncludUserInfo(orderId);
 	}
 	
-	// TODO: test
 	@PutMapping("/api/v1/admin/orders")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public OrderResponse updateOrderStatus(@RequestBody @Valid OrderStatusUpdateRequest orderStatusUpdate) {

@@ -45,7 +45,7 @@ public class ProductController
 	
 	@PutMapping("/api/v1/admin/products")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ProductDTO updateProduct(@RequestBody @Valid ProductDTO product, HttpServletResponse response) {
+	public ProductDTO updateProduct(@RequestBody @Valid ProductDTO product) {
 		ProductDTO dto = productService.save(product);
 		return dto;
 	}
@@ -62,7 +62,6 @@ public class ProductController
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Page<FullProductInfo> getProductsPaginatedForAdmin(ProductPage page) 
 	{
-		// This Should always Return all products?
 		return productService.findFullProductInfosPaginated(page);
 	}
 	
@@ -80,30 +79,5 @@ public class ProductController
 	public void deleteProductById(@PathVariable long productId) {
 		productService.deleteById(productId);
 	}
-	
-//	@DeleteMapping
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
-//	public void removeProduct()
-//	{
-//		
-//	}
-//	
-//	@GetMapping("/categories")
-//	public List<CategoryDTO> getCategories() 
-//	{
-//		return categoryService.findAll();
-//	}
-//	
-//	@GetMapping("/categories/{categoryName}")
-//	public List<ProductDTO> getProductsByCategory(@RequestParam String categoryName) 
-//	{
-//		return productService.findAllByCategoryName(categoryName);
-//	}
-//	
-//	@PostMapping("/categories")
-//	public CategoryDTO addCategory (@Valid CategoryDTO categoryDTO)
-//	{
-//		return categoryService.save(categoryDTO);
-//	}
 }
 
