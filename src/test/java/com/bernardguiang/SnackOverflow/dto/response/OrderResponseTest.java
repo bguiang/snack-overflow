@@ -1,9 +1,8 @@
 package com.bernardguiang.SnackOverflow.dto.response;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -12,9 +11,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.bernardguiang.SnackOverflow.dto.Address;
-import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
-import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
