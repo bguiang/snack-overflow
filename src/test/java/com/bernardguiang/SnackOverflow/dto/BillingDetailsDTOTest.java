@@ -1,7 +1,6 @@
 package com.bernardguiang.SnackOverflow.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Set;
 

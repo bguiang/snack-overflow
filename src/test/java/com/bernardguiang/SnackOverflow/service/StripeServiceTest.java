@@ -1,9 +1,7 @@
 package com.bernardguiang.SnackOverflow.service;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,10 +42,10 @@ import com.bernardguiang.SnackOverflow.repository.UserRepository;
 import com.google.gson.JsonSyntaxException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.Charge;
 import com.stripe.model.ChargeCollection;
+import com.stripe.model.Event;
+import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.StripeObject;
 import com.stripe.net.Webhook;
@@ -527,7 +525,6 @@ class StripeServiceTest {
 
 		// Given
 		String payload = "payload";
-		ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
 
 		Event event = Mockito.mock(Event.class);
 		EventDataObjectDeserializer dataObjectDeserializer = Mockito.mock(EventDataObjectDeserializer.class);

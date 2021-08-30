@@ -1,27 +1,19 @@
 package com.bernardguiang.SnackOverflow.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bernardguiang.SnackOverflow.dto.ProductDTO;
 import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
 import com.bernardguiang.SnackOverflow.dto.response.FullProductInfo;
-import com.bernardguiang.SnackOverflow.service.CategoryService;
-import com.bernardguiang.SnackOverflow.service.ProductIndexingService;
 import com.bernardguiang.SnackOverflow.service.ProductService;
 
 class ProductControllerTest {
