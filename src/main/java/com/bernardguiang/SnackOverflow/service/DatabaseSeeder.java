@@ -108,7 +108,7 @@ public class DatabaseSeeder {
 		RestTemplate restTemplate = new RestTemplate();
 		String unsplashAccessToken = env.getProperty("unsplash_access_token");
 		ResponseEntity<String> response = 
-				restTemplate.getForEntity("https://api.unsplash.com/search/photos?query=snack&client_id=" + unsplashAccessToken +"&per_page=30", String.class);
+				restTemplate.getForEntity("https://api.unsplash.com/search/photos?query=food&client_id=" + unsplashAccessToken +"&per_page=30", String.class);
 		
 		String responseString = response.getBody();
 		

@@ -6,8 +6,12 @@ function Copyright() {
   return (
     <Typography variant="h6" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="http://bernardguiang.com/">
-        Me
+      <Link
+        color="inherit"
+        href={"https://www.linkedin.com/in/bernard-guiang"}
+        target="_blank"
+      >
+        Bernard Guiang
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}

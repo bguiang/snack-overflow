@@ -95,7 +95,10 @@ const Navbar = () => {
             <IconButton href={"https://www.youtube.com"} target="_blank">
               <YouTubeIcon />
             </IconButton>
-            <IconButton href={"https://www.linkedin.com"} target="_blank">
+            <IconButton
+              href={"https://www.linkedin.com/in/bernard-guiang"}
+              target="_blank"
+            >
               <LinkedInIcon />
             </IconButton>
           </Box>
