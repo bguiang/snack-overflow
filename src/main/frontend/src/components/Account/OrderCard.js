@@ -49,31 +49,33 @@ const OrderCard = ({ order }) => {
           onClick={() => itemClick(order.id)}
           className={classes.orderCardActionArea}
         >
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            #{order.id}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-            {new Date(order.createdDate).toLocaleTimeString("en-US")}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {order.status}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            ${order.total.toFixed(2)}
-          </Typography>
+          <div className={classes.orderCardActionArea}>
+            <Typography
+              variant="subtitle1"
+              className={classes.orderCardActionAreaItem}
+            >
+              #{order.id}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
+              {new Date(order.createdDate).toLocaleTimeString("en-US")}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {order.status}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              className={classes.orderCardActionAreaItem}
+            >
+              ${order.total.toFixed(2)}
+            </Typography>
+          </div>
         </CardActionArea>
       </Card>
     </Grid>

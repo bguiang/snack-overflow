@@ -150,7 +150,7 @@ const ProductsAdmin = () => {
       >
         <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>Products</h2>
-          <FormControl className={classes.adminSelector}>
+          <div className={classes.adminSelector}>
             <InputLabel id="includeOrders">Include Orders</InputLabel>
             <Select
               labelId="includeOrders"
@@ -162,8 +162,8 @@ const ProductsAdmin = () => {
               <MenuItem value={"month"}>Month</MenuItem>
               <MenuItem value={"year"}>Year</MenuItem>
             </Select>
-          </FormControl>
-          <FormControl className={classes.adminSelector}>
+          </div>
+          <div className={classes.adminSelector}>
             <InputLabel id="sortBy">Sort By</InputLabel>
             <Select
               labelId="sortBy"
@@ -177,19 +177,19 @@ const ProductsAdmin = () => {
               <MenuItem value={"price"}>Price</MenuItem>
               <MenuItem value={"unitsSold"}>Units Sold</MenuItem>
             </Select>
-          </FormControl>
-          <FormControl className={classes.adminSelector}>
+          </div>
+          <div className={classes.adminSelector}>
             <InputLabel id="direction">Direction</InputLabel>
             <Select
               labelId="direction"
-              id="direcitonSelect"
+              id="directoonSelect"
               value={direction}
               onChange={handleDirectionChange}
             >
               <MenuItem value={"ASC"}>Ascending</MenuItem>
               <MenuItem value={"DESC"}>Descending</MenuItem>
             </Select>
-          </FormControl>
+          </div>
         </Grid>
         <Grid
           item

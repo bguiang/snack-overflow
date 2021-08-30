@@ -131,7 +131,7 @@ const Members = () => {
     >
       <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
         <h2 className={classes.cartHeaderTitle}>Members</h2>
-        <FormControl className={classes.adminSelector}>
+        <div className={classes.adminSelector}>
           <InputLabel id="sortBy">Sort By</InputLabel>
           <Select
             labelId="sortBy"
@@ -145,8 +145,8 @@ const Members = () => {
             <MenuItem value={"role"}>Role</MenuItem>
             <MenuItem value={"username"}>Username</MenuItem>
           </Select>
-        </FormControl>
-        <FormControl className={classes.adminSelector}>
+        </div>
+        <div className={classes.adminSelector}>
           <InputLabel id="direction">Direction</InputLabel>
           <Select
             labelId="direction"
@@ -157,7 +157,7 @@ const Members = () => {
             <MenuItem value={"ASC"}>Ascending</MenuItem>
             <MenuItem value={"DESC"}>Descending</MenuItem>
           </Select>
-        </FormControl>
+        </div>
       </Grid>
       <Grid item xs={12} key="search" className={classes.adminSearchContainer}>
         <Paper className={classes.adminSearchBar}>

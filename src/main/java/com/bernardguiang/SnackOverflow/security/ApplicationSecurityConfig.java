@@ -112,13 +112,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()// we want to authorize requests
 			.antMatchers(
 					"/",
-					"/login",
-					"/cart/**",
-					"/snacks**",
-					"/contact/**",
-					"/account/**",
-					"/error",
-					"/error/**",
 					"/favicon.ico",
 					"/**/*.png",
 					"/**/*.gif",
@@ -127,6 +120,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 					"/**/*.html",
 					"/**/*.css",
 					"/**/*.js",
+					"/**/*.woff",
+					"/**/*.woff2",
+					"/**/*.map",
 					"/manifest.json"
 					)
 			.permitAll() // Permit the above routes

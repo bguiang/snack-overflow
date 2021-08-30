@@ -98,58 +98,57 @@ const OrderCardAdmin = ({ order }) => {
         </CardActions>
       </Card>
       <Card className={classes.orderCard}>
-        <CardActionArea
-          onClick={() => itemClick(order.id)}
-          className={classes.orderCardActionArea}
-        >
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem}
-          >
-            #{order.id}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {order.user.username}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {new Date(order.createdDate).toLocaleDateString("en-US")}
-          </Typography>
-          {order.status === "CANCELLED" ||
-          order.status === "FAILED" ||
-          order.status === "REFUNDED" ? (
-            <div className={classes.orderCardActionAreaItem2}>
-              <Typography variant="subtitle1" className={classes.error}>
-                {order.status}
-              </Typography>
-            </div>
-          ) : (
-            <div className={classes.orderCardActionAreaItem2}>
-              <Typography variant="subtitle1" className={classes.success}>
-                {order.status}
-              </Typography>
-            </div>
-          )}
-          {order.status === "CANCELLED" ||
-          order.status === "FAILED" ||
-          order.status === "REFUNDED" ? (
-            <div className={classes.orderCardActionAreaItem}>
-              <Typography variant="subtitle1" className={classes.error}>
-                ${order.total.toFixed(2)}
-              </Typography>
-            </div>
-          ) : (
-            <div className={classes.orderCardActionAreaItem}>
-              <Typography variant="subtitle1" className={classes.success}>
-                ${order.total.toFixed(2)}
-              </Typography>
-            </div>
-          )}
+        <CardActionArea onClick={() => itemClick(order.id)}>
+          <div className={classes.orderCardActionArea}>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem}
+            >
+              #{order.id}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {order.user.username}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {new Date(order.createdDate).toLocaleDateString("en-US")}
+            </Typography>
+            {order.status === "CANCELLED" ||
+            order.status === "FAILED" ||
+            order.status === "REFUNDED" ? (
+              <div className={classes.orderCardActionAreaItem2}>
+                <Typography variant="subtitle1" className={classes.error}>
+                  {order.status}
+                </Typography>
+              </div>
+            ) : (
+              <div className={classes.orderCardActionAreaItem2}>
+                <Typography variant="subtitle1" className={classes.success}>
+                  {order.status}
+                </Typography>
+              </div>
+            )}
+            {order.status === "CANCELLED" ||
+            order.status === "FAILED" ||
+            order.status === "REFUNDED" ? (
+              <div className={classes.orderCardActionAreaItem}>
+                <Typography variant="subtitle1" className={classes.error}>
+                  ${order.total.toFixed(2)}
+                </Typography>
+              </div>
+            ) : (
+              <div className={classes.orderCardActionAreaItem}>
+                <Typography variant="subtitle1" className={classes.success}>
+                  ${order.total.toFixed(2)}
+                </Typography>
+              </div>
+            )}
+          </div>
         </CardActionArea>
         <CardActions className={classes.snackCardActions}>
           <UpdateOrder order={order} buttonSize="small" token={token} />

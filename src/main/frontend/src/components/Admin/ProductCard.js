@@ -67,47 +67,46 @@ const ProductCard = ({ product }) => {
       </Card>
 
       <Card className={classes.productCardHorizontal}>
-        <CardActionArea
-          className={classes.cartItemCardActionArea}
-          onClick={() => productClick(product)}
-        >
-          <Typography
-            variant="subtitle2"
-            className={classes.productCardHorizontalID}
-          >
-            #{product.id}
-          </Typography>
-          <div className={classes.productCardHorizontalMain}>
-            <CardMedia
-              className={classes.productCardHorizontalImage}
-              image={product.images[0] ? product.images[0] : null}
-              title={product.name}
-            />
+        <CardActionArea onClick={() => productClick(product)}>
+          <div className={classes.cartItemCardActionArea}>
             <Typography
               variant="subtitle2"
-              className={classes.productCardHorizontalName}
+              className={classes.productCardHorizontalID}
             >
-              {product.name}
+              #{product.id}
+            </Typography>
+            <div className={classes.productCardHorizontalMain}>
+              <CardMedia
+                className={classes.productCardHorizontalImage}
+                image={product.images[0] ? product.images[0] : null}
+                title={product.name}
+              />
+              <Typography
+                variant="subtitle2"
+                className={classes.productCardHorizontalName}
+              >
+                {product.name}
+              </Typography>
+            </div>
+            <Typography
+              variant="subtitle2"
+              className={classes.productCardHorizontalDate}
+            >
+              {new Date(product.createdDate).toLocaleDateString("en-US")}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.productCardHorizontalPrice}
+            >
+              ${product.price.toFixed(2)}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.productCardHorizontalUnitsSold}
+            >
+              {product.unitsSold}
             </Typography>
           </div>
-          <Typography
-            variant="subtitle2"
-            className={classes.productCardHorizontalDate}
-          >
-            {new Date(product.createdDate).toLocaleDateString("en-US")}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.productCardHorizontalPrice}
-          >
-            ${product.price.toFixed(2)}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.productCardHorizontalUnitsSold}
-          >
-            {product.unitsSold}
-          </Typography>
         </CardActionArea>
         <CardActions className={classes.cartItemCardActions}>
           <Button

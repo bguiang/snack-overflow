@@ -126,7 +126,7 @@ const Orders = () => {
     <Grid container spacing={2} justifyContent="center" alignItems="center">
       <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
         <h2 className={classes.cartHeaderTitle}>Orders</h2>
-        <FormControl className={classes.adminSelector}>
+        <div className={classes.adminSelector}>
           <InputLabel id="sortBy">Sort By</InputLabel>
           <Select
             labelId="sortBy"
@@ -140,8 +140,8 @@ const Orders = () => {
             <MenuItem value={"status"}>Status</MenuItem>
             <MenuItem value={"total"}>Total</MenuItem>
           </Select>
-        </FormControl>
-        <FormControl className={classes.adminSelector}>
+        </div>
+        <div className={classes.adminSelector}>
           <InputLabel id="direction">Direction</InputLabel>
           <Select
             labelId="direction"
@@ -152,7 +152,7 @@ const Orders = () => {
             <MenuItem value={"ASC"}>Ascending</MenuItem>
             <MenuItem value={"DESC"}>Descending</MenuItem>
           </Select>
-        </FormControl>
+        </div>
       </Grid>
       <Grid container xs={12} spacing={1} key="orderInfo">
         <Grid item xs={12} key={"listTitle"} className={classes.orderListTitle}>
@@ -173,6 +173,35 @@ const Orders = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
+          <div className={classes.adminSelectorMobileContainer}>
+            <FormControl className={classes.adminSelectorMobile}>
+              <InputLabel id="sortBy">Sort By</InputLabel>
+              <Select
+                labelId="sortBy"
+                id="sortBySelect"
+                value={sortBy}
+                onChange={handleSortByChange}
+              >
+                <MenuItem value={"createdDate"}>Created Date</MenuItem>
+                <MenuItem value={"id"}>ID</MenuItem>
+                <MenuItem value={"user.username"}>Username</MenuItem>
+                <MenuItem value={"status"}>Status</MenuItem>
+                <MenuItem value={"total"}>Total</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl className={classes.adminSelectorMobile}>
+              <InputLabel id="direction">Direction</InputLabel>
+              <Select
+                labelId="direction"
+                id="direcitonSelect"
+                value={direction}
+                onChange={handleDirectionChange}
+              >
+                <MenuItem value={"ASC"}>Ascending</MenuItem>
+                <MenuItem value={"DESC"}>Descending</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
           <div className={classes.orderCard}>
             <div className={classes.orderCardActionArea}>
               <Typography

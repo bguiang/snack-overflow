@@ -40,19 +40,21 @@ const CartItem = ({ cartItem }) => {
           className={classes.cartItemCardActionArea}
           onClick={() => itemClick(cartItem.product.id)}
         >
-          <CardMedia
-            className={classes.cartItemCardImage}
-            image={
-              cartItem.product.images[0] ? cartItem.product.images[0] : null
-            }
-            title={cartItem.product.name}
-          />
-          <Typography variant="h6" className={classes.cartItemName}>
-            {cartItem.product.name}
-          </Typography>
-          <Typography variant="h6" className={classes.cartItemPrice}>
-            ${cartItem.product.price.toFixed(2)}
-          </Typography>
+          <div className={classes.cartItemCardActionArea}>
+            <CardMedia
+              className={classes.cartItemCardImage}
+              image={
+                cartItem.product.images[0] ? cartItem.product.images[0] : null
+              }
+              title={cartItem.product.name}
+            />
+            <Typography variant="h6" className={classes.cartItemName}>
+              {cartItem.product.name}
+            </Typography>
+            <Typography variant="h6" className={classes.cartItemPrice}>
+              ${cartItem.product.price.toFixed(2)}
+            </Typography>
+          </div>
         </CardActionArea>
         <CardActions className={classes.cartItemCardActions}>
           <TextField

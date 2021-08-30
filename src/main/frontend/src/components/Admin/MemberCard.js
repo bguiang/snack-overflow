@@ -56,46 +56,45 @@ const MemberCard = ({ member }) => {
         </CardActionArea>
       </Card>
       <Card className={classes.memberCard}>
-        <CardActionArea
-          onClick={() => itemClick(member.id)}
-          className={classes.orderCardActionArea}
-        >
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem}
-          >
-            #{member.id}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {member.username}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {member.email}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {member.fullName}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem2}
-          >
-            {member.role}
-          </Typography>
-          <Typography
-            variant="subtitle2"
-            className={classes.orderCardActionAreaItem1}
-          >
-            {new Date(member.joinDate).toLocaleDateString("en-US")}
-          </Typography>
+        <CardActionArea onClick={() => itemClick(member.id)}>
+          <div className={classes.orderCardActionArea}>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem}
+            >
+              #{member.id}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {member.username}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {member.email}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {member.fullName}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem2}
+            >
+              {member.role}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={classes.orderCardActionAreaItem1}
+            >
+              {new Date(member.joinDate).toLocaleDateString("en-US")}
+            </Typography>
+          </div>
         </CardActionArea>
       </Card>
     </Grid>

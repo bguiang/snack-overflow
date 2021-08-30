@@ -122,7 +122,37 @@ const Snacks = () => {
       >
         <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>Snacks</h2>
-          <FormControl className={classes.adminSelector}>
+          <div className={classes.adminSelector}>
+            <InputLabel id="sortBy">Sort By</InputLabel>
+            <Select
+              labelId="sortBy"
+              id="sortBySelect"
+              value={sortBy}
+              onChange={handleSortByChange}
+            >
+              <MenuItem value={"createdDate"}>Newest</MenuItem>
+              <MenuItem value={"name"}>Name</MenuItem>
+              <MenuItem value={"price"}>Price</MenuItem>
+              <MenuItem value={"unitsSold"}>Popularity</MenuItem>
+            </Select>
+          </div>
+          <div className={classes.adminSelector}>
+            <InputLabel id="direction">Direction</InputLabel>
+            <Select
+              labelId="direction"
+              id="direcitonSelect"
+              value={direction}
+              onChange={handleDirectionChange}
+            >
+              <MenuItem value={"ASC"}>Ascending</MenuItem>
+              <MenuItem value={"DESC"}>Descending</MenuItem>
+            </Select>
+          </div>
+        </Grid>
+      </Grid>
+      <Grid item xs={12} key="search" className={classes.adminSearchContainer}>
+        <div className={classes.adminSelectorMobileContainer}>
+          <FormControl className={classes.adminSelectorMobile}>
             <InputLabel id="sortBy">Sort By</InputLabel>
             <Select
               labelId="sortBy"
@@ -136,7 +166,7 @@ const Snacks = () => {
               <MenuItem value={"unitsSold"}>Popularity</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={classes.adminSelector}>
+          <FormControl className={classes.adminSelectorMobile}>
             <InputLabel id="direction">Direction</InputLabel>
             <Select
               labelId="direction"
@@ -148,7 +178,9 @@ const Snacks = () => {
               <MenuItem value={"DESC"}>Descending</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
+        </div>
+      </Grid>
+      <Grid container xs={12} spacing={5} key="snacks">
         {snacks.map((snack) => (
           <SnackCard snack={snack} key={snack.id} />
         ))}

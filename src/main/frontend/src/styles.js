@@ -574,27 +574,39 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 80,
   },
   adminSelector: {
-    minWidth: 110,
-    marginLeft: 10,
     [theme.breakpoints.down("sm")]: {
       display: "none",
     },
     [theme.breakpoints.up("sm")]: {
-      display: "flex",
+      display: "inline-flex",
+      border: 0,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 10,
+      padding: 0,
+      position: "relative",
+      minWidth: 110,
+      flexDirection: "column",
+      verticalAlign: "top",
     },
   },
   adminSelectorMobileContainer: {
-    display: "flex",
-    paddingTop: 10,
-    paddingBottom: 20,
-    paddingRight: 10,
     [theme.breakpoints.down("sm")]: {
+      display: "flex",
       flexDirection: "column",
+      paddingTop: 10,
+      paddingBottom: 20,
+      paddingRight: 10,
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
     },
   },
   adminSelectorMobile: {
     [theme.breakpoints.down("sm")]: {
       display: "flex",
+      marginBottom: 10,
     },
     [theme.breakpoints.up("sm")]: {
       display: "none",
