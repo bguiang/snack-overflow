@@ -489,6 +489,17 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 14,
     },
   },
+  productCardNewProductButton: {
+    [theme.breakpoints.down("md")]: {
+      display: "flex",
+      flex: 1,
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "none",
+    },
+  },
   productCardHorizontalMain: {
     flex: 6,
     display: "flex",

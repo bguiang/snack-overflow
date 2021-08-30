@@ -256,6 +256,18 @@ const ProductsAdmin = () => {
             </FormControl>
           </div>
         </Grid>
+        <div className={classes.productCardNewProductButton}>
+          <Button
+            size="large"
+            color="primary"
+            variant="contained"
+            fullWidth={true}
+            onClick={() => history.push("/admin/products/new")}
+            startIcon={<AddIcon />}
+          >
+            New
+          </Button>
+        </div>
         <div className={classes.productCardHorizontalTitle}>
           <div className={classes.cartItemCardActionArea}>
             <Typography
