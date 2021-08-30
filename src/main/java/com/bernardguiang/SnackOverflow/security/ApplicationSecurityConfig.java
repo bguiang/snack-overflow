@@ -110,8 +110,26 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
 			
 			.headers().frameOptions().sameOrigin().and() // To enable H2 DB. Comment out if not using H2
 			.authorizeRequests()// we want to authorize requests
-			.antMatchers("/", "index", "/css/*", "/js/**")
-				.permitAll()	// permit matched patterns above
+			.antMatchers(
+					"/",
+					"/login",
+					"/cart/**",
+					"/snacks**",
+					"/contact/**",
+					"/account/**",
+					"/error",
+					"/error/**",
+					"/favicon.ico",
+					"/**/*.png",
+					"/**/*.gif",
+					"/**/*.svg",
+					"/**/*.jpg",
+					"/**/*.html",
+					"/**/*.css",
+					"/**/*.js",
+					"/manifest.json"
+					)
+			.permitAll() // Permit the above routes
 			.antMatchers(HttpMethod.GET, "/api/v1/products/**")
 				.permitAll()
 			.antMatchers("/api/v1/auth/**") //signup, refresh, signout
