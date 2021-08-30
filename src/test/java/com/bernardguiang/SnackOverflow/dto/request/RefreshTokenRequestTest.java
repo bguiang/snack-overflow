@@ -18,12 +18,9 @@ class RefreshTokenRequestTest {
 	@Test
 	void refreshTokenRequestValidationShouldPass() {
 		// Given
-		String refreshToken = "refresh token";
-		String username = "username";
-		
 		RefreshTokenRequest request = new RefreshTokenRequest();
-		request.setRefreshToken(refreshToken);
-		request.setUsername(username);
+		request.setRefreshToken("refresh token");
+		request.setUsername("username");
 		
 		// When
 		Set<ConstraintViolation<RefreshTokenRequest>> violations = validator.validate(request);
@@ -36,12 +33,9 @@ class RefreshTokenRequestTest {
 	@Test
 	void refreshTokenRequestValidationShouldFailIfRefreshTokenIsNull() {
 		// Given
-		String refreshToken = null;
-		String username = "username";
-		
 		RefreshTokenRequest request = new RefreshTokenRequest();
-		request.setRefreshToken(refreshToken);
-		request.setUsername(username);
+		request.setRefreshToken(null);
+		request.setUsername("username");
 		
 		// When
 		Set<ConstraintViolation<RefreshTokenRequest>> violations = validator.validate(request);
@@ -56,12 +50,9 @@ class RefreshTokenRequestTest {
 	@Test
 	void refreshTokenRequestValidationShouldFailIfRefreshTokenIsEmpty() {
 		// Given
-		String refreshToken = "  ";
-		String username = "username";
-		
 		RefreshTokenRequest request = new RefreshTokenRequest();
-		request.setRefreshToken(refreshToken);
-		request.setUsername(username);
+		request.setRefreshToken("  ");
+		request.setUsername("username");
 		
 		// When
 		Set<ConstraintViolation<RefreshTokenRequest>> violations = validator.validate(request);
@@ -76,12 +67,9 @@ class RefreshTokenRequestTest {
 	@Test
 	void refreshTokenRequestValidationShouldFailIfUsernameIsNull() {
 		// Given
-		String refreshToken = "refresh token";
-		String username = null;
-		
 		RefreshTokenRequest request = new RefreshTokenRequest();
-		request.setRefreshToken(refreshToken);
-		request.setUsername(username);
+		request.setRefreshToken("refresh token");
+		request.setUsername(null);
 		
 		// When
 		Set<ConstraintViolation<RefreshTokenRequest>> violations = validator.validate(request);
@@ -96,12 +84,9 @@ class RefreshTokenRequestTest {
 	@Test
 	void refreshTokenRequestValidationShouldFailIfUsernameLengthIsLessThanSix() {
 		// Given
-		String refreshToken = "refresh token";
-		String username = "abc12";
-		
 		RefreshTokenRequest request = new RefreshTokenRequest();
-		request.setRefreshToken(refreshToken);
-		request.setUsername(username);
+		request.setRefreshToken("refresh token");
+		request.setUsername("abc12");
 		
 		// When
 		Set<ConstraintViolation<RefreshTokenRequest>> violations = validator.validate(request);
@@ -116,12 +101,9 @@ class RefreshTokenRequestTest {
 	@Test
 	void refreshTokenRequestValidationShouldFailIfUsernameLengthIsMoreThanTwenty() {
 		// Given
-		String refreshToken = "refresh token";
-		String username = "12345678901234567890111";
-		
 		RefreshTokenRequest request = new RefreshTokenRequest();
-		request.setRefreshToken(refreshToken);
-		request.setUsername(username);
+		request.setRefreshToken("refresh token");
+		request.setUsername("12345678901234567890111");
 		
 		// When
 		Set<ConstraintViolation<RefreshTokenRequest>> violations = validator.validate(request);
@@ -135,13 +117,10 @@ class RefreshTokenRequestTest {
 	
 	@Test
 	void refreshTokenRequestValidationShouldFailIfUsernameContainsNonAlphabeticOrNonNumericCharacter() {
-		// Given
-		String refreshToken = "refresh token";
-		String username = "abcdefg$";
-		
+		// Given		
 		RefreshTokenRequest request = new RefreshTokenRequest();
-		request.setRefreshToken(refreshToken);
-		request.setUsername(username);
+		request.setRefreshToken("refresh token");
+		request.setUsername("abcdefg$");
 		
 		// When
 		Set<ConstraintViolation<RefreshTokenRequest>> violations = validator.validate(request);

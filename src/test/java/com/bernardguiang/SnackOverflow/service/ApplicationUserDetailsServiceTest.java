@@ -37,22 +37,20 @@ class ApplicationUserDetailsServiceTest {
 	@Test
 	void itShouldLoadUserByUsername() {
 		// Given
-		String username = "testUsername123";
-		String password = "testPassword123!";
 		User user = new User();
-		user.setUsername(username);
-		user.setPassword(password);
+		user.setUsername("testUsername123");
+		user.setPassword("testPassword123!");
 		user.setRole(ApplicationUserRole.ADMIN.name());
 		
 		Optional<User> userOptional = Optional.of(user);
 		
 		// When
-		when(userRepository.findByUsername(username)).thenReturn(userOptional);
+		when(userRepository.findByUsername("testUsername123")).thenReturn(userOptional);
 		
 		// Then
-		UserDetails response = underTest.loadUserByUsername(username);
-		assertEquals(username, response.getUsername());
-		assertEquals(password, response.getPassword());
+		UserDetails response = underTest.loadUserByUsername("testUsername123");
+		assertEquals("testUsername123", response.getUsername());
+		assertEquals("testPassword123!", response.getPassword());
 		Set<GrantedAuthority> expectedAuthorities = ApplicationUserRole.ADMIN.getGrantedAuthorities();
 		Set<GrantedAuthority> authorities =  new HashSet<>();
 		authorities.addAll(response.getAuthorities());
@@ -64,18 +62,17 @@ class ApplicationUserDetailsServiceTest {
 	@Test
 	void itThrowAnErrorIfUserWithUsernameDoesNotExist() {
 		// Given
-		String username = "testUsername123";
 		User user = null;
 		Optional<User> userOptional = Optional.ofNullable(user);
 		
 		// When
-		when(userRepository.findByUsername(username)).thenReturn(userOptional);
+		when(userRepository.findByUsername("testUsername123")).thenReturn(userOptional);
 		
 		// Then
 		assertThrows(
 			UsernameNotFoundException.class, 
-			() -> underTest.loadUserByUsername(username),
-			"User " + username + " not found.");
+			() -> underTest.loadUserByUsername("testUsername123"),
+			"User " + "testUsername123" + " not found.");
 	}
 
 }

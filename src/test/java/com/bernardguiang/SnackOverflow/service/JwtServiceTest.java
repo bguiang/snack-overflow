@@ -34,7 +34,7 @@ class JwtServiceTest {
 	
 	private JwtConfig jwtConfig;
 	
-	private final String secretKeyString = "ssshhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
+	private final String secretKeyString = "shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh";
 	private final Long tokenExpiration = 900000L;
 	private final SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
 	
@@ -48,15 +48,16 @@ class JwtServiceTest {
 	@Test
 	void itShouldGenerateJwt() {
 		// Given
-		String username = "felix123";
-		Instant iat = Instant.ofEpochMilli(1627285608000L);
+		String username = "customer";
+		Instant iat = Instant.ofEpochMilli(1629696048000L);
 		Collection<? extends GrantedAuthority> authorities = ApplicationUserRole.CUSTOMER.getGrantedAuthorities();
 		
-		String tokenExpected = 
-				"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJmZWxpeDEyMyIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST"
-				+ "0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcn"
-				+ "k6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLCJpYXQiOjE2MjcyODU2MDgsImV4cCI6MTYy"
-				+ "NzI4NjUwOH0.zwOkhm_U7xaauxiY_cSY2mDWJDkf9XdKuG7DPmFYVhcBRhX-vnCI7k4Q2MG8Oy5C";
+		String tokenExpected = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjdXN0b21lciIsImF1dGhvcml0aWVzIjpbeyJhdXRob3Jp"
+				+ "dHkiOiJST0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5Ijoib3JkZXI"
+				+ "6cmVhZCJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcnk6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLC"
+				+ "JpYXQiOjE2Mjk2OTYwNDgsImV4cCI6MTYyOTY5Njk0OH0.6EhglTyrgw8wssv2A4ZHLQZANhjhUt5r8a48dvWmX3HNJ"
+				+ "rqR96MBoSpcRpYBIeb3";
+				
 		
 		// When
 		when(jwtConfig.getTokenExpirationMilliSeconds()).thenReturn(tokenExpiration);
@@ -72,15 +73,15 @@ class JwtServiceTest {
 	@Test
 	void itShouldGetTokenPayload() {
 		// Given
-		String token = 
-			"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJmZWxpeDEyMyIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST"
-			+ "0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcn"
-			+ "k6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLCJpYXQiOjE2MjcyODU2MDgsImV4cCI6MTYy"
-			+ "NzI4NjUwOH0.zwOkhm_U7xaauxiY_cSY2mDWJDkf9XdKuG7DPmFYVhcBRhX-vnCI7k4Q2MG8Oy5C";
+		String token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjdXN0b21lciIsImF1dGhvcml0aWVzIjpbeyJhdXRob3Jp"
+				+ "dHkiOiJST0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5Ijoib3JkZXI"
+				+ "6cmVhZCJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcnk6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLC"
+				+ "JpYXQiOjE2Mjk2OTYwNDgsImV4cCI6MTYyOTY5Njk0OH0.6EhglTyrgw8wssv2A4ZHLQZANhjhUt5r8a48dvWmX3HNJ"
+				+ "rqR96MBoSpcRpYBIeb3";
 		
-		String subExpected = "felix123";
-		Long iatExpected = 1627285608000L;
-		Long expExpected = 1627286508000L;
+		String subExpected = "customer";
+		Long iatExpected = 1629696048000L;
+		Long expExpected = 1629696948000L;
 		
 		// When
 		when(jwtConfig.getSecretKeyForSigning()).thenReturn(secretKey);
@@ -115,11 +116,11 @@ class JwtServiceTest {
 	@Test
 	void itShouldThrowAnExceptionWhenTokenIsExpired() {
 		// Given
-		String token = 
-			"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJmZWxpeDEyMyIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST"
-			+ "0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcn"
-			+ "k6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLCJpYXQiOjE2MjcyODU2MDgsImV4cCI6MTYy"
-			+ "NzI4NjUwOH0.zwOkhm_U7xaauxiY_cSY2mDWJDkf9XdKuG7DPmFYVhcBRhX-vnCI7k4Q2MG8Oy5C";
+		String token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJjdXN0b21lciIsImF1dGhvcml0aWVzIjpbeyJhdXRob3Jp"
+				+ "dHkiOiJST0xFX0NVU1RPTUVSIn0seyJhdXRob3JpdHkiOiJvcmRlcjp3cml0ZSJ9LHsiYXV0aG9yaXR5Ijoib3JkZXI"
+				+ "6cmVhZCJ9LHsiYXV0aG9yaXR5IjoiY2F0ZWdvcnk6cmVhZCJ9LHsiYXV0aG9yaXR5IjoicHJvZHVjdDpyZWFkIn1dLC"
+				+ "JpYXQiOjE2Mjk2OTYwNDgsImV4cCI6MTYyOTY5Njk0OH0.6EhglTyrgw8wssv2A4ZHLQZANhjhUt5r8a48dvWmX3HNJ"
+				+ "rqR96MBoSpcRpYBIeb3";
 		
 		// When
 		when(jwtConfig.getSecretKeyForSigning()).thenReturn(secretKey);

@@ -8,6 +8,12 @@ import { makeStyles } from "@material-ui/core/styles";
 // style hook
 // uses the theme provider https://material-ui.com/customization/theming/
 const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: 0,
+  },
+  content: {
+    padding: 20,
+  },
   appbar: {
     backgroundColor: theme.palette.secondary.main,
   },
@@ -16,9 +22,9 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 0,
   },
   toolbar: {
-    [theme.breakpoints.up("sm")]: {
-      paddingLeft: 0,
-    },
+    // [theme.breakpoints.up("sm")]: {
+    //   paddingLeft: 0,
+    // },
     paddingRight: 0,
     flex: 1,
     display: "flex",
@@ -36,6 +42,13 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 4px",
     alignItems: "center",
   },
+  mobileIconButton: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  menuButton: {
+    color: "white",
+  },
   toolbarMenuMobile: {
     [theme.breakpoints.down("sm")]: {
       display: "flex",
@@ -49,10 +62,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   socialsMenu: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "none",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "flex",
     },
     flex: 1,
@@ -124,14 +137,12 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.up("md")]: {
       marginLeft: "10%",
-      width: 375,
-      //marginRight: 32,
+      width: 450,
       marginRight: 24,
     },
     [theme.breakpoints.up("lg")]: {
       marginLeft: "10%",
-      width: 450,
-      //marginRight: 32,
+      width: 650,
       marginRight: 0,
     },
     padding: "2px 4px",
@@ -204,10 +215,6 @@ const useStyles = makeStyles((theme) => ({
     width: 80,
   },
   snackPageContainer: { display: "flex" },
-  snackPageImage: {
-    minHeight: 250,
-    flex: 1,
-  },
 
   // Cart
   cartHeader: {
@@ -303,28 +310,29 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
   orderListTitleMobile: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "flex",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
   orderCard: {
     padding: 16,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "none",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "flex",
     },
   },
   orderCardMobile: {
     padding: 16,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       display: "flex",
+      flexDirection: "column",
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
@@ -388,6 +396,343 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.up("sm")]: {
       marginRight: 8,
+    },
+  },
+  dashboard: {
+    height: "100%",
+    display: "flex",
+    padding: 0,
+  },
+  dashboardMenu: {
+    backgroundColor: "#242526",
+    width: 160,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+    },
+    flexDirection: "column",
+    boxShadow: "1px 0 10px #242526",
+    WebkitBoxShadow: "1px 0 10px #242526",
+    MozBoxShadow: "1px 0 10px #242526",
+  },
+  dashboardMenuMobile: {
+    backgroundColor: "#242526",
+    width: 40,
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+    flexDirection: "column",
+  },
+  dashboardMenuItem: {
+    color: theme.palette.secondary.main,
+    justifyContent: "left",
+  },
+  dashboardContent: {
+    flex: 1,
+    padding: 20,
+  },
+  imageSection: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  editImageContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    padding: 10,
+  },
+  editImageContainerImageContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  editImageInputImage: {
+    flex: 1,
+    backgroundColor: "#bebebe",
+    [theme.breakpoints.down("sm")]: {
+      minHeight: 150,
+      maxWidth: 320,
+    },
+    [theme.breakpoints.up("sm")]: {
+      minHeight: 250,
+      maxWidth: 320,
+    },
+  },
+  editImageInputTextInput: {
+    display: "flex",
+  },
+  deleteImageContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  productCardHorizontal: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
+      flex: 1,
+      padding: 10,
+    },
+  },
+  productCardHorizontalTitle: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
+      flex: 1,
+      paddingLeft: 14,
+      paddingRight: 14,
+    },
+  },
+  productCardNewProductButton: {
+    [theme.breakpoints.down("md")]: {
+      display: "flex",
+      flex: 1,
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "none",
+    },
+  },
+  productCardHorizontalMain: {
+    flex: 6,
+    display: "flex",
+    flexDirection: "row",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+  },
+  productCardHorizontalImage: {
+    height: 100,
+    width: 100,
+    margin: 16,
+  },
+  productCardHorizontalName: {
+    flex: 1,
+    margin: 16,
+  },
+  productCardHorizontalID: {
+    minWidth: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  productCardHorizontalDate: {
+    minWidth: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  productCardHorizontalPrice: {
+    minWidth: 100,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  productCardHorizontalUnitsSold: {
+    width: 120,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  productCardHorizontalFiller: {
+    width: 80,
+  },
+  verticalCard: {
+    [theme.breakpoints.down("md")]: {
+      display: "flex",
+      flex: 1,
+      flexDirection: "column",
+      marginBottom: 10,
+    },
+    [theme.breakpoints.up("md")]: {
+      display: "none",
+    },
+  },
+  productCardVerticalImage: {
+    height: 200,
+    margin: 16,
+  },
+  selector: {
+    minWidth: 120,
+    marginLeft: 10,
+  },
+  success: {
+    color: "#388e3c",
+  },
+  error: {
+    color: "#d32f2f",
+  },
+  carouselImageContainer: {
+    flex: 1,
+    display: "flex",
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  carouselImage: {
+    [theme.breakpoints.down("sm")]: {
+      height: 200,
+      width: 200,
+    },
+    [theme.breakpoints.up("sm")]: {
+      height: 300,
+      width: 300,
+    },
+  },
+  orderTitleFiller: {
+    minWidth: 80,
+  },
+  adminSelector: {
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "inline-flex",
+      border: 0,
+      marginTop: 0,
+      marginRight: 0,
+      marginBottom: 0,
+      marginLeft: 10,
+      padding: 0,
+      position: "relative",
+      minWidth: 110,
+      flexDirection: "column",
+      verticalAlign: "top",
+    },
+  },
+  adminSelectorMobileContainer: {
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+      paddingTop: 10,
+      paddingBottom: 20,
+      paddingRight: 10,
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  adminSelectorMobile: {
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      marginBottom: 10,
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  adminSearchContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  adminSearchBar: {
+    flex: 1,
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: 0,
+      marginRight: 10,
+    },
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: 30,
+      marginRight: 40,
+    },
+
+    display: "flex",
+    alignItems: "center",
+  },
+  memberCard: {
+    padding: 16,
+    [theme.breakpoints.down("lg")]: {
+      display: "none",
+    },
+    [theme.breakpoints.up("lg")]: {
+      display: "flex",
+    },
+  },
+  memberCardMobile: {
+    padding: 16,
+    [theme.breakpoints.down("lg")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("lg")]: {
+      display: "none",
+    },
+  },
+  dashboardTile: {
+    display: "flex",
+    minHeight: 100,
+  },
+  dashboardTileItem: {
+    flex: 1,
+    padding: 5,
+  },
+  homeCarousel: {
+    width: "100%",
+  },
+  snackCarouselItem: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingRight: 10,
+    paddingLeft: 10,
+  },
+  snackCarouselItemContent: {
+    display: "flex",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      flex: 1,
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: 600,
+    },
+    [theme.breakpoints.up("md")]: {
+      width: 800,
+    },
+    [theme.breakpoints.up("lg")]: {
+      width: 1000,
+    },
+  },
+  snackItemCarouselImage: {
+    [theme.breakpoints.down("sm")]: {
+      height: 200,
+      marginLeft: 10,
+      marginRight: 10,
+    },
+    [theme.breakpoints.up("sm")]: {
+      flex: 1,
+      minHeight: 300,
+    },
+    [theme.breakpoints.up("md")]: {
+      flex: 1,
+      minHeight: 300,
+    },
+    [theme.breakpoints.up("lg")]: {
+      flex: 1,
+      minHeight: 400,
+    },
+  },
+  snackItemCarouselDescription: {
+    overflow: "hidden",
+    [theme.breakpoints.down("sm")]: {
+      height: 200,
+      padding: 20,
+    },
+    [theme.breakpoints.up("sm")]: {
+      flex: 2,
+      height: 300,
+      padding: 40,
+    },
+    [theme.breakpoints.up("md")]: {
+      flex: 2,
+      height: 300,
+    },
+    [theme.breakpoints.up("lg")]: {
+      flex: 2,
+      minHeight: 400,
+      padding: 40,
     },
   },
 }));

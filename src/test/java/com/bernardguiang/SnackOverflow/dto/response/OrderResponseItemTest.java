@@ -26,46 +26,24 @@ class OrderResponseItemTest {
 	@Test
 	void itShouldConstructOrderResponseItemFromOrderItem() {
 		// Given
-		// ... Define OrderItem
-		Long orderItemId = 1L;
-		int orderItemQuantity = 10;
-		BigDecimal orderItemPrice = new BigDecimal(2);
-		
-		// ... Define Order
 		Order order = null;
+		Product product = new Product();
 		
-		// ... Define Product
-		Long productId = 3L;
-		String productName = "Chips";
-		String productDescription = "A bag of chips";
-		BigDecimal productPrice = new BigDecimal(2.99);
-		List<String> productImages = Arrays.asList("Image 1", "Image 2", "Image 3");
-		Long categoryId = 10L;
-		String categoryName = "Junk Food";
-		Set<Product> categoryProducts = null;
-		List<String> productCategoryStrings = Arrays.asList(categoryName);
-		Set<Category> productCategories = new HashSet<>(Arrays.asList(new Category(categoryId, categoryName, categoryProducts)));
-		List<OrderItem> orderedItems = null;
-		Instant productCreatedDate = Instant.now();
-		
-		Product product = new Product(productName, productDescription, productPrice, productCreatedDate, productImages,
-				productCategories, orderedItems);
-		
-		OrderItem orderItem = new OrderItem(orderItemId, order, product, orderItemQuantity, orderItemPrice);
+		OrderItem orderItem = new OrderItem();
+		orderItem.setId(1L);
+		orderItem.setOrder(order);
+		orderItem.setPrice(new BigDecimal(2));
+		orderItem.setProduct(product);
+		orderItem.setQuantity(10);
 		
 		// When
-		OrderResponseItem orderResponseItem = new OrderResponseItem(orderItem);
+		OrderResponseItem underTest = new OrderResponseItem(orderItem);
 		
-		// Then
-		assertEquals(orderItemPrice, orderResponseItem.getPrice());
-		assertEquals(orderItemQuantity, orderResponseItem.getQuantity());
-		// ... Product
-		ProductDTO orderResponseItemProduct = orderResponseItem.getProduct();
-		assertEquals(productName, orderResponseItemProduct.getName());
-		assertEquals(productDescription, orderResponseItemProduct.getDescription());
-		assertEquals(productPrice, orderResponseItemProduct.getPrice());
-		assertEquals(productImages, orderResponseItemProduct.getImages());
-		assertEquals(productCategoryStrings, orderResponseItemProduct.getCategories());
+		// Then		
+		assertEquals(1L, underTest.getId());
+		assertEquals(new BigDecimal(2), underTest.getPrice());
+		assertEquals(10, underTest.getQuantity());
+		assertNotNull(underTest.getProduct());
 	}
 
 }

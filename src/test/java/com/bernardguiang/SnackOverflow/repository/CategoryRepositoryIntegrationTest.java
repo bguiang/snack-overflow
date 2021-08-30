@@ -18,7 +18,7 @@ import com.bernardguiang.SnackOverflow.model.Category;
 //This property is needed so the @Column annotations in the class isn't ignored by the unit test
 @DataJpaTest(properties = { "spring.jpa.properties.javax.persistence.validation.mode=none" })
 //@TestPropertySource(properties = {"spring.jpa.hibernate.ddl-auto=create-drop"})
-class CategoryRepositoryTest {
+class CategoryRepositoryIntegrationTest {
 
 	@Autowired
 	private CategoryRepository underTest;
@@ -42,22 +42,7 @@ class CategoryRepositoryTest {
 		korea = underTest.save(category2);
 		vietnam = underTest.save(category3);
 	}
-	
-	@Test
-	void ifShouldFindAll() {
-		// Given
-		// When
-		// Then
-		Iterable<Category> categoryIterator = underTest.findAll();
-		List<Category> result = new ArrayList<Category>();
-		categoryIterator.forEach(result::add);
-		
-		assertEquals(3, result.size());
-		assertTrue(result.contains(japan));
-		assertTrue(result.contains(korea));
-		assertTrue(result.contains(vietnam));
-	}
-	
+
 	@Test
 	void itshouldFindByName() {
 		// Given	

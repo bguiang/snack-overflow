@@ -57,6 +57,7 @@ public class AuthService {
 		user.setRole(ApplicationUserRole.CUSTOMER.name());
 		user.setFullName(registerRequest.getFullName());
 		user.setEmail(registerRequest.getEmail());
+		user.setJoinDate(Instant.now());
 		User saved = userRepository.save(user);
 		return new UserDTO(saved);
 	}

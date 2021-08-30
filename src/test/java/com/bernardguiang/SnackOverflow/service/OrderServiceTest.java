@@ -1,33 +1,44 @@
 package com.bernardguiang.SnackOverflow.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.bernardguiang.SnackOverflow.dto.Address;
-import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
-import com.bernardguiang.SnackOverflow.dto.ShippingDetailsDTO;
-import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
-import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
-import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
+import com.bernardguiang.SnackOverflow.dto.request.OrderPage;
+import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
+import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
+import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponseItem;
+import com.bernardguiang.SnackOverflow.dto.response.OrderStatsResponse;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
@@ -36,47 +47,79 @@ import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.model.ShippingDetails;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.OrderRepository;
-import com.bernardguiang.SnackOverflow.repository.ProductRepository;
-import com.bernardguiang.SnackOverflow.repository.UserRepository;
 
 class OrderServiceTest {
 
 	private OrderService underTest;
 
 	private OrderRepository orderRepository;
-	private ProductRepository productRepository;
-	private UserRepository userRepository;
+
+	private static List<Order> ordersList;
+
+	private Order completeOrder;
+
+	static SimpleDateFormat dateFormat;
+
+	@BeforeAll
+	static void beforeAll() throws ParseException {
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+		Order order1 = new Order();
+		order1.setStatus(OrderStatus.PAYMENT_PENDING);
+		order1.setTotal(new BigDecimal(20));
+		Date date1 = dateFormat.parse("15/02/1999");
+		order1.setCreatedDate(date1.toInstant());
+
+		Order order2 = new Order();
+		order2.setStatus(OrderStatus.PROCESSING);
+		order2.setTotal(new BigDecimal(10));
+		Date date2 = dateFormat.parse("15/02/2000");
+		order2.setCreatedDate(date2.toInstant());
+
+		Order order3 = new Order();
+		order3.setStatus(OrderStatus.COMPLETED);
+		order3.setTotal(new BigDecimal(30));
+		Date date3 = dateFormat.parse("15/02/2000");
+		order3.setCreatedDate(date3.toInstant());
+
+		Order order4 = new Order();
+		order4.setStatus(OrderStatus.FAILED);
+		order4.setTotal(new BigDecimal(5));
+		Date date4 = dateFormat.parse("15/03/2000");
+		order4.setCreatedDate(date4.toInstant());
+
+		Order order5 = new Order();
+		order5.setStatus(OrderStatus.CANCELLED);
+		order5.setTotal(new BigDecimal(15));
+		Date date5 = dateFormat.parse("15/03/2000");
+		order5.setCreatedDate(date5.toInstant());
+
+		Order order6 = new Order();
+		order6.setStatus(OrderStatus.REFUNDED);
+		order6.setTotal(new BigDecimal(10));
+		Date date6 = dateFormat.parse("15/03/2000");
+		order6.setCreatedDate(date6.toInstant());
+
+		ordersList = Arrays.asList(order1, order2, order3, order4, order5, order6);
+	}
 
 	@BeforeEach
 	void setUp() throws Exception {
 		orderRepository = Mockito.mock(OrderRepository.class);
-		productRepository = Mockito.mock(ProductRepository.class);
-		userRepository = Mockito.mock(UserRepository.class);
 
-		underTest = new OrderService(orderRepository, productRepository, userRepository);
-	}
+		underTest = new OrderService(orderRepository);
 
-	@Test
-	void itShouldFindByIdAndUserId() {
-		// Given
-		Long id = 1L;
-		Long userId = 1L;
-		BigDecimal total = new BigDecimal(20);
-		OrderStatus status = OrderStatus.PROCESSING;
-		Instant createDate = Instant.now();
-		boolean isShippingSameAsBilling = false;
-
-		Order order = new Order();
-		order.setId(id);
-		order.setTotal(total);
-		order.setCreatedDate(createDate);
-		order.setShippingSameAsBilling(isShippingSameAsBilling);
-		order.setStatus(status);
+		completeOrder = new Order();
+		completeOrder.setId(1L);
+		completeOrder.setTotal(new BigDecimal(20));
+		completeOrder.setCreatedDate(Instant.now());
+		completeOrder.setShippingSameAsBilling(false);
+		completeOrder.setStatus(OrderStatus.PROCESSING);
 
 		List<OrderItem> items = new ArrayList<>();
 		OrderItem item1 = new OrderItem();
 		item1.setId(1L);
-		item1.setOrder(order);
+		item1.setOrder(completeOrder);
 		item1.setPrice(new BigDecimal(2));
 		Product product1 = new Product();
 		product1.setId(1L);
@@ -84,7 +127,7 @@ class OrderServiceTest {
 		item1.setQuantity(5);
 		OrderItem item2 = new OrderItem();
 		item2.setId(2L);
-		item2.setOrder(order);
+		item2.setOrder(completeOrder);
 		item2.setPrice(new BigDecimal(5));
 		Product product2 = new Product();
 		product2.setId(2L);
@@ -92,11 +135,11 @@ class OrderServiceTest {
 		item2.setQuantity(2);
 		items.add(item1);
 		items.add(item2);
-		order.setItems(items);
+		completeOrder.setItems(items);
 
 		User user = new User();
-		user.setId(userId);
-		order.setUser(user);
+		user.setId(2L);
+		completeOrder.setUser(user);
 
 		String name = "First Last";
 		String email = "my@email.com";
@@ -117,735 +160,246 @@ class OrderServiceTest {
 		address.setCountry(country);
 
 		BillingDetails billingDetails = new BillingDetails();
-		billingDetails.setId(1L);
+		billingDetails.setId(3L);
 		billingDetails.setName(name);
 		billingDetails.setEmail(email);
 		billingDetails.setPhone(phone);
 		billingDetails.setAddress(address);
-		billingDetails.setOrder(order);
-		order.setBillingDetails(billingDetails);
+		billingDetails.setOrder(completeOrder);
+		completeOrder.setBillingDetails(billingDetails);
 
 		ShippingDetails shippingDetails = new ShippingDetails();
-		shippingDetails.setId(1L);
+		shippingDetails.setId(4L);
 		shippingDetails.setName(name);
 		shippingDetails.setPhone(phone);
 		shippingDetails.setAddress(address);
-		shippingDetails.setOrder(order);
-		order.setShippingDetails(shippingDetails);
+		shippingDetails.setOrder(completeOrder);
+		completeOrder.setShippingDetails(shippingDetails);
+	}
 
-		Optional<Order> orderOptional = Optional.ofNullable(order);
+	@Test
+	void getOrderStatsAllTime() {
+		// Given
+		StatsRequest statsRequest = new StatsRequest();
+		statsRequest.setRange("all");
 
 		// When
-		when(orderRepository.findByIdAndUserId(id, userId)).thenReturn(orderOptional);
-		OrderResponse orderResponse = underTest.findByIdAndUserId(id, userId);
+		when(orderRepository.findAll()).thenReturn(ordersList);
+		OrderStatsResponse orderStatsResponse = underTest.getOrderStats(statsRequest);
 
 		// Then
-		assertEquals(id, orderResponse.getId());
-		assertEquals(userId, orderResponse.getUserId());
-		assertEquals(total, orderResponse.getTotal());
-		assertEquals(status, orderResponse.getStatus());
-		assertEquals(userId, orderResponse.getUserId());
-		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
+		assertEquals(3, orderStatsResponse.getSuccessfulOrders());
+		assertEquals(new BigDecimal(60), orderStatsResponse.getTotalIncome());
+		assertEquals(3, orderStatsResponse.getUnsuccessfulOrders());
+		assertEquals(new BigDecimal(30), orderStatsResponse.getUnsuccessfulPayments());
+	}
 
-		// ... compare billing
-		assertEquals(1L, orderResponse.getBillingDetails().getId());
-		assertEquals(name, orderResponse.getBillingDetails().getName());
-		assertEquals(email, orderResponse.getBillingDetails().getEmail());
-		assertEquals(id, orderResponse.getBillingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getBillingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getBillingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getBillingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getBillingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getBillingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getBillingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getBillingDetails().getAddress().getCountry());
+	// TODO: need to figure out how to properly test this (time dependent)
+	@Test
+	void getOrderStatsForThisMonth() {
+		// Given
+		ArgumentCaptor<Instant> instantCaptor = ArgumentCaptor.forClass(Instant.class);
 
-		// ... compare shipping
-		assertEquals(1L, orderResponse.getShippingDetails().getId());
-		assertEquals(name, orderResponse.getShippingDetails().getName());
-		assertEquals(id, orderResponse.getShippingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getShippingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getShippingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getShippingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getShippingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getShippingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getShippingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getShippingDetails().getAddress().getCountry());
+		StatsRequest statsRequest = new StatsRequest();
+		statsRequest.setRange("month");
+		LocalDate firstDayOfMonth = LocalDate.parse("2000-05-01");
+		LocalDate localDateMock = Mockito.mock(LocalDate.class);
 
-		// .. compare order items
-		OrderResponseItem responseItem1 = orderResponse.getItems().get(0);
-		OrderResponseItem responseItem2 = orderResponse.getItems().get(1);
-		assertEquals(item1.getId(), responseItem1.getId());
-		assertEquals(item1.getPrice(), responseItem1.getPrice());
-		assertEquals(item1.getQuantity(), responseItem1.getQuantity());
-		assertEquals(item1.getProduct().getId(), responseItem1.getProduct().getId());
+		MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class);
 
-		assertEquals(item2.getId(), responseItem2.getId());
-		assertEquals(item2.getPrice(), responseItem2.getPrice());
-		assertEquals(item2.getQuantity(), responseItem2.getQuantity());
-		assertEquals(item2.getProduct().getId(), responseItem2.getProduct().getId());
+		// When
+		localDateMockedStatic.when(() -> LocalDate.now()).thenReturn(localDateMock);
+		when(localDateMock.withDayOfMonth(1)).thenReturn(firstDayOfMonth);
+		underTest.getOrderStats(statsRequest);
+
+		Mockito.verify(orderRepository).findAllByCreatedDateAfter(instantCaptor.capture());
+
+		// Then
+		Instant instantParam = instantCaptor.getValue();
+		Date convert = Date.from(instantParam);
+		assertNotNull(instantParam);
+		assertEquals(1, convert.getDate());
+		assertEquals(4, convert.getMonth());
+		localDateMockedStatic.close();
+	}
+
+	// TODO: need to figure out how to properly test this (time dependent). Replace
+	// argument captor with matcher
+	@Test
+	void getOrderStatsForThisYear() {
+		// Given
+		ArgumentCaptor<Instant> instantCaptor = ArgumentCaptor.forClass(Instant.class);
+
+		StatsRequest statsRequest = new StatsRequest();
+		statsRequest.setRange("year");
+		LocalDate firstDayOfYear = LocalDate.parse("2000-01-01");
+		LocalDate localDateMock = Mockito.mock(LocalDate.class);
+
+		MockedStatic<LocalDate> localDateMockedStatic = Mockito.mockStatic(LocalDate.class);
+
+		// When
+		localDateMockedStatic.when(() -> LocalDate.now()).thenReturn(localDateMock);
+		when(localDateMock.with(Mockito.any())).thenReturn(firstDayOfYear);
+		underTest.getOrderStats(statsRequest);
+
+		Mockito.verify(orderRepository).findAllByCreatedDateAfter(instantCaptor.capture());
+
+		// Then
+		Instant instantParam = instantCaptor.getValue();
+		Date convert = Date.from(instantParam);
+		assertNotNull(instantParam);
+		assertEquals(1, convert.getDate());
+		assertEquals(0, convert.getMonth());
+		localDateMockedStatic.close();
+	}
+
+	@Test
+	void findOrdersPaginated() {
+		// Given
+		OrderPage orderPage = new OrderPage();
+		OrderDTO mockOrderDTO = Mockito.mock(OrderDTO.class);
+		List<Object> orderDTOList = Arrays.asList(mockOrderDTO);
+		Sort sort = Sort.by(orderPage.getSortDirection(), orderPage.getSortBy());
+		Pageable pageable = PageRequest.of(orderPage.getPageNumber(), orderPage.getPageSize(), sort);
+
+		Page<Object> dtoPage = new PageImpl<Object>(orderDTOList, pageable, orderDTOList.size());
+
+		Page<Order> pageMock = Mockito.mock(Page.class);
+
+		// When
+		when(orderRepository.findAllByUserUsernameContainingIgnoreCase(Mockito.any(), Mockito.any()))
+				.thenReturn(pageMock);
+		when(pageMock.map(Mockito.any())).thenReturn(dtoPage);
+		when(mockOrderDTO.getStatus()).thenReturn(OrderStatus.COMPLETED);
+
+		Page<OrderDTO> result = underTest.findOrdersPaginated(orderPage);
+
+		// Then
+		assertEquals(dtoPage, result);
+		assertEquals(1, result.getContent().size());
+		assertEquals(OrderStatus.COMPLETED, result.getContent().get(0).getStatus());
+	}
+
+	@Test
+	void findByIdIncludUserInfo() {
+		// Given
+		Optional<Order> orderOptional = Optional.ofNullable(completeOrder);
+
+		// When
+		when(orderRepository.findById(1L)).thenReturn(orderOptional);
+
+		OrderDTO result = underTest.findByIdIncludUserInfo(1L);
+
+		// Then
+		assertEquals(1L, result.getId());
+		assertEquals(2L, result.getUser().getId());
+		assertEquals(new BigDecimal(20), result.getTotal());
+		assertEquals(OrderStatus.PROCESSING, result.getStatus());
+		assertEquals(false, result.getIsShippingSameAsBilling());
+		assertEquals(3L, result.getBillingDetails().getId());
+		assertEquals(4L, result.getShippingDetails().getId());
+	}
+
+	@Test
+	void findByIdIncludUserInfoShouldThrowAnExceptionWhenNotFound() {
+		// Given
+		Optional<Order> orderOptional = Optional.ofNullable(null);
+		// When
+		when(orderRepository.findById(1L)).thenReturn(orderOptional);
+
+		// Then
+		assertThrows(IllegalStateException.class, () -> underTest.findByIdIncludUserInfo(1L),
+				"Could not find Order with id: " + 1L);
+	}
+
+	@Test
+	void findByIdAndUserId() {
+		// Given
+		Optional<Order> orderOptional = Optional.ofNullable(completeOrder);
+
+		// When
+		when(orderRepository.findByIdAndUserId(1L, 2L)).thenReturn(orderOptional);
+		OrderResponse orderResponse = underTest.findByIdAndUserId(1L, 2L);
+
+		// Then
+		assertEquals(1L, orderResponse.getId());
+		assertEquals(2L, orderResponse.getUserId());
+		assertEquals(new BigDecimal(20), orderResponse.getTotal());
+		assertEquals(OrderStatus.PROCESSING, orderResponse.getStatus());
+		assertEquals(false, orderResponse.getIsShippingSameAsBilling());
+		assertEquals(3L, orderResponse.getBillingDetails().getId());
+		assertEquals(4L, orderResponse.getShippingDetails().getId());
 	}
 
 	@Test
 	void findByIdAndUserIdShouldThrowAnExceptionWhenNotFound() {
 		// Given
-		Long id = 1L;
-		Long userId = 1L;
 		Optional<Order> orderOptional = Optional.ofNullable(null);
 		// When
-		when(orderRepository.findByIdAndUserId(Mockito.any(), Mockito.any())).thenReturn(orderOptional);
+		when(orderRepository.findByIdAndUserId(1L, 2L)).thenReturn(orderOptional);
 
 		// Then
-		assertThrows(IllegalStateException.class, () -> underTest.findByIdAndUserId(id, userId),
-				"Could not find Order with id: " + id + " and userId: " + userId);
+		assertThrows(IllegalStateException.class, () -> underTest.findByIdAndUserId(1L, 2L),
+				"Could not find Order with id: " + 1L + " and userId: " + 2L);
 	}
 
 	@Test
-	void itShouldFindAllByUserAndStatusNot() {
+	void findAllByUserId() {
 		// Given
-		Long id = 1L;
-		OrderStatus status = OrderStatus.CREATED;
-
-		User user = new User();
-		user.setId(id);
-		List<Order> orders = new ArrayList<>();
-		Order order1 = new Order();
-		List<OrderItem> items1 = new ArrayList<>();
-		Product p1 = new Product();
-		p1.setId(1L);
-		OrderItem orderItem1 = new OrderItem();
-		orderItem1.setId(1L);
-		orderItem1.setProduct(p1);
-		items1.add(orderItem1);
-		order1.setItems(items1);
-		order1.setUser(user);
-		order1.setId(1L);
-		BillingDetails billingDetails1 = new BillingDetails();
-		billingDetails1.setOrder(order1);
-		order1.setBillingDetails(billingDetails1);
-		order1.setShippingSameAsBilling(true);
-
-		Order order2 = new Order();
-		List<OrderItem> items2 = new ArrayList<>();
-		Product p2 = new Product();
-		p2.setId(2L);
-		OrderItem orderItem2 = new OrderItem();
-		orderItem2.setId(2L);
-		orderItem2.setProduct(p2);
-		items2.add(orderItem2);
-		order2.setItems(items2);
-		order2.setUser(user);
-		order2.setId(3L);
-		BillingDetails billingDetails2 = new BillingDetails();
-		billingDetails2.setOrder(order2);
-		order2.setBillingDetails(billingDetails2);
-		order2.setShippingSameAsBilling(true);
-
-		orders.add(order1);
-		orders.add(order2);
-
-		UserDTO userDTO = new UserDTO();
-		userDTO.setId(id);
+		List<Order> orders = Arrays.asList(completeOrder);
 
 		// When
-		when(orderRepository.findAllByUserIdAndStatusNot(id, status)).thenReturn(orders);
+		when(orderRepository.findAllByUserId(1L)).thenReturn(orders);
+
+		List<OrderResponse> result = underTest.findAllByUserId(1L);
 
 		// Then
-		List<OrderResponse> orderList = underTest.findAllByUserAndStatusNot(userDTO, status);
-
-		assertEquals(2, orderList.size());
+		assertEquals(1L, result.get(0).getId());
+		assertEquals(2L, result.get(0).getUserId());
+		assertEquals(new BigDecimal(20), result.get(0).getTotal());
+		assertEquals(OrderStatus.PROCESSING, result.get(0).getStatus());
+		assertEquals(false, result.get(0).getIsShippingSameAsBilling());
+		assertEquals(3L, result.get(0).getBillingDetails().getId());
+		assertEquals(4L, result.get(0).getShippingDetails().getId());
 	}
 
 	@Test
-	void itShouldFindByIdAndUserIdAndStatusNot() {
+	void updateOrderStatus() {
 		// Given
-		Long id = 1L;
-		Long userId = 1L;
-		BigDecimal total = new BigDecimal(20);
-		OrderStatus status = OrderStatus.PROCESSING;
-		Instant createDate = Instant.now();
-		boolean isShippingSameAsBilling = false;
+		OrderStatusUpdateRequest request = new OrderStatusUpdateRequest();
+		request.setId(1L);
+		request.setStatus(OrderStatus.CANCELLED);
 
-		Order order = new Order();
-		order.setId(id);
-		order.setTotal(total);
-		order.setCreatedDate(createDate);
-		order.setShippingSameAsBilling(isShippingSameAsBilling);
-		order.setStatus(status);
-
-		List<OrderItem> items = new ArrayList<>();
-		OrderItem item1 = new OrderItem();
-		item1.setId(1L);
-		item1.setOrder(order);
-		item1.setPrice(new BigDecimal(2));
-		Product product1 = new Product();
-		product1.setId(1L);
-		item1.setProduct(product1);
-		item1.setQuantity(5);
-		OrderItem item2 = new OrderItem();
-		item2.setId(2L);
-		item2.setOrder(order);
-		item2.setPrice(new BigDecimal(5));
-		Product product2 = new Product();
-		product2.setId(2L);
-		item2.setProduct(product2);
-		item2.setQuantity(2);
-		items.add(item1);
-		items.add(item2);
-		order.setItems(items);
-
-		User user = new User();
-		user.setId(userId);
-		order.setUser(user);
-
-		String name = "First Last";
-		String email = "my@email.com";
-		String phone = "1234567890";
-		String addressLineOne = "address line 1";
-		String addressLineTwo = "address line 2";
-		String city = "city";
-		String state = "state";
-		String postalCode = "postal";
-		String country = "country";
-
-		Address address = new Address();
-		address.setAddressLineOne(addressLineOne);
-		address.setAddressLineTwo(addressLineTwo);
-		address.setCity(city);
-		address.setState(state);
-		address.setPostalCode(postalCode);
-		address.setCountry(country);
-
-		BillingDetails billingDetails = new BillingDetails();
-		billingDetails.setId(1L);
-		billingDetails.setName(name);
-		billingDetails.setEmail(email);
-		billingDetails.setPhone(phone);
-		billingDetails.setAddress(address);
-		billingDetails.setOrder(order);
-		order.setBillingDetails(billingDetails);
-
-		ShippingDetails shippingDetails = new ShippingDetails();
-		shippingDetails.setId(1L);
-		shippingDetails.setName(name);
-		shippingDetails.setPhone(phone);
-		shippingDetails.setAddress(address);
-		shippingDetails.setOrder(order);
-		order.setShippingDetails(shippingDetails);
-
-		Optional<Order> orderOptional = Optional.ofNullable(order);
+		Optional<Order> orderOptional = Optional.ofNullable(completeOrder);
 
 		// When
-		when(orderRepository.findByIdAndUserIdAndStatusNot(id, userId, OrderStatus.CREATED)).thenReturn(orderOptional);
-		OrderResponse orderResponse = underTest.findByIdAndUserIdAndStatusNot(id, userId, OrderStatus.CREATED);
+		when(orderRepository.findById(1L)).thenReturn(orderOptional);
+		when(orderRepository.save(completeOrder)).thenReturn(completeOrder);
+		OrderResponse orderResponse = underTest.updateOrderStatus(request);
 
 		// Then
-		assertEquals(id, orderResponse.getId());
-		assertEquals(userId, orderResponse.getUserId());
-		assertEquals(total, orderResponse.getTotal());
-		assertEquals(status, orderResponse.getStatus());
-		assertEquals(userId, orderResponse.getUserId());
-		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
-
-		// ... compare billing
-		assertEquals(1L, orderResponse.getBillingDetails().getId());
-		assertEquals(name, orderResponse.getBillingDetails().getName());
-		assertEquals(email, orderResponse.getBillingDetails().getEmail());
-		assertEquals(id, orderResponse.getBillingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getBillingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getBillingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getBillingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getBillingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getBillingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getBillingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getBillingDetails().getAddress().getCountry());
-
-		// ... compare shipping
-		assertEquals(1L, orderResponse.getShippingDetails().getId());
-		assertEquals(name, orderResponse.getShippingDetails().getName());
-		assertEquals(id, orderResponse.getShippingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getShippingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getShippingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getShippingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getShippingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getShippingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getShippingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getShippingDetails().getAddress().getCountry());
-
-		// .. compare order items
-		OrderResponseItem responseItem1 = orderResponse.getItems().get(0);
-		OrderResponseItem responseItem2 = orderResponse.getItems().get(1);
-		assertEquals(item1.getId(), responseItem1.getId());
-		assertEquals(item1.getPrice(), responseItem1.getPrice());
-		assertEquals(item1.getQuantity(), responseItem1.getQuantity());
-		assertEquals(item1.getProduct().getId(), responseItem1.getProduct().getId());
-
-		assertEquals(item2.getId(), responseItem2.getId());
-		assertEquals(item2.getPrice(), responseItem2.getPrice());
-		assertEquals(item2.getQuantity(), responseItem2.getQuantity());
-		assertEquals(item2.getProduct().getId(), responseItem2.getProduct().getId());
+		assertEquals(1L, orderResponse.getId());
+		assertEquals(2L, orderResponse.getUserId());
+		assertEquals(new BigDecimal(20), orderResponse.getTotal());
+		assertEquals(OrderStatus.CANCELLED, orderResponse.getStatus());
+		assertEquals(false, orderResponse.getIsShippingSameAsBilling());
+		assertEquals(3L, orderResponse.getBillingDetails().getId());
+		assertEquals(4L, orderResponse.getShippingDetails().getId());
 	}
-	
+
 	@Test
-	void findByIdAndUserIdAndStatusNotShouldThrowAnExceptionWhenNotFound() {
+	void updateOrderStatusShouldThrowAnExceptionIfOrderNotfound() {
 		// Given
-		Long id = 1L;
-		Long userId = 1L;
-		OrderStatus status = OrderStatus.CREATED;
+		OrderStatusUpdateRequest request = new OrderStatusUpdateRequest();
+		request.setId(1L);
+		request.setStatus(OrderStatus.CANCELLED);
+		
 		Optional<Order> orderOptional = Optional.ofNullable(null);
 		// When
-		when(orderRepository.findByIdAndUserIdAndStatusNot(Mockito.any(), Mockito.any(), Mockito.eq(status))).thenReturn(orderOptional);
+		when(orderRepository.findById(1L)).thenReturn(orderOptional);
 
 		// Then
-		assertThrows(IllegalStateException.class, () -> underTest.findByIdAndUserIdAndStatusNot(id, userId, status),
-				"Could not find Order with id: " + id + " and userId: " + userId);
-	}
-	
-	@Test
-	void itShouldCreateOrderWithCartItemsAndClientSecret() {
-		// Given
-		Long productId = 1L;
-		Product product = new Product();
-		product.setId(productId);
-		product.setPrice(new BigDecimal(2));
-		Optional<Product> productOptional = Optional.of(product);
-
-		Long userId = 20L;
-		User user = new User();
-		user.setId(userId);
-		Optional<User> userOptional = Optional.of(user);
-
-		Long orderId = 8L;
-		
-		Order order = new Order();
-		order.setUser(user);
-		order.setStatus(OrderStatus.CREATED);
-
-		List<CartInfoRequestItem> cartItems = new ArrayList<>();
-		CartInfoRequestItem item = new CartInfoRequestItem();
-		item.setProductId(productId);
-		item.setQuantity(5);
-		cartItems.add(item);
-		CartRequest request = new CartRequest();
-		request.setItems(cartItems);
-		
-		String clientSecret = "client secret";
-
-		// When
-		when(productRepository.findById(productId)).thenReturn(productOptional);
-		when(userRepository.findById(userId)).thenReturn(userOptional);
-		when(orderRepository.save(
-				Mockito.argThat((Order o) -> (o.getStatus() == OrderStatus.CREATED && o.getUser().getId() == userId
-						&& o.getTotal().equals(new BigDecimal(10)) && o.getClientSecret() == clientSecret
-						&& o.getItems().get(0).getProduct().getPrice().equals(new BigDecimal(2))
-						&& o.getItems().get(0).getProduct().getId() == productId)))).thenAnswer(
-								new Answer() {
-									@Override
-									public Object answer(InvocationOnMock invocation) throws Throwable {
-										Object[] args = invocation.getArguments();
-										Order savedOrder = (Order) args[0];
-										savedOrder.setId(orderId);
-										return savedOrder;
-									}
-						});
-
-		// Then
-		Long savedOrderId = underTest.createOrderWithCartItemsAndClientSecret(request, clientSecret, userId);
-
-		assertEquals(orderId, savedOrderId);
-	}
-
-	@Test
-	void itShouldThrowAnExceptionWhenUserDoesNotExist() {
-		// Given
-		Long productId = 1L;
-		Product product = new Product();
-		product.setId(productId);
-		product.setPrice(new BigDecimal(2));
-		Optional<Product> productOptional = Optional.ofNullable(product);
-
-		Long userId = 20L;
-
-		List<CartInfoRequestItem> cartItems = new ArrayList<>();
-		CartInfoRequestItem item = new CartInfoRequestItem();
-		item.setProductId(productId);
-		item.setQuantity(5);
-		cartItems.add(item);
-		CartRequest request = new CartRequest();
-		request.setItems(cartItems);
-
-		Optional<User> userOptional = Optional.ofNullable(null);
-		;
-
-		String clientSecret = "client secret";
-
-		// When
-		when(productRepository.findById(productId)).thenReturn(productOptional);
-		when(userRepository.findById(userId)).thenReturn(userOptional);
-
-		// Then
-		assertThrows(IllegalStateException.class,
-				() -> underTest.createOrderWithCartItemsAndClientSecret(request, clientSecret, userId),
-				"Could not find user with id: " + userId);
-	}
-
-	@Test
-	void itShouldThrowAnExceptionWhenProductDoesNotExist() {
-		// Given
-		Long productId = 1L;
-		Product product = null;
-		Optional<Product> productOptional = Optional.ofNullable(product);
-
-		Long userId = 20L;
-
-		List<CartInfoRequestItem> cartItems = new ArrayList<>();
-		CartInfoRequestItem item = new CartInfoRequestItem();
-		item.setProductId(productId);
-		item.setQuantity(5);
-		cartItems.add(item);
-		CartRequest request = new CartRequest();
-		request.setItems(cartItems);
-
-		String clientSecret = "client secret";
-
-		// When
-		when(productRepository.findById(productId)).thenReturn(productOptional);
-
-		// Then
-		assertThrows(IllegalStateException.class,
-				() -> underTest.createOrderWithCartItemsAndClientSecret(request, clientSecret, userId),
-				"Could not find product with id: " + productId);
-	}
-	
-	@Test
-	void itShouldUpdateBillingAndShipping() {
-		// Given		
-		Long orderId = 5L;
-		UpdateBillingAndShippingRequest update = new UpdateBillingAndShippingRequest();
-		update.setId(orderId);
-
-		String name = "First Last";
-		String email = "my@email.com";
-		String phone = "1234567890";
-		String addressLineOne = "address line 1";
-		String addressLineTwo = "address line 2";
-		String city = "city";
-		String state = "state";
-		String postalCode = "postal";
-		String country = "country";
-
-		Address address = new Address();
-		address.setAddressLineOne(addressLineOne);
-		address.setAddressLineTwo(addressLineTwo);
-		address.setCity(city);
-		address.setState(state);
-		address.setPostalCode(postalCode);
-		address.setCountry(country);
-
-		BillingDetailsDTO billingDetails = new BillingDetailsDTO();
-		billingDetails.setId(1L);
-		billingDetails.setName(name);
-		billingDetails.setEmail(email);
-		billingDetails.setPhone(phone);
-		billingDetails.setAddress(address);
-		billingDetails.setOrderId(orderId);
-
-		ShippingDetailsDTO shippingDetails = new ShippingDetailsDTO();
-		shippingDetails.setId(1L);
-		shippingDetails.setName(name);
-		shippingDetails.setPhone(phone);
-		shippingDetails.setAddress(address);
-		shippingDetails.setOrderId(orderId);
-
-		update.setBillingDetails(billingDetails);
-		boolean isShippingSameAsBilling = false;
-		update.setShippingSameAsBilling(isShippingSameAsBilling);
-		update.setShippingDetails(shippingDetails);
-
-		Long userId = 2L;
-		UserDTO userDTO = new UserDTO();
-		userDTO.setId(userId);
-
-		User user = new User();
-		user.setId(userId);
-		List<OrderItem> items = new ArrayList<>();
-		
-		Order order = new Order();
-		order.setItems(items);
-		order.setId(orderId);
-		order.setUser(user);
-		Optional<Order> orderOptional = Optional.of(order);
-
-		// When
-		when(orderRepository.findByIdAndUserId(orderId, userId)).thenReturn(orderOptional);
-		when(orderRepository.save(order)).thenAnswer(
-				new Answer() {
-					@Override
-					public Object answer(InvocationOnMock invocation) throws Throwable {
-						Object[] args = invocation.getArguments();
-						Order savedOrder = (Order) args[0];
-						savedOrder.setId(orderId);
-						return savedOrder;
-					}
-		});
-
-		// Then
-		OrderResponse orderResponse = underTest.updateBillingAndShipping(update, userDTO);
-
-		assertEquals(orderId, orderResponse.getId());
-		assertEquals(userId, orderResponse.getUserId());
-		assertTrue(orderResponse.getCreatedDate() != null);
-		
-		// Billing And Shipping Details
-		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
-
-		// ... compare billing
-		//assertEquals(1L, orderResponse.getBillingDetails().getId());
-		assertEquals(name, orderResponse.getBillingDetails().getName());
-		assertEquals(email, orderResponse.getBillingDetails().getEmail());
-		assertEquals(orderId, orderResponse.getBillingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getBillingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getBillingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getBillingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getBillingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getBillingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getBillingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getBillingDetails().getAddress().getCountry());
-
-		// ... compare shipping
-		//assertEquals(1L, orderResponse.getShippingDetails().getId());
-		assertEquals(name, orderResponse.getShippingDetails().getName());
-		assertEquals(orderId, orderResponse.getShippingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getShippingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getShippingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getShippingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getShippingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getShippingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getShippingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getShippingDetails().getAddress().getCountry());
-	}
-	
-	@Test
-	void shippingShouldBeNullWhenUpdatingBillingAndShippingWithBillingSameAsShipping() {
-		// Given
-		Long orderId = 5L;
-		UpdateBillingAndShippingRequest update = new UpdateBillingAndShippingRequest();
-		update.setId(orderId);
-
-//		String name = "First Last";
-//		String email = "my@email.com";
-//		String phone = "1234567890";
-//		String addressLineOne = "address line 1";
-//		String addressLineTwo = "address line 2";
-//		String city = "city";
-//		String state = "state";
-//		String postalCode = "postal";
-//		String country = "country";
-
-//		Address address = new Address();
-//		address.setAddressLineOne(addressLineOne);
-//		address.setAddressLineTwo(addressLineTwo);
-//		address.setCity(city);
-//		address.setState(state);
-//		address.setPostalCode(postalCode);
-//		address.setCountry(country);
-
-		BillingDetailsDTO billingDetails = new BillingDetailsDTO();
-//		billingDetails.setId(1L);
-//		billingDetails.setName(name);
-//		billingDetails.setEmail(email);
-//		billingDetails.setPhone(phone);
-//		billingDetails.setAddress(address);
-//		billingDetails.setOrderId(orderId);
-
-		ShippingDetailsDTO shippingDetails = new ShippingDetailsDTO();
-//		shippingDetails.setId(1L);
-//		shippingDetails.setName(name);
-//		shippingDetails.setPhone(phone);
-//		shippingDetails.setAddress(address);
-//		shippingDetails.setOrderId(orderId);
-
-		update.setBillingDetails(billingDetails);
-		boolean isShippingSameAsBilling = true;
-		update.setShippingSameAsBilling(isShippingSameAsBilling);
-		update.setShippingDetails(shippingDetails);
-
-		Long userId = 2L;
-		UserDTO userDTO = new UserDTO();
-		userDTO.setId(userId);
-
-		User user = new User();
-		user.setId(userId);
-		List<OrderItem> items = new ArrayList<>();
-		
-		Order order = new Order();
-		order.setItems(items);
-		order.setId(orderId);
-		order.setUser(user);
-		Optional<Order> orderOptional = Optional.of(order);
-
-		// When
-		when(orderRepository.findByIdAndUserId(orderId, userId)).thenReturn(orderOptional);
-		when(orderRepository.save(order)).thenAnswer(
-				new Answer() {
-					@Override
-					public Object answer(InvocationOnMock invocation) throws Throwable {
-						Object[] args = invocation.getArguments();
-						Order savedOrder = (Order) args[0];
-						savedOrder.setId(orderId);
-						return savedOrder;
-					}
-		});
-
-		// Then
-		OrderResponse orderResponse = underTest.updateBillingAndShipping(update, userDTO);
-
-		assertEquals(orderId, orderResponse.getId());
-		assertEquals(userId, orderResponse.getUserId());
-		assertTrue(orderResponse.getCreatedDate() != null);
-		
-		// Shipping Info
-		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
-		assertEquals(null, orderResponse.getShippingDetails());
-	}
-	
-	@Test
-	void itShouldUpdateExistingBillingAndShipping() {
-		// Given		
-		Long orderId = 5L;
-		UpdateBillingAndShippingRequest update = new UpdateBillingAndShippingRequest();
-		update.setId(orderId);
-
-		String name = "First Last";
-		String email = "my@email.com";
-		String phone = "1234567890";
-		String addressLineOne = "address line 1";
-		String addressLineTwo = "address line 2";
-		String city = "city";
-		String state = "state";
-		String postalCode = "postal";
-		String country = "country";
-
-		Address address = new Address();
-		address.setAddressLineOne(addressLineOne);
-		address.setAddressLineTwo(addressLineTwo);
-		address.setCity(city);
-		address.setState(state);
-		address.setPostalCode(postalCode);
-		address.setCountry(country);
-
-		BillingDetailsDTO billingDetails = new BillingDetailsDTO();
-		billingDetails.setId(1L);
-		billingDetails.setName(name);
-		billingDetails.setEmail(email);
-		billingDetails.setPhone(phone);
-		billingDetails.setAddress(address);
-		billingDetails.setOrderId(orderId);
-
-		ShippingDetailsDTO shippingDetails = new ShippingDetailsDTO();
-		shippingDetails.setId(1L);
-		shippingDetails.setName(name);
-		shippingDetails.setPhone(phone);
-		shippingDetails.setAddress(address);
-		shippingDetails.setOrderId(orderId);
-
-		update.setBillingDetails(billingDetails);
-		boolean isShippingSameAsBilling = false;
-		update.setShippingSameAsBilling(isShippingSameAsBilling);
-		update.setShippingDetails(shippingDetails);
-
-		Long userId = 2L;
-		UserDTO userDTO = new UserDTO();
-		userDTO.setId(userId);
-
-		User user = new User();
-		user.setId(userId);
-		List<OrderItem> items = new ArrayList<>();
-		
-		Order order = new Order();
-		order.setItems(items);
-		order.setId(orderId);
-		order.setUser(user);
-		BillingDetails savedBillingDetails = new BillingDetails();
-		Long savedBillingDetailsId = 20L;
-		savedBillingDetails.setId(savedBillingDetailsId);
-		order.setBillingDetails(savedBillingDetails);
-		order.setShippingSameAsBilling(false);
-		ShippingDetails savedShippingDetails = new ShippingDetails();
-		Long savedShippingDetailsId = 15L;
-		savedShippingDetails.setId(savedShippingDetailsId);
-		order.setShippingDetails(savedShippingDetails);
-		Optional<Order> orderOptional = Optional.of(order);
-
-		// When
-		when(orderRepository.findByIdAndUserId(orderId, userId)).thenReturn(orderOptional);
-		when(orderRepository.save(order)).thenAnswer(
-				new Answer() {
-					@Override
-					public Object answer(InvocationOnMock invocation) throws Throwable {
-						Object[] args = invocation.getArguments();
-						Order savedOrder = (Order) args[0];
-						savedOrder.setId(orderId);
-						savedOrder.getBillingDetails().setId(savedBillingDetailsId);
-						savedOrder.getShippingDetails().setId(savedShippingDetailsId);
-						return savedOrder;
-					}
-		});
-
-		// Then
-		OrderResponse orderResponse = underTest.updateBillingAndShipping(update, userDTO);
-
-		assertEquals(orderId, orderResponse.getId());
-		assertEquals(userId, orderResponse.getUserId());
-		assertTrue(orderResponse.getCreatedDate() != null);
-		
-		// Billing And Shipping Details
-		assertEquals(isShippingSameAsBilling, orderResponse.getIsShippingSameAsBilling());
-
-		// ... compare billing
-		assertEquals(20L, orderResponse.getBillingDetails().getId());
-		assertEquals(name, orderResponse.getBillingDetails().getName());
-		assertEquals(email, orderResponse.getBillingDetails().getEmail());
-		assertEquals(orderId, orderResponse.getBillingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getBillingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getBillingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getBillingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getBillingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getBillingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getBillingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getBillingDetails().getAddress().getCountry());
-
-		// ... compare shipping
-		assertEquals(15L, orderResponse.getShippingDetails().getId());
-		assertEquals(name, orderResponse.getShippingDetails().getName());
-		assertEquals(orderId, orderResponse.getShippingDetails().getOrderId());
-		assertEquals(phone, orderResponse.getShippingDetails().getPhone());
-		assertEquals(addressLineOne, orderResponse.getShippingDetails().getAddress().getAddressLineOne());
-		assertEquals(addressLineTwo, orderResponse.getShippingDetails().getAddress().getAddressLineTwo());
-		assertEquals(city, orderResponse.getShippingDetails().getAddress().getCity());
-		assertEquals(state, orderResponse.getShippingDetails().getAddress().getState());
-		assertEquals(postalCode, orderResponse.getShippingDetails().getAddress().getPostalCode());
-		assertEquals(country, orderResponse.getShippingDetails().getAddress().getCountry());
-	}
-	
-	@Test
-	void updateBillingAndShippingShouldThrowAnErrorWhenOrderDoesNotExist() {
-		// Given
-		Long orderId = 5L;
-		UpdateBillingAndShippingRequest update = new UpdateBillingAndShippingRequest();
-		update.setId(orderId);
-
-		Long userId = 2L;
-		UserDTO userDTO = new UserDTO();
-		userDTO.setId(userId);
-
-		Optional<Order> orderOptional = Optional.ofNullable(null);
-
-		// When
-		when(orderRepository.findByIdAndUserId(orderId, userId)).thenReturn(orderOptional);
-
-		// Then
-		assertThrows(IllegalStateException.class, ()->underTest.updateBillingAndShipping(update, userDTO),
-				"Order " + update.getId() + " does not exist for user " + userDTO.getId());
+		assertThrows(IllegalStateException.class, () -> underTest.updateOrderStatus(request),
+			"Could not find Order with id: " + 1L);
 	}
 }

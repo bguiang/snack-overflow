@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 
 import CardSection from "./CardSection";
-import SnackOverflow from "../../api/SnackOverflow";
 import {
   Card,
   Typography,
@@ -16,10 +15,8 @@ import {
   MenuItem,
   Button,
 } from "@material-ui/core";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { CheckBox } from "@material-ui/icons";
 
-const CheckoutForm = ({ clientSecret, token, orderId }) => {
+const CheckoutForm = ({ clientSecret, token }) => {
   const { clearItems } = useCart();
   const history = useHistory();
   const classes = useStyles();
@@ -45,25 +42,26 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
   const [shippingPostalCode, setShippingPostalCode] = useState("");
   const [shippingCountry, setShippingCountry] = useState("US");
 
+  const [submitting, setSubmitting] = useState(false);
+
   const confirmPayment = async () => {
-    const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement),
-        billing_details: {
-          address: {
-            line1: billingAddressLine1,
-            line2: billingAddressLine1,
-            city: billingCity,
-            state: billingState,
-            postal_code: billingPostalCode,
-            country: billingCountry,
-          },
-          name: billingName,
-          phone: billingPhone,
-          email: billingEmail,
+    let shipping = {};
+
+    if (isShippingSameAsBilling) {
+      shipping = {
+        address: {
+          line1: billingAddressLine1,
+          line2: billingAddressLine2,
+          city: billingCity,
+          state: billingState,
+          postal_code: billingPostalCode,
+          country: billingCountry,
         },
-      },
-      shipping: {
+        name: billingName,
+        phone: billingPhone,
+      };
+    } else {
+      shipping = {
         address: {
           line1: shippingAddressLine1,
           line2: shippingAddressLine2,
@@ -74,13 +72,33 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
         },
         name: shippingName,
         phone: shippingPhone,
+      };
+    }
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          address: {
+            line1: billingAddressLine1,
+            line2: billingAddressLine2,
+            city: billingCity,
+            state: billingState,
+            postal_code: billingPostalCode,
+            country: billingCountry,
+          },
+          name: billingName,
+          phone: billingPhone,
+          email: billingEmail,
+        },
       },
+      shipping: shipping,
     });
 
     if (result.error) {
       // Show error to your customer (e.g., insufficient funds)
-      console.log(result.error.message);
       setPaymentErrorMessage(result.error.message);
+      setSubmitting(false); // only re-activate button here. No need to do so when success
     } else {
       // The payment has been processed!
       if (result.paymentIntent.status === "succeeded") {
@@ -89,12 +107,9 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
         // execution. Set up a webhook or plugin to listen for the
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
-
-        console.log("Payment Success");
         clearItems();
         history.push("/checkout/success");
       }
-      console.log(result);
     }
   };
 
@@ -103,67 +118,17 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
     // which would refresh the page.
     event.preventDefault();
 
+    setSubmitting(true);
+
     setPaymentErrorMessage("");
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
+      setSubmitting(false);
       return;
     }
 
-    try {
-      const updateRequest = {
-        id: orderId,
-        billingDetails: {
-          address: {
-            addressLineOne: billingAddressLine1,
-            addressLineTwo: billingAddressLine2,
-            city: billingCity,
-            state: billingState,
-            postalCode: billingPostalCode,
-            country: billingCountry,
-          },
-          name: billingName,
-          phone: billingPhone,
-          email: billingEmail,
-        },
-        isShippingSameAsBilling,
-      };
-      const shippingDetails = {
-        address: {
-          addressLineOne: shippingAddressLine1,
-          addressLineTwo: shippingAddressLine2,
-          city: shippingCity,
-          state: shippingState,
-          postalCode: shippingPostalCode,
-          country: shippingCountry,
-        },
-        name: shippingName,
-        phone: shippingPhone,
-      };
-
-      if (!isShippingSameAsBilling)
-        updateRequest.shippingDetails = shippingDetails;
-
-      console.log("Update Request");
-      console.log(updateRequest);
-
-      const response = await SnackOverflow.put(
-        "/orders/updateBillingAndShipping",
-        updateRequest,
-        {
-          headers: { Authorization: token },
-        }
-      );
-
-      if (response.status === 200) {
-        confirmPayment();
-      }
-    } catch (error) {
-      //console.log(error);
-      if (error.status === 400) {
-        console.log(error.response);
-      }
-    }
+    confirmPayment();
   };
 
   return (
@@ -445,7 +410,7 @@ const CheckoutForm = ({ clientSecret, token, orderId }) => {
         <Button
           type="submit"
           fullWidth
-          disabled={!stripe}
+          disabled={!stripe && !submitting}
           variant="contained"
           color="primary"
           className={classes.submit}

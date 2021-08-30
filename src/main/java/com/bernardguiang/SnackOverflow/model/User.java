@@ -1,5 +1,6 @@
 package com.bernardguiang.SnackOverflow.model;
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -20,13 +21,17 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@Column(unique=true)
+	@Column(unique=true, nullable = false)
 	private String email;
-	@Column(unique=true)
+	@Column(unique=true, nullable = false)
 	private String username;
+	@Column(nullable = false)
 	private String password;
+	@Column(nullable = false)
 	private String fullName;
+	@Column(nullable = false)
 	private String role;
+	private Instant joinDate;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL) 
 	private List<Order> orders;
@@ -38,43 +43,20 @@ public class User {
 	@JoinColumn(name = "token_id", referencedColumnName = "id") // owning side contains the @JoinColumns (owns the foreign key column). Must save refresh token through User
 	private RefreshToken refreshToken;
 	
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL) 
+	private List<StripePaymentIntent> paymentIntent;
+	
 	public User() {}
 	
-	public User(Long id, String email, String username, String password, String fullName, String role,
-			List<Order> orders, Address address, RefreshToken refreshToken) {
-		this.id = id;
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.fullName = fullName;
-		this.role = role;
-		this.orders = orders;
-		this.address = address;
-		this.refreshToken = refreshToken;
-	}
-	
-	public User(String email, String username, String password, String fullName, String role,
-			List<Order> orders, Address address, RefreshToken refreshToken) {
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.fullName = fullName;
-		this.role = role;
-		this.orders = orders;
-		this.address = address;
-		this.refreshToken = refreshToken;
-	}
 
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getUsername() {
-		return username;
-	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -83,15 +65,22 @@ public class User {
 		this.email = email;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public String getFullName() {
 		return fullName;
 	}
@@ -108,6 +97,23 @@ public class User {
 		this.role = role;
 	}
 	
+	public Instant getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(Instant joinDate) {
+		this.joinDate = joinDate;
+	}
+
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
 	public Address getAddress() {
 		return address;
 	}
@@ -122,6 +128,14 @@ public class User {
 
 	public void setRefreshToken(RefreshToken refreshToken) {
 		this.refreshToken = refreshToken;
+	}
+
+	public List<StripePaymentIntent> getPaymentIntent() {
+		return paymentIntent;
+	}
+
+	public void setPaymentIntent(List<StripePaymentIntent> paymentIntent) {
+		this.paymentIntent = paymentIntent;
 	}
 
 	@Override

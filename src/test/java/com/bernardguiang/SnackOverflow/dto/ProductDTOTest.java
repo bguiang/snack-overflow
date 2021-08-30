@@ -44,24 +44,36 @@ class ProductDTOTest {
 		String categoryName = "Junk Food";
 		Set<Product> categoryProducts = null;
 		List<String> productCategoryStrings = Arrays.asList(categoryName);
+		Category category = new Category();
+		category.setId(categoryId);
+		category.setName(categoryName);
+		category.setProducts(categoryProducts);
 		Set<Category> productCategories = new HashSet<>(
-				Arrays.asList(new Category(categoryId, categoryName, categoryProducts)));
+				Arrays.asList(category));
 		List<OrderItem> orderedItems = null;
 		Instant productCreatedDate = Instant.now();
 
-		Product product = new Product(productName, productDescription, productPrice, productCreatedDate, productImages,
-				productCategories, orderedItems);
+		Product product = new Product();
+		product.setId(productId);
+		product.setName(productName);
+		product.setDescription(productDescription);
+		product.setPrice(productPrice);
+		product.setCreatedDate(productCreatedDate);
+		product.setImages(productImages);
+		product.setCategories(productCategories);
+		product.setOrderedItems(orderedItems);
 
 		// When
 		ProductDTO dto = new ProductDTO(product);
 
 		// Then
-		//assertEquals(productCreatedDate, dto.getCreatedDate()); //TODO: add asserts for createdDate on ProductDTO
+		assertEquals(productId, dto.getId());
 		assertEquals(productName, dto.getName());
 		assertEquals(productPrice, dto.getPrice());
 		assertEquals(productDescription, dto.getDescription());
 		assertEquals(productCategoryStrings, dto.getCategories());
 		assertEquals(productImages, dto.getImages());
+		assertEquals(false, dto.isDeleted());
 	}
 
 	@Test

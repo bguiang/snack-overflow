@@ -8,9 +8,7 @@ export default (id) => {
     try {
       let response = await SnackOverflow.get(`/products/${id}`);
       setSnack(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   // Call Get Snacks Once

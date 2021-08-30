@@ -29,7 +29,10 @@ class CategoryDTOTest {
 		Long id = 2L;
 		String name = "Japan";
 		Set<Product> products = null;
-		Category category = new Category(id, name, products);
+		Category category = new Category();
+		category.setId(id);
+		category.setName(name);
+		category.setProducts(products);
 
 		// When
 		CategoryDTO dto = new CategoryDTO(category);
@@ -74,7 +77,7 @@ class CategoryDTOTest {
 	}
 	
 	@Test
-	void categoryDTOValidationShouldFailifNameIsempty() {
+	void categoryDTOValidationShouldFailifNameIsBlank() {
 		// Given
 		String categoryName = "";
 		CategoryDTO category = new CategoryDTO();

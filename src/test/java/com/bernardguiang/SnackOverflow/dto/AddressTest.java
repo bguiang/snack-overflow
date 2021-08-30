@@ -10,8 +10,6 @@ import javax.validation.Validator;
 
 import org.junit.jupiter.api.Test;
 
-import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
-
 class AddressTest {
 
 	private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

@@ -26,14 +26,6 @@ public class ShippingDetails {
 	public ShippingDetails() {
 	}
 	
-	public ShippingDetails(Long id, String name, String phone, Address address, Order order) {
-		this.id = id;
-		this.name = name;
-		this.phone = phone;
-		this.address = address;
-		this.order = order;
-	}
-	
 	public Long getId() {
 		return id;
 	}

@@ -10,8 +10,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -34,6 +38,9 @@ import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponseItem;
+import com.bernardguiang.SnackOverflow.model.Category;
+import com.bernardguiang.SnackOverflow.model.OrderItem;
+import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.repository.ProductRepository;
 import com.bernardguiang.SnackOverflow.service.ApplicationUserDetailsService;
 import com.bernardguiang.SnackOverflow.service.AuthService;
@@ -85,7 +92,38 @@ class CartControllerIntegrationTest {
 		CartInfoResponse cartInfoResponse = new CartInfoResponse();
 		List<CartInfoResponseItem> responseItems = new ArrayList<>();
 		CartInfoResponseItem responseItem = new CartInfoResponseItem();
-		responseItem.setProduct(new ProductDTO());
+		//responseItem.setProduct(new ProductDTO()); // TODO: needs to use a full productDTO to check serialization
+		
+		String productName = "Chips";
+		String productDescription = "A bag of chips";
+		BigDecimal productPrice = new BigDecimal(2.99);
+		List<String> productImages = Arrays.asList("Image 1", "Image 2", "Image 3");
+		Long categoryId = 10L;
+		String categoryName = "Junk Food";
+		Set<Product> categoryProducts = null;
+		Category category = new Category();
+		category.setId(categoryId);
+		category.setName(categoryName);
+		category.setProducts(categoryProducts);
+		Set<Category> productCategories = new HashSet<>(
+				Arrays.asList(category));
+		List<OrderItem> orderedItems = null;
+		Instant productCreatedDate = Instant.now();
+
+		Product product = new Product();
+		product.setId(productId);
+		product.setName(productName);
+		product.setDescription(productDescription);
+		product.setPrice(productPrice);
+		product.setCreatedDate(productCreatedDate);
+		product.setImages(productImages);
+		product.setCategories(productCategories);
+		product.setOrderedItems(orderedItems);
+		ProductDTO productDTO = new ProductDTO(product);
+		responseItem.setProduct(productDTO);
+		
+		
+		
 		responseItem.setQuantity(10);
 		responseItems.add(responseItem);
 		cartInfoResponse.setItems(responseItems);
@@ -97,8 +135,8 @@ class CartControllerIntegrationTest {
 			@Override
 			public boolean matches(CartRequest argument) {
 				return 
-					argument.getItems().get(0).getProductId() == request.getItems().get(0).getProductId() &&
-					argument.getItems().get(0).getQuantity() == request.getItems().get(0).getQuantity();
+					argument.getItems().get(0).getProductId() == productId &&
+					argument.getItems().get(0).getQuantity() == quantity;
 			}
 		}))).thenReturn(cartInfoResponse);
 		
@@ -107,7 +145,20 @@ class CartControllerIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.total").value(total))
-				.andExpect(jsonPath("$.items").isNotEmpty());
+				.andExpect(jsonPath("$.items").isNotEmpty())
+				.andExpect(jsonPath("$.items[0].quantity").value(10))
+				.andExpect(jsonPath("$.items[0].product").exists())
+				.andExpect(jsonPath("$.items[0].product.id").value(productId))
+				.andExpect(jsonPath("$.items[0].product.name").value(productName))
+				.andExpect(jsonPath("$.items[0].product.description").value(productDescription))
+				.andExpect(jsonPath("$.items[0].product.price").value(productPrice))
+				.andExpect(jsonPath("$.items[0].product.images").isNotEmpty())
+				.andExpect(jsonPath("$.items[0].product.images[0]").value("Image 1"))
+				.andExpect(jsonPath("$.items[0].product.images[1]").value("Image 2"))
+				.andExpect(jsonPath("$.items[0].product.images[2]").value("Image 3"))
+				.andExpect(jsonPath("$.items[0].product.categories[0]").value("Junk Food"))
+				.andExpect(jsonPath("$.items[0].product.deleted").value(false))
+				;
 		
 		verify(cartService).getCartInfo(Mockito.any());
 		

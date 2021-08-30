@@ -102,15 +102,7 @@ class AuthControllerIntegrationTest {
 	void signupShouldFailIfInvalidRequest() throws Exception {
 
 		// Given
-		String email = "test@email.com";
-		String fullName = "test";
-		String password = "Test123!";
-		String username = ""; // invalid username
 		RegisterRequest registerRequest = new RegisterRequest();
-		registerRequest.setEmail(email);
-		registerRequest.setFullName(fullName);
-		registerRequest.setPassword(password);
-		registerRequest.setUsername(username);
 
 		// When
 		// Then
@@ -121,7 +113,7 @@ class AuthControllerIntegrationTest {
 	}
 	
 	@Test
-	void itShouldLogout() throws Exception {
+	void logout() throws Exception {
 		// Given
 	
 		String cookieValue = null;
@@ -148,7 +140,7 @@ class AuthControllerIntegrationTest {
 	}
 	
 	@Test
-	void itShouldRefreshTokens() throws Exception {
+	void refreshTokens() throws Exception {
 		// Given
 		String username = "tokenOwner";
 		String refreshTokenUsed = "refreshTokenUsed";

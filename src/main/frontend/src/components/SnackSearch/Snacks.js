@@ -1,50 +1,117 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import {
+  Grid,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel,
+} from "@material-ui/core";
 
 import SnackCard from "./SnackCard";
 import useStyles from "../../styles";
 import SnackOverflow from "../../api/SnackOverflow";
 import Pagination from "@material-ui/lab/Pagination";
+import { useHistory } from "react-router";
 
 const Snacks = () => {
+  const classes = useStyles();
+
   const location = useLocation();
+  const history = useHistory();
+
+  const [snacks, setSnacks] = useState([]);
   const [search, setSearch] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const [pageNumberUI, setPageNumberUI] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  //const [snacks] = useSnacks(search);
-  const classes = useStyles();
+  const [sortBy, setSortBy] = useState("unitsSold");
+  const [direction, setDirection] = useState("DESC");
 
   useEffect(() => {
-    console.log("Location changed");
-    setSearch(new URLSearchParams(location.search).get("search"));
-    setPageNumber(0);
-    setPageNumberUI(1);
+    let urlParams = new URLSearchParams(location.search);
+
+    if (urlParams.get("search") !== null) {
+      setSearch(urlParams.get("search"));
+    }
+
+    if (urlParams.get("page")) {
+      let currentPage = parseInt(urlParams.get("page"));
+      setPageNumber(currentPage - 1);
+      setPageNumberUI(currentPage);
+    }
+    if (urlParams.get("sortBy")) {
+      setSortBy(urlParams.get("sortBy"));
+    }
+    if (urlParams.get("direction")) {
+      setDirection(urlParams.get("direction"));
+    }
   }, [location]);
 
-  const [snacks, setSnacks] = useState([]);
+  const handleSearchSubmit = () => {
+    history.push({
+      pathname: `/snacks`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&&page=${1}`,
+    });
+  };
+
+  const handleSearchChange = (event) => {
+    history.push({
+      pathname: `/snacks`,
+      search: `?search=${
+        event.target.value
+      }&sortBy=${sortBy}&direction=${direction}&page=${1}`,
+    });
+  };
+
+  const handleSortByChange = (event) => {
+    history.push({
+      pathname: `/snacks`,
+      search: `?search=${search}&sortBy=${
+        event.target.value
+      }&direction=${direction}&page=${1}`,
+    });
+  };
+
+  const handleDirectionChange = (event) => {
+    history.push({
+      pathname: `/snacks`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${
+        event.target.value
+      }&page=${1}`,
+    });
+  };
+
+  const handlePageChange = (value) => {
+    history.push({
+      pathname: `/snacks`,
+      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&page=${value}`,
+    });
+  };
 
   const getSnacks = async () => {
     try {
       let response = await SnackOverflow.get("/products", {
-        params: { search: search, pageSize: 9, pageNumber: pageNumber },
+        params: {
+          search: search,
+          pageSize: 9,
+          pageNumber: pageNumber,
+          itemsSold: "month",
+          sortBy: sortBy,
+          sortDirection: direction,
+        },
       });
       setSnacks(response.data.content);
       setTotalPages(response.data.totalPages);
-      //console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   // Call Get Snacks Once
   useEffect(() => {
-    console.log("search updated");
     getSnacks();
-  }, [search, pageNumber]);
+  }, [search, pageNumber, sortBy, direction]);
 
   return (
-    <div>
+    <div className={classes.content}>
       <Grid
         container
         spacing={5}
@@ -53,9 +120,67 @@ const Snacks = () => {
         justifyContent="flex-start"
         alignItems="flex-start"
       >
-        <Grid item xs={12} key="title" className={classes.cartHeader}>
+        <Grid item xs={12} key="pageTitle" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>Snacks</h2>
+          <div className={classes.adminSelector}>
+            <InputLabel id="sortBy">Sort By</InputLabel>
+            <Select
+              labelId="sortBy"
+              id="sortBySelect"
+              value={sortBy}
+              onChange={handleSortByChange}
+            >
+              <MenuItem value={"createdDate"}>Newest</MenuItem>
+              <MenuItem value={"name"}>Name</MenuItem>
+              <MenuItem value={"price"}>Price</MenuItem>
+              <MenuItem value={"unitsSold"}>Popularity</MenuItem>
+            </Select>
+          </div>
+          <div className={classes.adminSelector}>
+            <InputLabel id="direction">Direction</InputLabel>
+            <Select
+              labelId="direction"
+              id="direcitonSelect"
+              value={direction}
+              onChange={handleDirectionChange}
+            >
+              <MenuItem value={"ASC"}>Ascending</MenuItem>
+              <MenuItem value={"DESC"}>Descending</MenuItem>
+            </Select>
+          </div>
         </Grid>
+      </Grid>
+      <Grid item xs={12} key="search" className={classes.adminSearchContainer}>
+        <div className={classes.adminSelectorMobileContainer}>
+          <FormControl className={classes.adminSelectorMobile}>
+            <InputLabel id="sortBy">Sort By</InputLabel>
+            <Select
+              labelId="sortBy"
+              id="sortBySelect"
+              value={sortBy}
+              onChange={handleSortByChange}
+            >
+              <MenuItem value={"createdDate"}>Newest</MenuItem>
+              <MenuItem value={"name"}>Name</MenuItem>
+              <MenuItem value={"price"}>Price</MenuItem>
+              <MenuItem value={"unitsSold"}>Popularity</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl className={classes.adminSelectorMobile}>
+            <InputLabel id="direction">Direction</InputLabel>
+            <Select
+              labelId="direction"
+              id="direcitonSelect"
+              value={direction}
+              onChange={handleDirectionChange}
+            >
+              <MenuItem value={"ASC"}>Ascending</MenuItem>
+              <MenuItem value={"DESC"}>Descending</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+      </Grid>
+      <Grid container xs={12} spacing={5} key="snacks">
         {snacks.map((snack) => (
           <SnackCard snack={snack} key={snack.id} />
         ))}
@@ -67,8 +192,7 @@ const Snacks = () => {
             color="primary"
             page={pageNumberUI}
             onChange={(event, value) => {
-              setPageNumberUI(value);
-              setPageNumber(value - 1);
+              handlePageChange(value);
             }}
           />
         </div>

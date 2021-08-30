@@ -12,6 +12,7 @@ import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
 
 // Used as response in OrderController
+// Compared to OrderDTO, orderResponse doesn't return a userdto and only userId
 public class OrderResponse {
 
 	private long id;
@@ -23,9 +24,6 @@ public class OrderResponse {
 	private boolean isShippingSameAsBilling;
 	private long userId;
 	private OrderStatus status;
-
-	public OrderResponse() {
-	}
 	
 	public OrderResponse(Order order) {
 		List<OrderResponseItem> itemDTOs = new ArrayList<>();
@@ -39,19 +37,14 @@ public class OrderResponse {
 		this.setTotal(order.getTotal());
 		this.setCreatedDate(order.getCreatedDate());
 		
-		// this null checking should only be used for OrderDTO because Orders are allowed to be partially saved when the paymentIntent is created
-		if(order.getBillingDetails() != null) {
-			BillingDetailsDTO billing = new BillingDetailsDTO(order.getBillingDetails());
-			this.setBillingDetails(billing);
-		}
+		BillingDetailsDTO billing = new BillingDetailsDTO(order.getBillingDetails());
+		this.setBillingDetails(billing);
 		if(order.isShippingSameAsBilling()) {
 			this.setShippingDetails(null);
 		}
 		else {
-			if(order.getShippingDetails() != null) {
-				ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
-				this.setShippingDetails(shipping);
-			}
+			ShippingDetailsDTO shipping = new ShippingDetailsDTO(order.getShippingDetails());
+			this.setShippingDetails(shipping);
 		}
 		this.setIsShippingSameAsBilling(order.isShippingSameAsBilling());
 		this.setUserId(order.getUser().getId());

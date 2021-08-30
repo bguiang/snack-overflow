@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -41,19 +40,16 @@ const Order = () => {
   useEffect(() => {
     const getOrder = async () => {
       try {
-        console.log("Order ID: " + id);
         const response = await SnackOverflow.get(`/orders/${id}`, {
           headers: { Authorization: token },
         });
 
         if (response.status === 200) {
-          console.log(response.data);
           setOrder(response.data);
         } else {
           history.push("/account");
         }
       } catch (error) {
-        console.log(error);
         history.push("/account");
       }
     };
@@ -63,20 +59,15 @@ const Order = () => {
     }
   }, [id, token]);
 
+  const orderItemClick = (id) => {
+    history.push(`/snacks/${id}`);
+  };
+
   if (order === null) return <></>;
 
   return (
-    <div>
+    <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={12} key="title" className={classes.cartHeader}>
-          <h2 className={classes.cartHeaderTitle}>
-            Hello, {currentUser.username}
-          </h2>
-          <Button variant="contained" color="primary" onClick={() => logout()}>
-            Sign Out
-          </Button>
-        </Grid>
-
         <Grid item xs={12} key="orderInfo">
           <Typography variant="h6">Order #{order.id}</Typography>
           <Grid
@@ -88,7 +79,7 @@ const Order = () => {
             <Card className={classes.orderDetailsCard}>
               <CardActionArea>
                 {order.items.map((item) => (
-                  <OrderItem orderItem={item} />
+                  <OrderItem orderItem={item} orderItemClick={orderItemClick} />
                 ))}
               </CardActionArea>
               <CardContent>

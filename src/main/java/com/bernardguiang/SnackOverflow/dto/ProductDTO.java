@@ -11,8 +11,9 @@ import javax.validation.constraints.NotNull;
 import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Product;
 
-// Used as request for creating new product in ProductController
-// Used as response for retrieving products in ProductController
+// Create a separate dto for create request
+// Used as request for UPDATING new product in ProductController
+// Used as response for GETTING products in ProductController
 public class ProductDTO 
 {
 	private Long id;
@@ -30,6 +31,8 @@ public class ProductDTO
 	private List<@NotBlank(message = "Image url cannot be blank or null") String> images;
 	
 	private List<String> categories;
+	
+	private boolean deleted;
 	
 	public ProductDTO()
 	{
@@ -49,6 +52,8 @@ public class ProductDTO
 			categoriesDTO.add(category.getName());
 		}
 		this.setCategories(categoriesDTO);
+		
+		this.setDeleted(product.isDeleted());
 	}
 
 	public Long getId() {
@@ -97,6 +102,14 @@ public class ProductDTO
 
 	public void setCategories(List<String> categories) {
 		this.categories = categories;
+	}
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

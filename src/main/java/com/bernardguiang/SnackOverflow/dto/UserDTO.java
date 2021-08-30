@@ -1,5 +1,7 @@
 package com.bernardguiang.SnackOverflow.dto;
 
+import java.time.Instant;
+
 import com.bernardguiang.SnackOverflow.model.User;
 
 // Not used as part of a request since its usually grabbed inside the endpoint using the Authority
@@ -10,6 +12,7 @@ public class UserDTO {
 	private String username;
 	private String fullName;
 	private String role;
+	private Instant joinDate;
 	
 	public UserDTO() {
 		
@@ -22,6 +25,7 @@ public class UserDTO {
 		this.setFullName(user.getFullName());
 		this.setId(user.getId());
 		this.setRole(user.getRole());
+		this.setJoinDate(user.getJoinDate());
 	}
 
 	public Long getId() {
@@ -63,5 +67,12 @@ public class UserDTO {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
+
+	public Instant getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(Instant joinDate) {
+		this.joinDate = joinDate;
+	}
 }

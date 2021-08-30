@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, CardActionArea, Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { useAuth } from "../../context/AuthContext";
 import useStyles from "../../styles";
@@ -11,7 +11,7 @@ const Account = () => {
   const [orders] = useOrders();
   const classes = useStyles();
   return (
-    <div>
+    <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} key="title" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>

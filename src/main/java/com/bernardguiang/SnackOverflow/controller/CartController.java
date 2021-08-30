@@ -1,7 +1,5 @@
 package com.bernardguiang.SnackOverflow.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
-import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
 import com.bernardguiang.SnackOverflow.dto.response.CartInfoResponse;
 import com.bernardguiang.SnackOverflow.service.CartService;
 

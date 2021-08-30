@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import useStyles from "../../styles";
@@ -10,6 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 import SnackOverflow from "../../api/SnackOverflow";
 import { useHistory, useLocation } from "react-router-dom";
 import validator from "validator";
+import jwt_decode from "jwt-decode";
 
 const LoginSignup = () => {
   const { currentUser, login } = useAuth();
@@ -35,9 +34,29 @@ const Login = ({ login, classes, currentUser }) => {
     history.replace(from);
   };
 
+  const isAdmin = () => {
+    if (currentUser === null) return false;
+
+    var decoded = jwt_decode(currentUser.authenticationToken);
+    let auth = [];
+    decoded.authorities.map((authority) => {
+      auth.push(authority.authority);
+    });
+    if (auth.includes("ROLE_ADMIN")) return true;
+    else return false;
+  };
+
   useEffect(() => {
     if (currentUser !== null) {
-      callback();
+      if (from.pathname.startsWith("/admin")) {
+        if (isAdmin()) {
+          callback();
+        } else {
+          history.replace("/");
+        }
+      } else {
+        callback();
+      }
     }
   }, [currentUser]);
 
@@ -72,9 +91,7 @@ const Login = ({ login, classes, currentUser }) => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
+        <h2 className={classes.cartHeaderTitle}>Login</h2>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
             variant="outlined"
@@ -104,9 +121,6 @@ const Login = ({ login, classes, currentUser }) => {
               setPassword(event.target.value);
             }}
             autoComplete="current-password"
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
             helperText={passwordError}
             error={passwordError ? true : false}
           />
@@ -119,13 +133,13 @@ const Login = ({ login, classes, currentUser }) => {
           >
             Submit
           </Button>
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
       </div>
     </Container>
@@ -134,6 +148,7 @@ const Login = ({ login, classes, currentUser }) => {
 
 const SignUp = ({ classes }) => {
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupError, setSignupError] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -155,9 +170,11 @@ const SignUp = ({ classes }) => {
     setPasswordError("");
     setPasswordRepeatError("");
 
+    // Reset Request Error
+    setSignupError("");
+
     // Email
     if (!validator.isEmail(email)) {
-      console.log("Invalid Email: " + email);
       setEmailError("Please use a valid email");
       isValid = false;
     }
@@ -198,7 +215,7 @@ const SignUp = ({ classes }) => {
     }
 
     // PasswordRepeat
-    if (!password === passwordRepeat) {
+    if (password !== passwordRepeat) {
       setPasswordRepeatError("Passwords do not match");
       isValid = false;
     }
@@ -206,7 +223,6 @@ const SignUp = ({ classes }) => {
     return isValid;
   };
 
-  const [signupError, setSignupError] = useState("");
   const signup = async (fullName, email, username, password) => {
     const signupRequest = { fullName, email, username, password };
 
@@ -216,7 +232,16 @@ const SignUp = ({ classes }) => {
         setSignupSuccess(true);
       }
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        // Request made and server responded
+        setSignupError(error.response.data.message);
+      } else if (error.request) {
+        // The request was made but no response was received
+        setSignupError("Something went wrong. Try again later");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setSignupError("Something went wrong. Try again later");
+      }
     }
   };
 
@@ -231,9 +256,7 @@ const SignUp = ({ classes }) => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
+        <h2 className={classes.cartHeaderTitle}>Sign Up</h2>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
             variant="outlined"
@@ -317,6 +340,16 @@ const SignUp = ({ classes }) => {
           >
             Submit
           </Button>
+          {signupSuccess ? (
+            <Typography variant="h6" className={classes.success}>
+              {"Signup success!"}
+            </Typography>
+          ) : null}
+          {signupError ? (
+            <Typography variant="subtitle2" className={classes.error}>
+              {signupError}
+            </Typography>
+          ) : null}
         </form>
       </div>
     </Container>

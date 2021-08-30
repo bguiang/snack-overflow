@@ -21,12 +21,9 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldPass() {
 		// Given
-		String username = "username";
-		String password = "Password123!";
-		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -39,12 +36,9 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldFailIfUsernameLengthIsLessThanSix() {
 		// Given
-		String username = "abc";
-		String password = "Password123!";
-		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername( "abc");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -59,12 +53,9 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldFailIfUsernameLengthIsGreaterThanTwenty() {
 		// Given
-		String username = "123456789012345678901";
-		String password = "Password123!";
-		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("123456789012345678901");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -78,13 +69,10 @@ class LoginRequestTest {
 	
 	@Test
 	void loginRequestValidationShouldShouldFailIfUsernameContainsNonAlphabeticOrNonNumericCharacter() {
-		// Given
-		String username = "abcdefg$";
-		String password = "Password123!";
-		
+		// Given	
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("abcdefg$");
+		request.setPassword("Password123!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -96,21 +84,16 @@ class LoginRequestTest {
 		}
 	}
 	
-	////////////////////////////
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordIsNull() {
 		// Given
-		String expectedPasswordViolationMessage = "Password is null";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = null;
+		expectedViolationMessages.add("Password is null");
 		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword(null);
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -127,17 +110,13 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordLengthIsLessThanSix() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must be 6 or more characters in length.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = "Aa!2";
-		
+		expectedViolationMessages.add("Password must be 6 or more characters in length.");
+
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("Aa!2");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -155,17 +134,13 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordLengthIsMoreThanTwenty() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must be no more than 20 characters in length.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = "Aa!200000000000000000";
+		expectedViolationMessages.add("Password must be no more than 20 characters in length.");
 		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("Aa!200000000000000000");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -183,17 +158,13 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneUppercase() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more uppercase characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = "password123!";
+		expectedViolationMessages.add("Password must contain 1 or more uppercase characters.");
 		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("password123!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -211,17 +182,13 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneLowercase() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more lowercase characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = "PASSWORD123!";
-		
+		expectedViolationMessages.add("Password must contain 1 or more lowercase characters.");
+
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("PASSWORD123!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -239,17 +206,13 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneDigit() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more digit characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = "Password!";
+		expectedViolationMessages.add("Password must contain 1 or more digit characters.");
 		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("Password!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -267,17 +230,13 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordDoesNotContainAtLeastOneSpecialCharacter() {
 		// Given
-		String expectedPasswordViolationMessage = "Password must contain 1 or more special characters.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = "Password123";
+		expectedViolationMessages.add("Password must contain 1 or more special characters.");
 		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("Password123");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);
@@ -295,17 +254,13 @@ class LoginRequestTest {
 	@Test
 	void loginRequestValidationShouldShouldFailIfPasswordDoesNotContainContainsWhitespace() {
 		// Given
-		String expectedPasswordViolationMessage = "Password contains a whitespace character.";
 		Set<String> expectedViolationMessages = new HashSet<>();
 		expectedViolationMessages.add(defaultPasswordViolationMessage);
-		expectedViolationMessages.add(expectedPasswordViolationMessage);
-		
-		String username = "username";
-		String password = "P assword123!";
+		expectedViolationMessages.add("Password contains a whitespace character.");
 		
 		LoginRequest request = new LoginRequest();
-		request.setUsername(username);
-		request.setPassword(password);
+		request.setUsername("username");
+		request.setPassword("P assword123!");
 		
 		// When
 		Set<ConstraintViolation<LoginRequest>> violations = validator.validate(request);

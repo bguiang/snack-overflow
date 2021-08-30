@@ -22,8 +22,10 @@ import Checkout from "./components/Checkout/Checkout";
 import CheckoutSuccess from "./components/Checkout/CheckoutSuccess";
 import CartRoute from "./components/Checkout/CheckoutRoute";
 import Contact from "./components/Contact/Contact";
-import Subscriptions from "./components/Subscriptions/Subscriptions";
 import Order from "./components/Account/Order";
+import AdminRoute from "./components/AdminRoute";
+import Admin from "./components/Admin/Admin";
+import Home from "./components/Home/Home";
 
 function App() {
   // Theme colors
@@ -38,6 +40,9 @@ function App() {
       },
       secondary: {
         main: "#F8EB37",
+      },
+      success: {
+        main: "#4caf50",
       },
     },
   });
@@ -58,7 +63,8 @@ function App() {
     },
     container: {
       backgroundColor: theme.palette.background.paper,
-      padding: 20,
+      // padding: 20,
+      padding: 0,
     },
   }));
 
@@ -81,9 +87,6 @@ function App() {
                     <Route path="/snacks">
                       <Snacks />
                     </Route>
-                    <Route path="/subscriptions">
-                      <Subscriptions />
-                    </Route>
                     <Route path="/contact">
                       <Contact />
                     </Route>
@@ -93,6 +96,9 @@ function App() {
                     <Route path="/cart">
                       <Cart />
                     </Route>
+                    <AdminRoute path="/admin">
+                      <Admin />
+                    </AdminRoute>
                     <PrivateRoute path="/account/orders/:id">
                       <Order />
                     </PrivateRoute>
@@ -108,7 +114,7 @@ function App() {
                       </CartRoute>
                     </PrivateRoute>
                     <Route path="/">
-                      <Snacks />
+                      <Home />
                     </Route>
                   </Switch>
                 </Container>

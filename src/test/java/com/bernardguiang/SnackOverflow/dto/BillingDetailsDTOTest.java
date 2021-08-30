@@ -40,6 +40,7 @@ class BillingDetailsDTOTest {
 		String postalCode = "postal";
 		String country = "country";
 
+		//TODO: the valid address already exists?
 		Address address = new Address(
 				addressLineOne,
 				addressLineTwo, 
@@ -52,7 +53,13 @@ class BillingDetailsDTOTest {
 		Long orderId = 2L;
 		order.setId(orderId);
 		
-		BillingDetails billingDetails = new BillingDetails(id, name, email, phone, address, order);
+		BillingDetails billingDetails = new BillingDetails();
+		billingDetails.setId(id);
+		billingDetails.setAddress(address);
+		billingDetails.setEmail(email);
+		billingDetails.setName(name);
+		billingDetails.setOrder(order);
+		billingDetails.setPhone(phone);
 		
 		// When
 		BillingDetailsDTO dto = new BillingDetailsDTO(billingDetails);
@@ -64,16 +71,6 @@ class BillingDetailsDTOTest {
 		assertEquals(phone, dto.getPhone());
 		assertEquals(email, dto.getEmail());
 		assertEquals(orderId, dto.getOrderId());
-	}
-	
-	@Test
-	void itShouldThrowAnExceptionIfBillingDetailsIsNull() {
-		// Given
-		BillingDetails billingDetails = null;
-		
-		// When
-		// Then
-		assertThrows(NullPointerException.class, ()-> new BillingDetailsDTO(billingDetails));
 	}
 
 	@Test

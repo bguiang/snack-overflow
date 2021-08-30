@@ -1,44 +1,115 @@
 package com.bernardguiang.SnackOverflow.service;
 
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
+
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
-import com.bernardguiang.SnackOverflow.dto.request.CartInfoRequestItem;
-import com.bernardguiang.SnackOverflow.dto.request.UpdateBillingAndShippingRequest;
+import com.bernardguiang.SnackOverflow.dto.request.OrderPage;
+import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
+import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
+import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
-import com.bernardguiang.SnackOverflow.model.BillingDetails;
+import com.bernardguiang.SnackOverflow.dto.response.OrderStatsResponse;
 import com.bernardguiang.SnackOverflow.model.Order;
-import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.OrderStatus;
-import com.bernardguiang.SnackOverflow.model.Product;
-import com.bernardguiang.SnackOverflow.model.ShippingDetails;
-import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.repository.OrderRepository;
-import com.bernardguiang.SnackOverflow.repository.ProductRepository;
-import com.bernardguiang.SnackOverflow.repository.UserRepository;
 
 @Service
 public class OrderService {
 	
 	private final OrderRepository orderRepository;
-	private final ProductRepository	productRepository;
-	private final UserRepository userRepository;
 	
 	@Autowired
-	public OrderService(
-			OrderRepository orderRepository, 
-			ProductRepository productRepository,
-			UserRepository userRepository) {
+	public OrderService(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
-		this.productRepository = productRepository;
-		this.userRepository = userRepository;
+	}
+	
+	// Find all this month, year, all
+	public OrderStatsResponse getOrderStats(StatsRequest request) {
+
+		Iterable<Order> result = null;
+		switch(request.getRange()) {
+			case "all":
+				result = orderRepository.findAll();
+				break;
+			case "month":
+				LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
+				Instant monthStart = firstDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant();
+				result = orderRepository.findAllByCreatedDateAfter(monthStart);
+				break;
+			case "year":
+				LocalDate firstDayOfYear = LocalDate.now().with(firstDayOfYear());
+				Instant yearStart = firstDayOfYear.atStartOfDay(ZoneId.systemDefault()).toInstant();
+				result = orderRepository.findAllByCreatedDateAfter(yearStart);
+				break;
+		}
+
+		return getStatsFromList(result);
+	}
+	
+	private OrderStatsResponse getStatsFromList(Iterable<Order> orders) {
+		
+		Set<OrderStatus> failedStatuses = 
+			new HashSet<>(Arrays.asList(OrderStatus.FAILED, OrderStatus.REFUNDED, OrderStatus.CANCELLED));
+				
+		int successfulOrders = 0;
+		int unsuccessfulOrders = 0;
+		BigDecimal totalIncome = new BigDecimal(0);
+		BigDecimal unsuccessfulPayments = new BigDecimal(0);
+		
+		for(Order order : orders) {
+			BigDecimal total = order.getTotal();
+			if(failedStatuses.contains(order.getStatus())) {
+				unsuccessfulOrders++;
+				unsuccessfulPayments = unsuccessfulPayments.add(total);
+			}
+			else {
+				successfulOrders++;
+				totalIncome = totalIncome.add(total);
+			}
+		}
+		
+		return new OrderStatsResponse(successfulOrders, unsuccessfulOrders, totalIncome, unsuccessfulPayments);
+	}
+
+	public Page<OrderDTO> findOrdersPaginated(OrderPage page) {
+		Sort sort = Sort.by(page.getSortDirection(), page.getSortBy());
+		Pageable pageable = PageRequest.of(page.getPageNumber(), page.getPageSize(), sort);
+
+		Page<Order> result = orderRepository.findAllByUserUsernameContainingIgnoreCase(page.getSearch(), pageable);
+
+		// Returns a new Page with the content of the current one mapped by the given function
+		Page<OrderDTO> dtoPage = result.map(new Function<Order, OrderDTO>() {
+			@Override
+			public OrderDTO apply(Order entity) {
+				OrderDTO dto = new OrderDTO(entity);
+				return dto;
+			}
+		});
+
+		return dtoPage;
+	}
+	
+	public OrderDTO findByIdIncludUserInfo(Long id) {
+		Order order = orderRepository.findById(id)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id));
+		return new OrderDTO(order);
 	}
 	
 	public OrderResponse findByIdAndUserId(Long id, Long userId) {
@@ -47,8 +118,8 @@ public class OrderService {
 		return new OrderResponse(order);
 	}
 	
-	public List<OrderResponse> findAllByUserAndStatusNot(UserDTO user, OrderStatus status) {
-		Iterable<Order> ordersIterator = orderRepository.findAllByUserIdAndStatusNot(user.getId(), status);
+	public List<OrderResponse> findAllByUserId(Long userId) {
+		Iterable<Order> ordersIterator = orderRepository.findAllByUserId(userId);
 		List<OrderResponse> orderDTOs = new ArrayList<>();
 		for(Order order : ordersIterator)
 		{
@@ -58,89 +129,14 @@ public class OrderService {
 		return orderDTOs;
 	}
 	
-	public OrderResponse findByIdAndUserIdAndStatusNot(Long id, Long userId, OrderStatus status) {
-		Order order = orderRepository.findByIdAndUserIdAndStatusNot(id, userId, status)
-			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id + " and userId: " + userId));
-		return new OrderResponse(order);
-	}
-	
-	public Long createOrderWithCartItemsAndClientSecret(CartRequest cartRequest, String clientSecret, Long userId) {
+	public OrderResponse updateOrderStatus(OrderStatusUpdateRequest request) {
+		// Find order first
+		Long id = request.getId();
+		Order order = orderRepository.findById(id)
+			.orElseThrow(() -> new IllegalStateException("Could not find Order with id: " + id));
 		
-		Order order = new Order();
-		
-		BigDecimal total = new BigDecimal("0");	
-		List<OrderItem> items = new ArrayList<>();
-		for(CartInfoRequestItem requestItem : cartRequest.getItems()) {
-			Product product = productRepository.findById(requestItem.getProductId())
-				.orElseThrow(() -> new IllegalStateException("Could not find product with id: " + requestItem.getProductId()));
-			OrderItem item = new OrderItem();
-			item.setOrder(order); // set order
-			item.setProduct(product); // set product
-			item.setPrice(product.getPrice());
-			item.setQuantity(requestItem.getQuantity());
-			items.add(item);
-			
-			total = total.add(product.getPrice().multiply(new BigDecimal(requestItem.getQuantity())));
-		}
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalStateException("Could not find user with id: " + userId));
-		order.setItems(items);
-		order.setTotal(total);
-		order.setUser(user);
-		order.setClientSecret(clientSecret);
-		order.setStatus(OrderStatus.CREATED);
-		
-		Order saved = orderRepository.save(order);
-		
-		return saved.getId();
-	}
-	
-	// TODO: this doesn't "update" billing and shipping. It always saves a new one. 
-	// TODO: Don't let the user dictate which billing or shipping id to update either
-	public OrderResponse updateBillingAndShipping(UpdateBillingAndShippingRequest update, UserDTO user) {
-		
-		Order order = orderRepository.findByIdAndUserId(update.getId(), user.getId())
-				.orElseThrow(() -> new IllegalStateException("Order " + update.getId() + " does not exist for user " + user.getId()));	
-		
-		order.setCreatedDate(Instant.now());
-		
-		// Update Billing
-		BillingDetails billing = null;
-		if(order.getBillingDetails() == null) {
-			billing = new BillingDetails();
-		} else {
-			billing = order.getBillingDetails();
-		}
-		
-//		if(update.getBillingDetails().getId() != null)
-//			billing.setId(update.getBillingDetails().getId());
-		billing.setAddress(update.getBillingDetails().getAddress());
-		billing.setEmail(update.getBillingDetails().getEmail());
-		billing.setPhone(update.getBillingDetails().getPhone());
-		billing.setName(update.getBillingDetails().getName());
-		billing.setOrder(order);
-		order.setBillingDetails(billing);
-		
-		// Update Shipping
-		order.setShippingSameAsBilling(update.isShippingSameAsBilling());
-		
-		if(update.isShippingSameAsBilling()) {
-			order.setShippingDetails(null);
-		} else {
-			ShippingDetails shipping = null;
-			if(order.getShippingDetails() == null) {
-				shipping = new ShippingDetails();
-			} else {
-				shipping = order.getShippingDetails();
-			}
-//			if(update.getShippingDetails().getId() != null)
-//				shipping.setId(update.getShippingDetails().getId());
-			shipping.setAddress(update.getShippingDetails().getAddress());
-			shipping.setPhone(update.getShippingDetails().getPhone());
-			shipping.setName(update.getShippingDetails().getName());
-			shipping.setOrder(order);
-			order.setShippingDetails(shipping);
-		}
+		// Update values minus PaymentIntentId and Cart
+		order.setStatus(request.getStatus());
 		
 		Order saved = orderRepository.save(order);	
 		

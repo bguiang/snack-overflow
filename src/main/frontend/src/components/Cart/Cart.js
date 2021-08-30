@@ -38,7 +38,7 @@ const Cart = () => {
           setCartInfo(response.data);
         }
       } catch (error) {
-        console.log(error);
+        setCartInfo({ items: [], total: 0 });
       }
     };
 
@@ -54,7 +54,7 @@ const Cart = () => {
   };
 
   return (
-    <div>
+    <div className={classes.content}>
       <Dialog
         open={isTotalTooLow}
         onClose={() => setIsTotalTooLow(false)}

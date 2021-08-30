@@ -44,38 +44,33 @@ class CartServiceTest {
 	void itShouldGetCartInfo() {
 		
 		// Given
-		Long productId = 2L;
-		int quantity = 5;
-		BigDecimal price = new BigDecimal(20);
 		Set<Category> categories = new HashSet<>();
 		Category category = new Category();
 			category.setId(1L);
 			category.setName("Japanese");
 		categories.add(category);
-		String description = "description";
 		List<String> images = new ArrayList<>();
 		images.add("imageURL");
-		String productName = "Product name";
 		
 		List<CartInfoRequestItem> cartInfoRequestItems = new ArrayList<>();
 		CartInfoRequestItem item = new CartInfoRequestItem();
-		item.setProductId(productId);
-		item.setQuantity(quantity);
+		item.setProductId(2L);
+		item.setQuantity(5);
 		cartInfoRequestItems.add(item);
 		CartRequest request = new CartRequest();
 		request.setItems(cartInfoRequestItems);
 		
 		Product p = new Product();
-		p.setId(productId);
-		p.setPrice(price);
+		p.setId(2L);
+		p.setPrice(new BigDecimal(20));
 		p.setCategories(categories);
-		p.setDescription(description);
+		p.setDescription("description");
 		p.setImages(images);
-		p.setName(productName);
+		p.setName("Product name");
 		
 		// When
 		Optional<Product> productOptional = Optional.of(p);
-		when(productRepository.findById(productId)).thenReturn(productOptional);
+		when(productRepository.findById(2L)).thenReturn(productOptional);
 		CartInfoResponse response = underTest.getCartInfo(request);
 		
 		// Then
@@ -87,13 +82,13 @@ class CartServiceTest {
 		CartInfoResponseItem responseItem = responseItems.get(0);
 		// ... Cart Item
 		// ... - quantity
-		assertEquals(quantity, responseItem.getQuantity());
+		assertEquals(5, responseItem.getQuantity());
 		// ... - product
 		ProductDTO expectedProductDTO = responseItem.getProduct();
-		assertEquals(productId, expectedProductDTO.getId());
-		assertEquals(productName, expectedProductDTO.getName());
-		assertEquals(description, expectedProductDTO.getDescription());
-		assertEquals(price, expectedProductDTO.getPrice());
+		assertEquals(2L, expectedProductDTO.getId());
+		assertEquals("Product name", expectedProductDTO.getName());
+		assertEquals("description", expectedProductDTO.getDescription());
+		assertEquals(new BigDecimal(20), expectedProductDTO.getPrice());
 		assertTrue(expectedProductDTO.getCategories().equals(Arrays.asList("Japanese")));
 		assertTrue(expectedProductDTO.getImages().equals(images));
 	}
@@ -102,13 +97,11 @@ class CartServiceTest {
 	void itShouldThrowAnExceptionIfProductIdDoesNotExist() {
 		
 		// Given
-		Long productId = 2L;
-		int quantity = 5;
 		
 		List<CartInfoRequestItem> cartInfoRequestItems = new ArrayList<>();
 		CartInfoRequestItem item = new CartInfoRequestItem();
-		item.setProductId(productId);
-		item.setQuantity(quantity);
+		item.setProductId(2L);
+		item.setQuantity(5);
 		cartInfoRequestItems.add(item);
 		CartRequest request = new CartRequest();
 		request.setItems(cartInfoRequestItems);
@@ -122,6 +115,6 @@ class CartServiceTest {
 		assertThrows(
 				IllegalStateException.class,
 				()->underTest.getCartInfo(request), 
-				"Could not find product " + productId);
+				"Could not find product " + 2L);
 		}
 	}

@@ -30,16 +30,6 @@ public class OrderItem {
 	public OrderItem() {
 	}
 	
-	public OrderItem(Long id, Order order, Product product, int quantity, BigDecimal price) {
-		this.id = id;
-		this.order = order;
-		this.product = product;
-		this.quantity = quantity;
-		this.price = price;
-	}
-
-
-
 	public Long getId() {
 		return id;
 	}

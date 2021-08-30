@@ -40,6 +40,8 @@ public class Product {
 	@ElementCollection
 	private List<String> images;
 	
+	private boolean deleted = Boolean.FALSE;
+	
 	// Category has the mappedBy attribute on its @ManyToMany annotation
 	// This means that the Product is the owner in the relationship
 	// Changes to Product will cascade to the Category as well
@@ -49,29 +51,11 @@ public class Product {
 	@OneToMany(mappedBy="product")
 	private List<OrderItem> orderedItems;
 	
+	@OneToMany(mappedBy="product")
+	private List<CartItem> cartItem;
+	
 	public Product() {
 		
-	}
-	
-	public Product(String name, String description, BigDecimal price, Instant createdDate, List<String> images,
-			Set<Category> categories, List<OrderItem> orderedItems) {
-		super();
-		this.name = name;
-		this.description = description;
-		this.price = price;
-		this.createdDate = createdDate;
-		this.images = images;
-		this.categories = categories;
-		this.orderedItems = orderedItems;
-	}
-	
-	public Product(String name) {
-		this.name = name;
-	}
-	
-	public Product(Long id, String name) {
-		this.id = id;
-		this.name = name;
 	}
 
 	public Long getId() {
@@ -105,7 +89,7 @@ public class Product {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
-	
+
 	public Instant getCreatedDate() {
 		return createdDate;
 	}
@@ -129,8 +113,6 @@ public class Product {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
-	
-	
 
 	public List<OrderItem> getOrderedItems() {
 		return orderedItems;
@@ -138,6 +120,22 @@ public class Product {
 
 	public void setOrderedItems(List<OrderItem> orderedItems) {
 		this.orderedItems = orderedItems;
+	}
+
+	public List<CartItem> getCartItem() {
+		return cartItem;
+	}
+
+	public void setCartItem(List<CartItem> cartItem) {
+		this.cartItem = cartItem;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

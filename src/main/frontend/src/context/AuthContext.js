@@ -33,22 +33,16 @@ export function AuthProvider({ children }) {
     const expirationEpochMS = decoded.exp * 1000;
     const nowEpochMS = Date.now();
 
-    console.log("Token Expiration Epoch MS: " + expirationEpochMS);
-    console.log("Now Epoch MS: " + nowEpochMS);
-
     const msToExpire = expirationEpochMS - nowEpochMS;
 
     if (msToExpire < 60000) {
       // If jwt is already within 1 minute of expiring, just call refresh. Includes less than zero or expired
-      console.log("Already within 1 min of expiration. Refresh now!");
       refresh();
     } else {
       // otherwise, set timer to one minute of expiring
       const oneMinuteToExpireMS = msToExpire - 60000;
       const oneMinuteToExpire = oneMinuteToExpireMS / 1000;
-      console.log("Call refresh after " + oneMinuteToExpire + " seconds");
       setTimeout(() => {
-        console.log("Timed Refresh!");
         refresh();
       }, oneMinuteToExpireMS);
     }
@@ -64,9 +58,7 @@ export function AuthProvider({ children }) {
         // Set refresh timer function
         setRefreshTimer(response.data.authenticationToken);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   const refresh = async () => {
     try {
@@ -79,7 +71,6 @@ export function AuthProvider({ children }) {
         setRefreshTimer(response.data.authenticationToken);
       }
     } catch (error) {
-      console.log(error);
       setCurrentUser(null);
     }
   };
@@ -91,10 +82,7 @@ export function AuthProvider({ children }) {
       if (response.status === 200) {
         setCurrentUser(null);
       }
-    } catch (error) {
-      console.log(error);
-      //setCurrentUser(null);
-    }
+    } catch (error) {}
   };
 
   // Context Value that we're passing down to child components of the provider

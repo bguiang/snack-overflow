@@ -8,6 +8,5 @@ import com.bernardguiang.SnackOverflow.model.Category;
 
 public interface CategoryRepository extends CrudRepository<Category, Long>
 {
-	Iterable<Category> findAll();
 	Optional<Category> findByName(String name);
 }

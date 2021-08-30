@@ -22,18 +22,6 @@ public class RefreshToken {
 	
 	public RefreshToken() {
 	}
-	public RefreshToken(long id, String token, Instant createdDate, User user) {
-		this.id = id;
-		this.token = token;
-		this.createdDate = createdDate;
-		this.user = user;
-	}
-	
-	public RefreshToken(String token, Instant createdDate, User user) {
-		this.token = token;
-		this.createdDate = createdDate;
-		this.user = user;
-	}
 	
 	public long getId() {
 		return id;

@@ -20,6 +20,7 @@ public enum ApplicationUserRole {
 	CUSTOMER(Sets.newHashSet(
 			PRODUCT_READ,
 			CATEGORY_READ,
+			ORDER_READ,
 			ORDER_WRITE
 	)),
 	ADMIN(Sets.newHashSet(
