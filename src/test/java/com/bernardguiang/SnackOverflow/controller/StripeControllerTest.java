@@ -49,12 +49,12 @@ class StripeControllerTest {
 	void createPaymentIntent() throws StripeException {
 		// Given
 		CartRequest cartRequest = new CartRequest();
-		List<CartInfoRequestItem> emptyList = new ArrayList<>();
+		List<CartInfoRequestItem> cartInfoRequestItems = new ArrayList<>();
 		CartInfoRequestItem item = new CartInfoRequestItem();
 		item.setProductId(1L);
 		item.setQuantity(1);
-		emptyList.add(item);
-		cartRequest.setItems(emptyList);
+		cartInfoRequestItems.add(item);
+		cartRequest.setItems(cartInfoRequestItems);
 		
 		Authentication authenticationMock = Mockito.mock(Authentication.class);
 		
@@ -119,82 +119,5 @@ class StripeControllerTest {
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		assertEquals("Invalid Payload", response.getBody());
 	}
-	
-	
-//	TODO: these are transferred from OrderControllerTest
-//	@Test
-//	void itShouldStartCheckout() throws StripeException {
-//		// Given
-//		String authUsername = "authUsername";
-//		Authentication authentication = Mockito.mock(Authentication.class);
-//		
-//		UserDTO user = new UserDTO();
-//		String userEmail = "user@user.com";
-//		user.setEmail(userEmail);
-//		Long userId = 3L;
-//		user.setId(userId);
-//		
-//		List<CartInfoRequestItem> cartItems = new ArrayList<>();
-//		Long productId = 2L;
-//		int quantity = 5;
-//		CartInfoRequestItem cartItem = new CartInfoRequestItem();
-//		cartItem.setProductId(productId);
-//		cartItem.setQuantity(quantity);
-//		cartItems.add(cartItem);
-//		CartRequest request = new CartRequest();
-//		request.setItems(cartItems);
-//		
-//		CartInfoResponse cartInfoResponse = new CartInfoResponse();
-//		BigDecimal cartTotal = new BigDecimal(10);
-//		cartInfoResponse.setTotal(cartTotal);
-//		
-//		PaymentIntent intent = Mockito.mock(PaymentIntent.class);
-//		String clientSecret = "clientSecret";
-//		
-//		Long savedOrderId = 10L;
-//		Long amount = 1000L;
-//		
-//		// When
-//		when(authentication.getName()).thenReturn(authUsername);
-//		when(userService.findByUsername(authUsername)).thenReturn(user);
-//		when(cartService.getCartInfo(request)).thenReturn(cartInfoResponse);
-//		when(intent.getClientSecret()).thenReturn(clientSecret);
-//		when(stripeService.createPaymentIntent(amount, userEmail)).thenReturn(intent);
-//		when(orderService.createOrderWithCartItemsAndPaymentIntentId(request, clientSecret, user.getId())).thenReturn(savedOrderId);
-//		
-//		ResponseEntity<Map<String, Object>> response = underTest.startOrder(request, authentication);
-//		
-//		// Then
-//		assertEquals(HttpStatus.CREATED, response.getStatusCode());
-//		Map<String, Object> responseBody = response.getBody();
-//		assertEquals(clientSecret, (String) responseBody.get("client_secret"));
-//		CartInfoResponse responseCart = (CartInfoResponse) responseBody.get("cart");
-//		assertEquals(cartInfoResponse.getTotal(), responseCart.getTotal());
-//		assertEquals(savedOrderId, (Long) responseBody.get("orderId"));
-//	}
-//	
-//	@Test
-//	void updateOrderBillingAndShippingShouldReturnStatusOk( ) throws StripeException {
-//		// Given
-//		UpdateBillingAndShippingRequest updateBillingAndShippingRequest = null;
-//		Authentication authentication = Mockito.mock(Authentication.class);
-//		String authUsername = "authUsername";
-//		
-//		UserDTO user = new UserDTO();
-//		String userEmail = "user@user.com";
-//		user.setEmail(userEmail);
-//		Long userId = 3L;
-//		user.setId(userId);
-//		
-//		// When
-//		when(userService.findByUsername(authUsername)).thenReturn(user);
-//
-//		when(orderService.updateBillingAndShipping(updateBillingAndShippingRequest, user)).thenReturn(null);
-//		
-//		ResponseEntity<String> response = underTest.updateOrderBillingAndShipping(
-//				updateBillingAndShippingRequest, authentication);
-//		// Then
-//		assertEquals(HttpStatus.OK, response.getStatusCode());
-//	}
 
 }

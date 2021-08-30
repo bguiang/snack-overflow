@@ -2,6 +2,7 @@ package com.bernardguiang.SnackOverflow.dto.response;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +10,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.bernardguiang.SnackOverflow.dto.Address;
+import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
+import com.bernardguiang.SnackOverflow.model.OrderStatus;
+import com.bernardguiang.SnackOverflow.model.Product;
 import com.bernardguiang.SnackOverflow.model.RefreshToken;
+import com.bernardguiang.SnackOverflow.model.ShippingDetails;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
 
@@ -28,7 +33,7 @@ class FullUserDTOTest {
 		String role = ApplicationUserRole.CUSTOMER.name();
 		RefreshToken refreshToken = null;
 		Instant joinDate = Instant.now();
-		
+
 		String addressLine1 = "Address Line 1";
 		String addressLine2 = null;
 		String city = "city";
@@ -36,7 +41,7 @@ class FullUserDTOTest {
 		String postalCode = "postal code";
 		String country = "country";
 		Address address = new Address(addressLine1, addressLine2, city, state, postalCode, country);
-		
+
 		User user = new User();
 		user.setId(id);
 		user.setEmail(email);
@@ -48,20 +53,42 @@ class FullUserDTOTest {
 		user.setRefreshToken(refreshToken);
 		user.setJoinDate(joinDate);
 		user.setAddress(address);
-		
-		List<Order> orders = new ArrayList<>();
+
 		Order order = new Order();
 		order.setId(1L);
+		order.setTotal(new BigDecimal(20));
+		order.setCreatedDate(Instant.now());
+		order.setShippingSameAsBilling(false);
+		order.setStatus(OrderStatus.COMPLETED);
+
+		List<OrderItem> items = new ArrayList<>();
+		OrderItem item1 = new OrderItem();
+		Product product1 = new Product();
+		product1.setId(1L);
+		item1.setProduct(product1);
+		OrderItem item2 = new OrderItem();
+		Product product2 = new Product();
+		product2.setId(2L);
+		item2.setProduct(product2);
+		items.add(item1);
+		items.add(item2);
+		order.setItems(items);
 		order.setUser(user);
-		List<OrderItem> orderItems = new ArrayList<>();
-		order.setItems(orderItems);
+
+		BillingDetails billingDetails = new BillingDetails();
+		billingDetails.setOrder(order);
+		order.setBillingDetails(billingDetails);
+
+		ShippingDetails shippingDetails = new ShippingDetails();
+		shippingDetails.setOrder(order);
+		order.setShippingDetails(shippingDetails);
+
+		List<Order> orders = new ArrayList<>();
 		orders.add(order);
 		user.setOrders(orders);
-		
-		
 		// When
 		FullUserDTO underTest = new FullUserDTO(user);
-		
+
 		// Then
 		assertEquals(id, underTest.getId());
 		assertEquals(username, underTest.getUsername());
@@ -71,6 +98,7 @@ class FullUserDTOTest {
 		assertEquals(joinDate, underTest.getJoinDate());
 		assertEquals(1, underTest.getOrders().size());
 		assertEquals(address, underTest.getAddress());
+		assertEquals(1, underTest.getOrders().size());
 	}
 
 }

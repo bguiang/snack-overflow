@@ -40,11 +40,8 @@ class UserRepositoryIntegrationTest {
 		u1.setPassword("Password1!");
 		u1.setFullName("Full Name 1");
 		u1.setRole(ApplicationUserRole.ADMIN.name());
-		joinDate1 = Instant.now();
+		joinDate1 = Instant.ofEpochMilli(20L);
 		u1.setJoinDate(joinDate1);
-//		u1.setOrders(orders1);
-//		u1.setAddress(address1);
-//		u1.setRefreshToken(refreshToken1);
 		
 		user1 = underTest.save(u1);
 	
@@ -54,11 +51,9 @@ class UserRepositoryIntegrationTest {
 		u2.setPassword("Password2!");
 		u2.setFullName("Full Name 2");
 		u2.setRole(ApplicationUserRole.CUSTOMER.name());
-		joinDate2 = Instant.now();
+		joinDate2 = Instant.ofEpochMilli(2000L);
 		u2.setJoinDate(joinDate2);
-//		u2.setOrders(orders2);
-//		u2.setAddress(address2);
-//		u2.setRefreshToken(refreshToken2);
+
 		user2 = underTest.save(u2);
 		
 		User u3 = new User();
@@ -67,11 +62,9 @@ class UserRepositoryIntegrationTest {
 		u3.setPassword("Password3!");
 		u3.setFullName("Full Name 3");
 		u3.setRole(ApplicationUserRole.CUSTOMER.name());
-		joinDate3 = Instant.now();
+		joinDate3 = Instant.ofEpochMilli(2000000L);
 		u3.setJoinDate(joinDate3);
-//		u3.setOrders(orders2);
-//		u3.setAddress(address2);
-//		u3.setRefreshToken(refreshToken2);
+
 		user3 = underTest.save(u3);
 	}
 

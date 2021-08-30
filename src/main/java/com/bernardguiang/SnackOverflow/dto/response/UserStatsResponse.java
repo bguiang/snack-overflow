@@ -1,7 +1,7 @@
 package com.bernardguiang.SnackOverflow.dto.response;
 
 public class UserStatsResponse {
-	int newUsers;
+	private int newUsers;
 
 	public UserStatsResponse(int newUsers) {
 		this.setNewUsers(newUsers);

@@ -54,9 +54,9 @@ class BillingDetailsDTOTest {
 		order.setId(orderId);
 		
 		BillingDetails billingDetails = new BillingDetails();
+		billingDetails.setId(id);
 		billingDetails.setAddress(address);
 		billingDetails.setEmail(email);
-		billingDetails.setId(orderId);
 		billingDetails.setName(name);
 		billingDetails.setOrder(order);
 		billingDetails.setPhone(phone);
