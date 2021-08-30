@@ -1,6 +1,5 @@
 package com.bernardguiang.SnackOverflow.controller;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -31,15 +30,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.bernardguiang.SnackOverflow.dto.Address;
-import com.bernardguiang.SnackOverflow.dto.BillingDetailsDTO;
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.dto.request.CartRequest;
 import com.bernardguiang.SnackOverflow.dto.request.OrderPage;
 import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
 import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
 import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
-import com.bernardguiang.SnackOverflow.dto.response.OrderResponseItem;
 import com.bernardguiang.SnackOverflow.dto.response.OrderStatsResponse;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Category;

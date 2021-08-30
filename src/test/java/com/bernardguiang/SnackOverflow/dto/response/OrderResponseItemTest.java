@@ -1,22 +1,12 @@
 package com.bernardguiang.SnackOverflow.dto.response;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.bernardguiang.SnackOverflow.dto.ProductDTO;
-import com.bernardguiang.SnackOverflow.model.Category;
 import com.bernardguiang.SnackOverflow.model.Order;
 import com.bernardguiang.SnackOverflow.model.OrderItem;
 import com.bernardguiang.SnackOverflow.model.Product;

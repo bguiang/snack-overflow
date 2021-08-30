@@ -14,11 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.JpaSort;
 
-import com.bernardguiang.SnackOverflow.dto.Address;
-import com.bernardguiang.SnackOverflow.model.Order;
-import com.bernardguiang.SnackOverflow.model.RefreshToken;
 import com.bernardguiang.SnackOverflow.model.User;
 import com.bernardguiang.SnackOverflow.security.ApplicationUserRole;
 

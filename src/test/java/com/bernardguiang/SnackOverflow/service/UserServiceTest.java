@@ -1,6 +1,7 @@
 package com.bernardguiang.SnackOverflow.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
@@ -11,9 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -26,10 +24,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.bernardguiang.SnackOverflow.dto.UserDTO;
-import com.bernardguiang.SnackOverflow.dto.request.ProductPage;
 import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
 import com.bernardguiang.SnackOverflow.dto.request.UserPage;
-import com.bernardguiang.SnackOverflow.dto.response.FullProductInfo;
 import com.bernardguiang.SnackOverflow.dto.response.FullUserDTO;
 import com.bernardguiang.SnackOverflow.dto.response.UserStatsResponse;
 import com.bernardguiang.SnackOverflow.model.Order;

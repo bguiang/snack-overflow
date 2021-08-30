@@ -1,11 +1,6 @@
 package com.bernardguiang.SnackOverflow;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
-
-import com.bernardguiang.SnackOverflow.service.DatabaseSeeder;
 
 //@SpringBootTest
 //@MockBeans(@MockBean(DatabaseSeeder.class)) //The mock will replace any existing bean of the same type in the application context								

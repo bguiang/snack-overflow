@@ -1,10 +1,8 @@
 package com.bernardguiang.SnackOverflow.service;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -12,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -37,7 +34,6 @@ import com.bernardguiang.SnackOverflow.dto.request.OrderStatusUpdateRequest;
 import com.bernardguiang.SnackOverflow.dto.request.StatsRequest;
 import com.bernardguiang.SnackOverflow.dto.response.OrderDTO;
 import com.bernardguiang.SnackOverflow.dto.response.OrderResponse;
-import com.bernardguiang.SnackOverflow.dto.response.OrderResponseItem;
 import com.bernardguiang.SnackOverflow.dto.response.OrderStatsResponse;
 import com.bernardguiang.SnackOverflow.model.BillingDetails;
 import com.bernardguiang.SnackOverflow.model.Order;
