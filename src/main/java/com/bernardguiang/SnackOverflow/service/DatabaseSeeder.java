@@ -45,11 +45,11 @@ public class DatabaseSeeder {
 
 	@EventListener(classes = { ContextRefreshedEvent.class})
 	public void setDefaultUsers() {
-		
+		String adminPassword = env.getProperty("admin_password");
 		User admin = new User();
 		admin.setUsername("admin");
-		admin.setEmail("admin@admin.com");
-		admin.setPassword(passwordEncoder.encode("password"));
+		admin.setEmail("admin@snackoverflow.bernardguiang.com");
+		admin.setPassword(passwordEncoder.encode(adminPassword));
 		admin.setRole(ApplicationUserRole.ADMIN.name());
 		admin.setFullName("Admin Guy");
 		admin.setJoinDate(Instant.now());
@@ -57,7 +57,7 @@ public class DatabaseSeeder {
 		
 		User customer = new User();
 		customer.setUsername("customer");
-		customer.setEmail("customer@customer.com");
+		customer.setEmail("customer@snackoverflow.bernardguiang.com");
 		customer.setPassword(passwordEncoder.encode("password"));
 		customer.setRole(ApplicationUserRole.CUSTOMER.name());
 		customer.setFullName("Customer Guy");
