@@ -80,7 +80,7 @@ const Checkout = () => {
           justifyContent="center"
           alignItems="flex-start"
         >
-          <Grid item sm={12} md={6} key="order-info">
+          <Grid item xs={12} sm={12} md={6} key="order-info">
             <Card className={classes.checkoutOrderInfo}>
               <Typography variant="h6">Order Info</Typography>
               {cartInfo.items.map((checkoutItem) => (
@@ -94,7 +94,7 @@ const Checkout = () => {
               </Typography>
             </Card>
           </Grid>
-          <Grid item sm={12} md={6} key="checkout" flex>
+          <Grid item xs={12} sm={12} md={6} key="checkout">
             <Elements stripe={stripePromise}>
               <InjectedCheckoutForm />
             </Elements>

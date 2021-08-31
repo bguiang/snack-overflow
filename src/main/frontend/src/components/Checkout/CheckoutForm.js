@@ -231,7 +231,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             }}
             autoComplete="postal-code"
           />
-          <FormControl className={classes.formControl}>
+          <FormControl fullWidth>
             <InputLabel>Country</InputLabel>
             <Select
               value={billingCountry}
@@ -363,7 +363,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               }}
               autoComplete="postal-code"
             />
-            <FormControl flex>
+            <FormControl fullWidth>
               <InputLabel>Country</InputLabel>
               <Select
                 value={shippingCountry}

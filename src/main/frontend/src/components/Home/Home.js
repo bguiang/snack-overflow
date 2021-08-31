@@ -110,7 +110,7 @@ const Home = () => {
             </div>
           ))}
         </Carousel>
-        <Grid item xs={12} key="title" className={classes.cartHeader}>
+        <Grid item xs={12} key="title2" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>New Snacks</h2>
         </Grid>
         {newestSnacks.map((snack) => (

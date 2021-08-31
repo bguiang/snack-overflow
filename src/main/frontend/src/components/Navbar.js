@@ -225,7 +225,7 @@ const Navbar = () => {
             <Paper className={classes.toolbar2SearchContainer}>
               <InputBase
                 className={classes.search}
-                autocomplete="off"
+                autoComplete="off"
                 placeholder="Search Snacks"
                 inputProps={{ "aria-label": "search snacks" }}
                 onChange={(event) => {
