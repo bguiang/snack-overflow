@@ -155,7 +155,13 @@ const useStyles = makeStyles((theme) => ({
   },
   footer: {
     backgroundColor: theme.palette.primary.main,
-    height: 50,
+    height: 80,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  footerText: {
+    color: "#ffffff",
   },
   loginSignUp: {
     display: "flex",

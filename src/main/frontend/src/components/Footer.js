@@ -3,8 +3,10 @@ import { Container, Typography, Link } from "@material-ui/core";
 import useStyles from "../styles";
 
 function Copyright() {
+  const classes = useStyles();
+
   return (
-    <Typography variant="h6" color="textSecondary" align="center">
+    <Typography variant="h6" align="center" className={classes.footerText}>
       {"Copyright © "}
       <Link
         color="inherit"
