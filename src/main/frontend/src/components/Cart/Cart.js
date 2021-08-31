@@ -37,12 +37,14 @@ const Cart = () => {
         if (200 === response.status) {
           setCartInfo(response.data);
         }
-      } catch (error) {
-        setCartInfo({ items: [], total: 0 });
-      }
+      } catch (error) {}
     };
 
-    if (cart.length >= 0) loadCartInfo();
+    if (cart && cart.length > 0) {
+      loadCartInfo();
+    } else {
+      setCartInfo({ items: [], total: 0 });
+    }
   }, [cart]);
 
   const checkoutClick = () => {
