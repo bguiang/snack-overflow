@@ -64,13 +64,6 @@ const Navbar = () => {
     history.push(url);
   };
 
-  // const handleSearchSubmit = () => {
-  //   history.push({
-  //     pathname: "/snacks",
-  //     search: `?search=${search}`,
-  //   });
-  // };
-
   const handleSearchSubmit = () => {
     history.push({
       pathname: `/snacks`,
