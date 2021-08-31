@@ -8,17 +8,11 @@ import SnackOverflow from "../../api/SnackOverflow";
 import Carousel from "react-material-ui-carousel";
 
 const Home = () => {
-  const location = useLocation();
   const history = useHistory();
-  const [search, setSearch] = useState("");
   const classes = useStyles();
 
   const [snacks, setSnacks] = useState([]);
   const [newestSnacks, setNewestSnacks] = useState([]);
-
-  useEffect(() => {
-    setSearch(new URLSearchParams(location.search).get("search"));
-  }, [location]);
 
   const getPopularSnacks = async () => {
     try {
@@ -56,7 +50,7 @@ const Home = () => {
   useEffect(() => {
     getPopularSnacks();
     getNewestSnacks();
-  }, [search]);
+  }, []);
 
   const snackClick = (snack) => {
     history.push(`/snacks/${snack.id}`);
