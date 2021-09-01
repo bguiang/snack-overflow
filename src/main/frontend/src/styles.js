@@ -309,6 +309,7 @@ const useStyles = makeStyles((theme) => ({
   },
   addressCard: {
     padding: 16,
+    marginTop: 10,
   },
 
   // Orders

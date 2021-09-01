@@ -14,6 +14,7 @@ import {
   Select,
   MenuItem,
   Button,
+  Link,
 } from "@material-ui/core";
 
 const CheckoutForm = ({ clientSecret, token }) => {
@@ -131,11 +132,37 @@ const CheckoutForm = ({ clientSecret, token }) => {
     confirmPayment();
   };
 
+  const autoPopulateBilling = () => {
+    setBillingName("John Doe");
+    setBillingEmail("jdoe@snackoverflow.bernardguiang.com");
+    setBillingPhone("1234567890");
+    setBillingAddressLine1("Line 1");
+    setBillingAddressLine2("Line 2");
+    setBillingCity("City");
+    setBillingState("State");
+    setBillingPostalCode("12345");
+    setBillingCountry("US");
+  };
+
+  const autoPopulateShipping = () => {
+    setShippingName("Jane Doe");
+    setShippingPhone("1234567890");
+    setShippingAddressLine1("Line 1");
+    setShippingAddressLine2("Line 2");
+    setShippingCity("City");
+    setShippingState("State");
+    setShippingPostalCode("12345");
+    setShippingCountry("US");
+  };
+
   return (
     <form onSubmit={handleSubmit} className={classes.checkoutForm}>
       <div>
         <Card className={classes.addressCard}>
-          <Typography variant="h6">Billing Details</Typography>
+          <Typography variant="h6">
+            Billing Details{" "}
+            <Link onClick={() => autoPopulateBilling()}>auto-populate</Link>
+          </Typography>
           <TextField
             variant="outlined"
             size="small"
@@ -143,6 +170,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             required
             fullWidth
             label="name"
+            value={billingName}
             onChange={(event) => {
               setBillingName(event.target.value);
             }}
@@ -155,6 +183,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             required
             fullWidth
             label="email"
+            value={billingEmail}
             onChange={(event) => {
               setBillingEmail(event.target.value);
             }}
@@ -167,6 +196,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             required
             fullWidth
             label="phone"
+            value={billingPhone}
             onChange={(event) => {
               setBillingPhone(event.target.value);
             }}
@@ -179,6 +209,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             required
             fullWidth
             label="address line 1"
+            value={billingAddressLine1}
             onChange={(event) => {
               setBillingAddressLine1(event.target.value);
             }}
@@ -190,6 +221,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             margin="dense"
             fullWidth
             label="address line 2"
+            value={billingAddressLine2}
             onChange={(event) => {
               setBillingAddressLine2(event.target.value);
             }}
@@ -202,6 +234,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             required
             fullWidth
             label="city"
+            value={billingCity}
             onChange={(event) => {
               setBillingCity(event.target.value);
             }}
@@ -214,6 +247,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             required
             fullWidth
             label="state"
+            value={billingState}
             onChange={(event) => {
               setBillingState(event.target.value);
             }}
@@ -226,6 +260,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
             required
             fullWidth
             label="postal code"
+            value={billingPostalCode}
             onChange={(event) => {
               setBillingPostalCode(event.target.value);
             }}
@@ -279,7 +314,10 @@ const CheckoutForm = ({ clientSecret, token }) => {
         </Typography>
         {isShippingSameAsBilling ? null : (
           <Card className={classes.addressCard}>
-            <Typography variant="h6">Shipping Details</Typography>
+            <Typography variant="h6">
+              Shipping Details{" "}
+              <Link onClick={() => autoPopulateShipping()}>auto-populate</Link>
+            </Typography>
             <TextField
               variant="outlined"
               size="small"
@@ -287,6 +325,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               required
               fullWidth
               label="name"
+              value={shippingName}
               onChange={(event) => {
                 setShippingName(event.target.value);
               }}
@@ -299,6 +338,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               required
               fullWidth
               label="phone"
+              value={shippingPhone}
               onChange={(event) => {
                 setShippingPhone(event.target.value);
               }}
@@ -311,6 +351,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               required
               fullWidth
               label="address line 1"
+              value={shippingAddressLine1}
               onChange={(event) => {
                 setShippingAddressLine1(event.target.value);
               }}
@@ -322,6 +363,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               margin="dense"
               fullWidth
               label="address line 2"
+              value={shippingAddressLine2}
               onChange={(event) => {
                 setShippingAddressLine2(event.target.value);
               }}
@@ -334,6 +376,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               required
               fullWidth
               label="city"
+              value={shippingCity}
               onChange={(event) => {
                 setShippingCity(event.target.value);
               }}
@@ -346,6 +389,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               required
               fullWidth
               label="state"
+              value={shippingState}
               onChange={(event) => {
                 setShippingState(event.target.value);
               }}
@@ -358,6 +402,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
               required
               fullWidth
               label="postal code"
+              value={shippingPostalCode}
               onChange={(event) => {
                 setShippingPostalCode(event.target.value);
               }}
@@ -402,7 +447,7 @@ const CheckoutForm = ({ clientSecret, token }) => {
           </Card>
         )}
       </div>
-      <Card>
+      <Card className={classes.addressCard}>
         <CardSection />
         {paymentErrorMessage ? (
           <Typography color="error">{paymentErrorMessage}</Typography>

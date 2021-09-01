@@ -13,12 +13,12 @@ const CheckoutSuccess = () => {
   const history = useHistory();
 
   return (
-    <div>
+    <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={12} md={10} key="title" className={classes.cartHeader}>
+        <Grid item xs={12} key="title" className={classes.cartHeader}>
           <h2 className={classes.cartHeaderTitle}>Checkout Success!</h2>
         </Grid>
-        <Grid item xs={12} md={10} key="body" className={classes.cartHeader}>
+        <Grid item xs={12} key="body" className={classes.cartHeader}>
           <Typography>
             It may take a few minutes for your order to show up on your{" "}
             <Link onClick={() => history.push("/account")}>account</Link>
