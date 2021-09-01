@@ -31,37 +31,60 @@ const Snacks = () => {
   useEffect(() => {
     let urlParams = new URLSearchParams(location.search);
 
+    let urlSearch = "";
+    let urlPageNumber = 0;
+    let urlPageNumberUI = 1;
+    let urlSortBy = "unitsSold";
+    let urlDirection = "DESC";
+
     if (urlParams.get("search") !== null) {
-      setSearch(urlParams.get("search"));
+      urlSearch = urlParams.get("search");
+      setSearch(urlSearch);
     }
 
     if (urlParams.get("page")) {
-      let currentPage = parseInt(urlParams.get("page"));
-      setPageNumber(currentPage - 1);
-      setPageNumberUI(currentPage);
+      urlPageNumberUI = parseInt(urlParams.get("page"));
+      urlPageNumber = urlPageNumberUI - 1;
+      setPageNumber(urlPageNumber);
+      setPageNumberUI(urlPageNumberUI);
     }
     if (urlParams.get("sortBy")) {
-      setSortBy(urlParams.get("sortBy"));
+      urlSortBy = urlParams.get("sortBy");
+      setSortBy(urlSortBy);
     }
     if (urlParams.get("direction")) {
-      setDirection(urlParams.get("direction"));
+      urlDirection = urlParams.get("direction");
+      setDirection(urlDirection);
     }
+
+    const params = {
+      search: urlSearch,
+      pageSize: 9,
+      pageNumber: urlPageNumber,
+      itemsSold: "month",
+      sortBy: urlSortBy,
+      sortDirection: urlDirection,
+    };
+
+    getSnacks(params);
   }, [location]);
 
-  const handleSearchSubmit = () => {
-    history.push({
-      pathname: `/snacks`,
-      search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&&page=${1}`,
-    });
-  };
-
-  const handleSearchChange = (event) => {
-    history.push({
-      pathname: `/snacks`,
-      search: `?search=${
-        event.target.value
-      }&sortBy=${sortBy}&direction=${direction}&page=${1}`,
-    });
+  const getSnacks = async (params) => {
+    try {
+      let response = await SnackOverflow.get("/products", {
+        params,
+        // params: {
+        //   search: search,
+        //   pageSize: 9,
+        //   pageNumber: pageNumber,
+        //   itemsSold: "month",
+        //   sortBy: sortBy,
+        //   sortDirection: direction,
+        // },
+      });
+      setSnacks(response.data.content);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {}
   };
 
   const handleSortByChange = (event) => {
@@ -88,27 +111,6 @@ const Snacks = () => {
       search: `?search=${search}&sortBy=${sortBy}&direction=${direction}&page=${value}`,
     });
   };
-
-  const getSnacks = async () => {
-    try {
-      let response = await SnackOverflow.get("/products", {
-        params: {
-          search: search,
-          pageSize: 9,
-          pageNumber: pageNumber,
-          itemsSold: "month",
-          sortBy: sortBy,
-          sortDirection: direction,
-        },
-      });
-      setSnacks(response.data.content);
-      setTotalPages(response.data.totalPages);
-    } catch (error) {}
-  };
-  // Call Get Snacks Once
-  useEffect(() => {
-    getSnacks();
-  }, [search, pageNumber, sortBy, direction]);
 
   return (
     <div className={classes.content}>
@@ -180,10 +182,12 @@ const Snacks = () => {
           </FormControl>
         </div>
       </Grid>
-      <Grid container xs={12} spacing={5} key="snacks">
-        {snacks.map((snack) => (
-          <SnackCard snack={snack} key={snack.id} />
-        ))}
+      <Grid item xs={12} key="snacks">
+        <Grid container spacing={5}>
+          {snacks.map((snack) => (
+            <SnackCard snack={snack} key={snack.id} />
+          ))}
+        </Grid>
       </Grid>
       <Grid item xs={12} key="pagination" className={classes.pagination}>
         <div className={classes.snacksPaginationContainer}>

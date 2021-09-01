@@ -4,6 +4,7 @@
 import React from "react";
 import { CardElement } from "@stripe/react-stripe-js";
 import "./CardSectionStyles.css";
+import { Typography, Link } from "@material-ui/core";
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -26,8 +27,18 @@ const CARD_ELEMENT_OPTIONS = {
 function CardSection() {
   return (
     <label>
-      <h3>Payment Information</h3>
+      <Typography variant="h6">Payment Information</Typography>
+      <Typography variant="subtitle2">
+        Please use the following Stripe test card number with any valid
+        expiration date and CVC. You may also use any other{" "}
+        <Link href={"https://stripe.com/docs/testing"} target="_blank">
+          Stripe Test card
+        </Link>
+      </Typography>
       <CardElement options={CARD_ELEMENT_OPTIONS} />
+      <Typography variant="subtitle1">
+        Test Card: 4242 4242 4242 4242
+      </Typography>
     </label>
   );
 }

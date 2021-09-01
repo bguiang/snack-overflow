@@ -28,6 +28,7 @@ const Login = ({ login, classes, currentUser }) => {
   let { from } = location.state || { from: { pathname: "/" } };
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loginFailedMessage, setLoginFailedMessage] = useState("");
 
   // Send User to landing page "/" or to previous route if it was a private route
   const callback = () => {
@@ -84,9 +85,14 @@ const Login = ({ login, classes, currentUser }) => {
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (isValidated()) login(username, password);
+    setLoginFailedMessage("");
+    if (isValidated()) {
+      const isLoginSuccessful = await login(username, password);
+      if (!isLoginSuccessful)
+        setLoginFailedMessage("Incorrect username and/or password");
+    }
   };
   return (
     <Container component="main" maxWidth="xs">
@@ -133,13 +139,11 @@ const Login = ({ login, classes, currentUser }) => {
           >
             Submit
           </Button>
-          {/* <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-          </Grid> */}
+          {loginFailedMessage ? (
+            <Typography variant="subtitle2" className={classes.error}>
+              {loginFailedMessage}
+            </Typography>
+          ) : null}
         </form>
       </div>
     </Container>

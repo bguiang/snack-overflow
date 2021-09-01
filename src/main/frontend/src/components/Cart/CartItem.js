@@ -62,7 +62,6 @@ const CartItem = ({ cartItem }) => {
             className={classes.cartItemQuantity}
             label="Quantity"
             variant="outlined"
-            size="large"
             type="number"
             min={1}
             value={quantity}
@@ -76,8 +75,8 @@ const CartItem = ({ cartItem }) => {
           <Button size="small" color="primary" onClick={() => updateClick()}>
             Update
           </Button>
-          <IconButton>
-            <DeleteIcon color="error" onClick={() => deleteClick()} />
+          <IconButton onClick={() => deleteClick()}>
+            <DeleteIcon color="error" />
           </IconButton>
         </CardActions>
       </Card>

@@ -154,12 +154,12 @@ const Orders = () => {
           </Select>
         </div>
       </Grid>
-      <Grid container xs={12} spacing={1} key="orderInfo">
+      <Grid container spacing={1} key="orderInfo">
         <Grid item xs={12} key={"listTitle"} className={classes.orderListTitle}>
           <Paper className={classes.adminSearchBar}>
             <InputBase
               className={classes.search}
-              autocomplete="off"
+              autoComplete="off"
               placeholder="Search Orders By Username"
               inputProps={{ "aria-label": "search" }}
               onChange={handleSearchChange}
@@ -239,7 +239,7 @@ const Orders = () => {
           </div>
         </Grid>
         {orders.map((order) => (
-          <OrderCardAdmin order={order} />
+          <OrderCardAdmin order={order} key={order.id} />
         ))}
       </Grid>
       <Grid item xs={12} key="pagination" className={classes.pagination}>

@@ -5,8 +5,9 @@
 The React frontend stores the stripe public api key in src/main/frontend/.env but is gitignored
 - create a ".env" file in the root folder of the react frontend and add a variable called "REACT_APP_STRIPE_PUBLIC_KEY" and set it equal to your Stripe publishable key
 
-The Spring Boot backend also expects environment variables for:
-- "jwt_secret_key" which is used as the jwt signing secret
+The Spring Boot backend also expects the following environment variables:
+- "admin_password" which is the default admin account's password
+- "jwt_secret_key" which is used as the JWT signing secret
 - "stripe_access_key" which should have the value of your Stripe secret key
 - "unsplash_access_token" which is your unsplash api key
 - "stripe_webhook_secret" from your stripe developer dashboard. Used for verifying payment intent events are from Stripe

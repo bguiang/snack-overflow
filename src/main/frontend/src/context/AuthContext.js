@@ -57,8 +57,12 @@ export function AuthProvider({ children }) {
         setCurrentUser(response.data);
         // Set refresh timer function
         setRefreshTimer(response.data.authenticationToken);
+        return true;
       }
-    } catch (error) {}
+      return false;
+    } catch (error) {
+      return false;
+    }
   };
   const refresh = async () => {
     try {

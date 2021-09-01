@@ -62,7 +62,7 @@ const Account = () => {
             </div>
           </Grid>
           {orders.map((order) => (
-            <OrderCard order={order} />
+            <OrderCard order={order} key={order.id} />
           ))}
         </Grid>
       </Grid>

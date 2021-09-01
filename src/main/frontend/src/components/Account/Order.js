@@ -18,17 +18,6 @@ const Order = () => {
   const classes = useStyles();
   const [token, setToken] = useState(null);
 
-  // const [order, setOrder] = useState({
-  //   id: null,
-  //   items: [],
-  //   total: 0,
-  //   createdDate: null,
-  //   billingDetails: null,
-  //   shippingDetails: null,
-  //   isShippingSameAsBilling: false,
-  //   userId: null,
-  //   status: null,
-  // });
   const [order, setOrder] = useState(null);
 
   const { id } = useParams();
@@ -68,43 +57,38 @@ const Order = () => {
   return (
     <div className={classes.content}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid item xs={12} key="orderInfo">
+        <Grid item xs={12} key="title">
           <Typography variant="h6">Order #{order.id}</Typography>
-          <Grid
-            item
-            xs={12}
-            key={"orderListTitle"}
-            className={classes.orderListTitle}
-          >
-            <Card className={classes.orderDetailsCard}>
-              <CardActionArea>
-                {order.items.map((item) => (
-                  <OrderItem orderItem={item} orderItemClick={orderItemClick} />
-                ))}
-              </CardActionArea>
-              <CardContent>
-                <Typography variant="subtitle1" align="right">
-                  Created:{" "}
-                  {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
-                  {new Date(order.createdDate).toLocaleTimeString("en-US")}
-                </Typography>
-                <Typography variant="subtitle1" align="right">
-                  Status: {order.status}
-                </Typography>
-                <div>
-                  <Typography variant="subtitle1" align="right">
-                    Total ${order.total.toFixed(2)}
-                  </Typography>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
         </Grid>
-        <div
-          item
-          key="billingAndShipping"
-          className={classes.orderDetailsBillingAndShipping}
-        >
+        <Grid item xs={12} key="orderInfo">
+          <Card className={classes.orderDetailsCard}>
+            <CardActionArea>
+              {order.items.map((item) => (
+                <OrderItem
+                  orderItem={item}
+                  orderItemClick={orderItemClick}
+                  key={item.id}
+                />
+              ))}
+            </CardActionArea>
+            <CardContent>
+              <Typography variant="subtitle1" align="right">
+                Created:{" "}
+                {new Date(order.createdDate).toLocaleDateString("en-US")}{" "}
+                {new Date(order.createdDate).toLocaleTimeString("en-US")}
+              </Typography>
+              <Typography variant="subtitle1" align="right">
+                Status: {order.status}
+              </Typography>
+              <div>
+                <Typography variant="subtitle1" align="right">
+                  Total ${order.total.toFixed(2)}
+                </Typography>
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6} key="billing">
           <Card className={classes.orderBillingAndShippingCard}>
             <CardContent>
               <Typography variant="h6">Billing</Typography>
@@ -136,6 +120,8 @@ const Order = () => {
               </Typography>
             </CardContent>
           </Card>
+        </Grid>
+        <Grid item xs={12} md={6} key="shipping">
           <Card className={classes.orderBillingAndShippingCard}>
             {order.isShippingSameAsBilling ? (
               <CardContent>
@@ -173,7 +159,7 @@ const Order = () => {
               </CardContent>
             )}
           </Card>
-        </div>
+        </Grid>
       </Grid>
     </div>
   );
