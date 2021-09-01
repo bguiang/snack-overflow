@@ -163,7 +163,7 @@ const Members = () => {
         <Paper className={classes.adminSearchBar}>
           <InputBase
             className={classes.search}
-            autocomplete="off"
+            autoComplete="off"
             placeholder="Search Members by Username"
             inputProps={{ "aria-label": "search" }}
             onChange={handleSearchChange}
@@ -207,7 +207,7 @@ const Members = () => {
           </FormControl>
         </div>
       </Grid>
-      <Grid container xs={12} spacing={1} key="memberInfo">
+      <Grid container spacing={1} key="memberInfo">
         <Grid item xs={12} key={"listTitle"}>
           <div className={classes.memberCard}>
             <div className={classes.orderCardActionArea}>

@@ -200,7 +200,7 @@ const ProductsAdmin = () => {
           <Paper className={classes.adminSearchBar}>
             <InputBase
               className={classes.search}
-              autocomplete="off"
+              autoComplete="off"
               placeholder="Search Products by Name"
               inputProps={{ "aria-label": "search" }}
               onChange={handleSearchChange}

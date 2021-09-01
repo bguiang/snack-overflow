@@ -170,7 +170,7 @@ const Images = ({ images, setImages }) => {
   return (
     <div className={classes.imageSection}>
       {images.map((image, index) => (
-        <Card title={index} className={classes.editImageContainer}>
+        <Card title={index} className={classes.editImageContainer} key={index}>
           <div className={classes.editImageContainerImageContainer}>
             <CardMedia
               image={images[index]}
@@ -193,8 +193,8 @@ const Images = ({ images, setImages }) => {
                 updateImage(index, event.target.value);
               }}
             />
-            <IconButton>
-              <DeleteIcon color="error" onClick={() => deleteClick(index)} />
+            <IconButton onClick={() => deleteClick(index)}>
+              <DeleteIcon color="error" />
             </IconButton>
           </div>
         </Card>

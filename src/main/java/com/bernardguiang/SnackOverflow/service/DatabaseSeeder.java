@@ -48,7 +48,7 @@ public class DatabaseSeeder {
 		String adminPassword = env.getProperty("admin_password");
 		User admin = new User();
 		admin.setUsername("admin");
-		admin.setEmail("admin@snackoverflow.bernardguiang.com");
+		admin.setEmail("admin@bernardguiang.com");
 		admin.setPassword(passwordEncoder.encode(adminPassword));
 		admin.setRole(ApplicationUserRole.ADMIN.name());
 		admin.setFullName("Admin Guy");
@@ -57,7 +57,7 @@ public class DatabaseSeeder {
 		
 		User customer = new User();
 		customer.setUsername("customer");
-		customer.setEmail("customer@snackoverflow.bernardguiang.com");
+		customer.setEmail("customer@bernardguiang.com");
 		customer.setPassword(passwordEncoder.encode("password"));
 		customer.setRole(ApplicationUserRole.CUSTOMER.name());
 		customer.setFullName("Customer Guy");

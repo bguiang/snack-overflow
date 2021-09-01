@@ -182,10 +182,12 @@ const Snacks = () => {
           </FormControl>
         </div>
       </Grid>
-      <Grid container xs={12} spacing={5} key="snacks">
-        {snacks.map((snack) => (
-          <SnackCard snack={snack} key={snack.id} />
-        ))}
+      <Grid item xs={12} key="snacks">
+        <Grid container spacing={5}>
+          {snacks.map((snack) => (
+            <SnackCard snack={snack} key={snack.id} />
+          ))}
+        </Grid>
       </Grid>
       <Grid item xs={12} key="pagination" className={classes.pagination}>
         <div className={classes.snacksPaginationContainer}>
