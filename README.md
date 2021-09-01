@@ -1,5 +1,8 @@
 # SnackOverflow
 
+# Live Demo
+[https://snackoverflow.bernardguiang.com](https://snackoverflow.bernardguiang.com)
+
 # Environment Setup
 
 The React frontend stores the stripe public api key in src/main/frontend/.env but is gitignored
