@@ -31,24 +31,88 @@ const ProductPurchasedCard = ({ orderedItem }) => {
             {new Date(orderedItem.orderCreatedDate).toLocaleDateString("en-US")}{" "}
             {new Date(orderedItem.orderCreatedDate).toLocaleTimeString("en-US")}
           </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            Order Status: {orderedItem.orderStatus}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            Price: ${orderedItem.price.toFixed(2)}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            className={classes.orderCardActionAreaItem}
-          >
-            Quantity: {orderedItem.quantity}
-          </Typography>
+
+          {orderedItem.orderStatus === "CANCELLED" ||
+          orderedItem.orderStatus === "FAILED" ||
+          orderedItem.orderStatus === "REFUNDED" ? (
+            <div className={classes.orderCardActionAreaItem}>
+              <div>
+                <Typography variant="subtitle1" display="inline">
+                  Order Status:{" "}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  display="inline"
+                  className={classes.error}
+                >
+                  {orderedItem.orderStatus}
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="subtitle1" display="inline">
+                  Price:{" "}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  display="inline"
+                  className={classes.error}
+                >
+                  ${orderedItem.price.toFixed(2)}
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="subtitle1" display="inline">
+                  Quantity:{" "}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  display="inline"
+                  className={classes.error}
+                >
+                  {orderedItem.quantity}
+                </Typography>
+              </div>
+            </div>
+          ) : (
+            <div className={classes.orderCardActionAreaItem}>
+              <div>
+                <Typography variant="subtitle1" display="inline">
+                  Order Status:{" "}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  display="inline"
+                  className={classes.success}
+                >
+                  {orderedItem.orderStatus}
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="subtitle1" display="inline">
+                  Price:{" "}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  display="inline"
+                  className={classes.success}
+                >
+                  ${orderedItem.price.toFixed(2)}
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="subtitle1" display="inline">
+                  Quantity:{" "}
+                </Typography>
+                <Typography
+                  variant="subtitle1"
+                  display="inline"
+                  className={classes.success}
+                >
+                  {orderedItem.quantity}
+                </Typography>
+              </div>
+            </div>
+          )}
         </CardActionArea>
       </Card>
       <Card className={classes.orderCard}>
