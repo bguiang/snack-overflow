@@ -1,5 +1,11 @@
 # SnackOverflow
 
+# Live Demo
+[https://snackoverflow.bernardguiang.com](https://snackoverflow.bernardguiang.com)
+
+# Video Demo Playlist (including admin view)
+[![Alternate Text](https://user-images.githubusercontent.com/15081211/131763202-d207dae1-1bb4-468c-922c-ea6d2c74977e.png)](https://www.youtube.com/watch?v=jLMbFiJjALg&list=PLoqr7rWbqsC3JO66t5NDhNrcCWu3qYanx&index=1 "Demo Videos")
+
 # Environment Setup
 
 The React frontend stores the stripe public api key in src/main/frontend/.env but is gitignored

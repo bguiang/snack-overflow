@@ -1,4 +1,5 @@
 import "./App.css";
+import React, { useEffect } from "react";
 import "@fontsource/roboto";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline, Container } from "@material-ui/core";
@@ -46,6 +47,10 @@ function App() {
       },
     },
   });
+
+  useEffect(() => {
+    document.title = "SnackOverflow";
+  }, []);
 
   // Not using the styles.js because the theme created isn't being applied to the classes in App.js
   // The theme does get applied to useStyles from styles.js when used on child components
