@@ -86,9 +86,6 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		Cookie refreshCookie = authService.generateRefreshTokenCookie(authResult.getName());
 		response.addCookie(refreshCookie);
 		
-		// Add token to response header to return to client
-		// response.addHeader("Authorization", "Bearer " + token);
-		
 		response.setContentType("application/json");
 		AuthenticationResponse responseBody = new AuthenticationResponse(token, authResult.getName());
 		Gson gson = new Gson();
